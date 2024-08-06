@@ -3,12 +3,13 @@ import type { BunFile } from "bun";
 import { generateLODs } from "./lodGenerator";
 
 const testImage: BunFile = Bun.file("./src/assets/testImage.png");
-await testImage.arrayBuffer()
 
 test("Expect testImage to exist", async () => {
     expect(testImage).not.toBeNull();
     expect(testImage).not.toBeUndefined();
     expect(await testImage.exists()).toBe(true);
+    expect(await testImage.arrayBuffer()).not.toBeNull();
+    expect(testImage.size).toBeGreaterThan(0);
 })
 
 test("No LODs should be created if the threshold is already met by the input image", async () => {
@@ -35,5 +36,5 @@ test("No LODs should be created if the input image is empty", async () => {
 test("No LODs should be created if the input image is an unsupported type", async () => {
     const testBlob = new Blob([], {type: "image/thisformatdoesnotexist"});
     const res = await generateLODs(testBlob, 10);
-    expect(res.error).toEqual("Unsupported image type: image/thisFormatDoesNotExist");
+    expect(res.error).toEqual("Unsupported image type: image/thisformatdoesnotexist");
 });
