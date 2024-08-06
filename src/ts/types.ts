@@ -1,3 +1,5 @@
+export type Error = string;
+
 /**
  * CLI shortHand: "xOff yOff zIndex, xScale yScale", example: transform="0f 0f 0, 0f 0f"
  */
