@@ -1,0 +1,11 @@
+// src/devour.ts
+console.log("Running devour v. 0.0.1");
+var args = process.argv.slice(2);
+if (args.length === 0) {
+  console.log("No arguments provided.");
+} else {
+  console.log("Arguments:");
+  args.forEach((arg, index) => {
+    console.log(`${index + 1}: ${arg}`);
+  });
+}
