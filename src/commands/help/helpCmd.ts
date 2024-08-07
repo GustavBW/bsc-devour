@@ -69,23 +69,23 @@ const INGEST_FILE_FORMAT_EXAMPLE = `
 			"password": string,
 			"dbName": string,
 			"sslMode": string
-		},
+		}
 	},
 	"assets": [
 		{
-			"id": uint32
+			"id": uint32,
 			"useCase": "icon" | "environment" | "player",
 
 			"single": {     // mutually exclusive with field "collection"
-				"id": uint32
+				//All sources must either be local files or start with \"www\" or \"http\"
 				"source": string, 			
 				"width": uint32, 			
-				"height": uint32, 			
+				"height": uint32		
 			}?,
 			"collection": {
 				"sources": {	
 					"transform": Transform, // internal, relative, as seen below
-					"graphicalAssetId": uint32,
+					"graphicalAssetId": uint32
 				}[], 		
 				"transform": {
 					"xOffset": float32,
@@ -93,9 +93,9 @@ const INGEST_FILE_FORMAT_EXAMPLE = `
 					"zIndex": uint32,
 					 // the scale parameters acts as width/height if no such exist
 					"xScale": float32, 
-					"yScale": float32, 
+					"yScale": float32
 				}, 	
-				"name": string, 			
+				"name": string,			
 			}?
 		}
 	]

@@ -1,13 +1,19 @@
 import { test, expect } from "bun:test";
 import type { BunFile } from "bun";
 import { generateLODs } from "./lodGenerator";
+import { fetchBlobFromFile } from "./blobFetcher";
 
-const testImage: BunFile = Bun.file("./src/assets/testImage.png");
+const testImageRes = await fetchBlobFromFile("src/assets/testImage.png");
+if (testImageRes.error !== null) {
+    console.error(testImageRes.error);
+    throw new Error("Failed to fetch test image");
+}
+const testImage = testImageRes.result;
 
 test("Expect testImage to exist", async () => {
     expect(testImage).not.toBeNull();
     expect(testImage).not.toBeUndefined();
-    expect(await testImage.exists()).toBe(true);
+    expect(await (testImage as BunFile).exists()).toBe(true);
     expect(await testImage.arrayBuffer()).not.toBeNull();
     expect(testImage.size).toBeGreaterThan(0);
 })
@@ -38,3 +44,20 @@ test("No LODs should be created if the input image is an unsupported type", asyn
     const res = await generateLODs(testBlob, 10);
     expect(res.error).toEqual("Unsupported image type: image/thisformatdoesnotexist");
 });
+
+test("A 160 kb image with threshold 10kb should be downscaled 4 times", async () => {
+    const res = await generateLODs(testImage, 10);
+    expect(res.error).toBeNull();
+    expect(res.result).not.toBeNull();
+    expect(res.result).not.toBeUndefined();
+    expect(res.result).toBeInstanceOf(Array);
+    //The Test image has a size of 160 KB, so it should be downscaled 4 times
+    expect(res.result).toHaveLength(5);
+
+    for (const lod of res.result!) {
+        const outfile = Bun.file("src/assets/generated/testImageLOD"+lod.detailLevel+".png");
+        Bun.write(outfile, lod.blob);
+    }
+    console.log(res.result);
+})
+

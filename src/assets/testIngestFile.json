@@ -1,0 +1,60 @@
+{
+    "settings": {
+            "version": "0.0.1", 
+            "maxLOD": 6, 
+            "LODThreshhold": 10, 
+            "allowedFailures": 0, 
+            "dsn": {
+                    "host": "localhost",
+                    "port": 3000,
+                    "user": "testUser",
+                    "password": "password",
+                    "dbName": "testDB",
+                    "sslMode": "disable"
+            }
+    },
+    "assets": [
+            {
+                    "id": 1,
+                    "useCase": "environment",
+
+                    "single": {
+                            "source": "https://http.cat/images/404.jpg",
+                            "width": 750,
+                            "height": 600
+                    }
+            },
+            {
+                "id": 1,
+                "useCase": "environment",
+
+                "single": {
+                        "source": "https://http.cat/images/404.jpg",
+                        "width": 750,
+                        "height": 600
+                },
+                "collection": {
+                        "sources": [
+                            {
+                                "transform": {
+                                    "xOffset": 0,
+                                    "yOffset": 0,
+                                    "zIndex": 0,
+                                    "xScale": 1,
+                                    "yScale": 1
+                                }, 
+                                "graphicalAssetId": 1
+                            }
+                        ],
+                        "transform": {
+                                "xOffset": 0,
+                                "yOffset": 0,
+                                "zIndex": 0,
+                                "xScale": 1,
+                                "yScale": 1
+                        },
+                        "name": "ImmaKillThatCat"
+                }
+        }
+    ]
+}
