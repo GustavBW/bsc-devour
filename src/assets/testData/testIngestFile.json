@@ -17,7 +17,6 @@
             {
                     "id": 1,
                     "useCase": "environment",
-
                     "single": {
                             "source": "https://http.cat/images/404.jpg",
                             "width": 750,
@@ -27,12 +26,6 @@
             {
                 "id": 1,
                 "useCase": "environment",
-
-                "single": {
-                        "source": "https://http.cat/images/404.jpg",
-                        "width": 750,
-                        "height": 600
-                },
                 "collection": {
                         "sources": [
                             {

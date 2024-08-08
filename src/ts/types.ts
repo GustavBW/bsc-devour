@@ -79,6 +79,26 @@ export type LODDTO = {
  */
 export type AssetUseCase = "icon" | "environment" | "player";
 export type AssetType = "single" | "collection";
+export type DBDSN = {
+    host: string,
+    port: number,
+    user: string,
+    password: string,
+    dbName: string,
+    sslMode: string
+}
+
+export type ImageMIMEType = "image/jpeg" | "image/jpg" | "image/avif" | "image/tiff" | "image/webp" | "image/png" | "image/gif" | "image/bmp" | "image/svg+xml";
+
+export type GraphicAsset = {
+	id: number,
+	useCase: AssetUseCase,
+	type: ImageMIMEType, //MIME type
+	hasLODs: boolean,
+	width: number,
+	height: number,
+	blob: Blob //Only available if "hasLODs" is false
+}
 
 /**
  * @author GustavBW
@@ -99,14 +119,7 @@ export type AutoIngestScript = {
          * int32 - default 0 - num. allowed failures
          */
 		allowedFailures: number | undefined,
-		dsn: {
-			host: string,
-			port: number,
-			user: string,
-			password: string,
-			dbName: string,
-			sslMode: string
-		},
+		dsn: DBDSN,
 	},
 	assets: [
 		{
