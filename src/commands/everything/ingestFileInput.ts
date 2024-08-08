@@ -1,10 +1,34 @@
+import { readUrlArg } from '../../processing/cliInputProcessor.ts';
 import type { CLIFunc, ResErr } from '../../ts/metaTypes.ts';
 /**
  * @author GustavBW
  * @since 0.0.1
  */
-const handleIngestFileInput = (args: string[]): Promise<ResErr<string>> => {
-    return Promise.resolve({result: null, error: "Not implemented yet."});
+const handleIngestFileInput = async (args: string[]): Promise<ResErr<string>> => {
+    let url = "";
+    for (const arg of args) {
+        if (arg.startsWith("path=")) {
+            const {result, error} = readUrlArg(arg);
+            if (error !== null) {
+                return {result: null, error: error};
+            }
+            url = result;
+        }
+    }
+
+    if (url === "") {
+        return {result: null, error: "No path argument provided"};
+    }
+
+    const file = Bun.file(url);
+    const fileExists = await file.exists();
+    if (!fileExists) {
+        return { result: null, error: "File: \""+url+"\" does not exist. WD: " + import.meta.dir };
+    }
+    const json = await file.text();
+    console.log(json);
+
+    return {result: null, error: "Not implemented yet."};
 }
 /**
  * @author GustavBW
