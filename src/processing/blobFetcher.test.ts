@@ -10,7 +10,7 @@ test("Can fetch local file", async () => {
 });
 
 test("Can't fetch non-existing file", async () => {
-    const res = await fetchBlobFromFile("src/assets/thisFileDoesNotExist.asd");
+    const res = await fetchBlobFromFile("src/assets/thisFileAbsolutelyCannotExist.asd");
     expect(res.error).not.toBeNull();
     expect(res.result).toBeNull();
 });

@@ -47,13 +47,13 @@ export async function downscaleImage(blob: Blob): Promise<ResErr<Blob>> {
       const outputBuffer = await image.resize(width, height).toBuffer();
 
       // Log buffer size and some content for debugging
-      console.log('Output Buffer Size:', outputBuffer.length);
-      console.log('Output Buffer Slice:', outputBuffer.slice(0, 20)); // Log first 20 bytes
+      //console.log('Output Buffer Size:', outputBuffer.length);
+      //console.log('Output Buffer Slice:', outputBuffer.slice(0, 20)); // Log first 20 bytes
 
       // Validate the buffer by creating an image from it
       const tempImage = sharp(outputBuffer);
       const tempMetadata = await tempImage.metadata();
-      console.log('Temporary Image Metadata:', tempMetadata);
+      //console.log('Temporary Image Metadata:', tempMetadata);
 
       // Construct the Blob with the appropriate MIME type
       const outputBlob = new Blob([outputBuffer], { type: blob.type });

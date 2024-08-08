@@ -58,6 +58,5 @@ test("A 160 kb image with threshold 10kb should be downscaled 4 times", async ()
         const outfile = Bun.file("src/assets/generated/testImageLOD"+lod.detailLevel+".png");
         Bun.write(outfile, lod.blob);
     }
-    console.log(res.result);
 })
 
