@@ -1,9 +1,9 @@
 import { test, expect } from "bun:test";
 import type { BunFile } from "bun";
 import { generateLODs } from "./lodGenerator";
-import { fetchBlobFromFile } from "./blobFetcher";
+import { fetchBlobFromFile } from "../networking/blobFetcher";
 
-const testImageRes = await fetchBlobFromFile("src/assets/testImage.png");
+const testImageRes = await fetchBlobFromFile("src/assets/testData/testImage.png");
 if (testImageRes.error !== null) {
     console.error(testImageRes.error);
     throw new Error("Failed to fetch test image");
@@ -20,7 +20,6 @@ test("Expect testImage to exist", async () => {
 
 test("No LODs should be created if the threshold is already met by the input image", async () => {
   const res = await generateLODs(testImage, testImage.size / 1000);
-  console.log(res.error);
   expect(res).toEqual({result: [{ detailLevel: 0, blob: testImage }], error: null});
 });
 
@@ -56,7 +55,23 @@ test("A 160 kb image with threshold 10kb should be downscaled 4 times", async ()
 
     for (const lod of res.result!) {
         const outfile = Bun.file("src/assets/generated/testImageLOD"+lod.detailLevel+".png");
-        Bun.write(outfile, lod.blob);
+        const data = await lod.blob.arrayBuffer();
+        Bun.write(outfile, data);
     }
 })
 
+test("Content type is preserved during LOD generation", async () => {
+    const res = await generateLODs(testImage, 10);
+    expect(res.error).toBeNull();
+    expect(res.result).not.toBeNull();
+    expect(res.result).not.toBeUndefined();
+    const expectedType = testImage.type;
+    for (const lod of res.result!) {
+        expect(lod.blob.type).toEqual(expectedType);
+    }
+})
+/*
+test("Downscaling preserves alpha channnel", async () => {
+    expect(false, "This aint implemented yet").toBe(true);
+})
+*/

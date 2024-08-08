@@ -1,4 +1,4 @@
-import { fetchBlobFromUrl } from '../../processing/blobFetcher.ts';
+import { fetchBlobFromUrl } from '../../networking/blobFetcher.ts';
 import { readCompactTransformNotation, readThresholdArg, readUrlArg, readUseCaseArg } from '../../processing/cliInputProcessor.ts';
 import type { CLIFunc, ResErr } from '../../ts/metaTypes.ts';
 import { UNIT_TRANSFORM, type AssetUseCase, type TransformDTO } from '../../ts/types.ts';

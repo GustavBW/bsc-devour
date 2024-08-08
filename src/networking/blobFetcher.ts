@@ -60,14 +60,15 @@ export const fetchBlobOverHTTP = async (url: string): Promise<ResErr<Blob>> => {
     }
 }
 
-export const fetchBlobFromFile = async (url: string): Promise<ResErr<Blob>> => {
-    console.log("Fetching blob from path: " + url)
+export const fetchBlobFromFile = async (url: string, init?: boolean): Promise<ResErr<Blob>> => {
     const file: BunFile = Bun.file(url);
     const fileExists = await file.exists();
     if (!fileExists) {
         return { result: null, error: "File does not exist" };
     }
-    console.log(file)
+    if (init) {
+        await file.arrayBuffer();
+    }
     return { result: file, error: null };
 }
 

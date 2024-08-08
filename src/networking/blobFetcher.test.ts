@@ -2,7 +2,7 @@ import { test, expect } from "bun:test";
 import { fetchBlobFromUrl, fetchBlobFromFile, fetchBlobOverHTTP } from "./blobFetcher";
 
 test("Can fetch local file", async () => {
-    const res = await fetchBlobFromFile("src/assets/testImage.png");
+    const res = await fetchBlobFromFile("src/assets/testData/testImage.png");
     expect(res.error).toBeNull();
     expect(res.result).not.toBeNull();
     expect(res.result).toBeInstanceOf(Blob);

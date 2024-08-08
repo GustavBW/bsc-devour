@@ -79,6 +79,7 @@ export type LODDTO = {
  */
 export type AssetUseCase = "icon" | "environment" | "player";
 export type AssetType = "single" | "collection";
+
 /**
  * @author GustavBW
  * @since 0.0.1
