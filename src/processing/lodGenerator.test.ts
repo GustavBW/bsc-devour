@@ -2,25 +2,38 @@ import { test, expect } from "bun:test";
 import type { BunFile } from "bun";
 import { generateLODs } from "./lodGenerator";
 import { fetchBlobFromFile } from "../networking/blobFetcher";
+import sharp from "sharp";
 
-const testImageRes = await fetchBlobFromFile("src/assets/testData/testImage.png");
-if (testImageRes.error !== null) {
-    console.error(testImageRes.error);
-    throw new Error("Failed to fetch test image");
+const testImageNames = ["testImage.gif", "testImage.jpg", "testImage.png", "testImage.tif", "testImage.webp"];
+const testImages: Blob[] = [];
+const typesBeingTested = [];
+for (const testFile of testImageNames) {
+    const res = await fetchBlobFromFile("src/assets/testData/"+testFile);
+    if (res.error !== null) {
+        console.error(res.error);
+        throw new Error("Failed to fetch test image: " + testFile);
+    }
+    testImages.push(res.result);
+    typesBeingTested.push(res.result.type);
 }
-const testImage = testImageRes.result;
+const pngTestImage = testImages[3];
+console.log("Testing image types: " + typesBeingTested.join(", "));
 
-test("Expect testImage to exist", async () => {
-    expect(testImage).not.toBeNull();
-    expect(testImage).not.toBeUndefined();
-    expect(await (testImage as BunFile).exists()).toBe(true);
-    expect(await testImage.arrayBuffer()).not.toBeNull();
-    expect(testImage.size).toBeGreaterThan(0);
+test("Expect test images to exist", async () => {
+    for (const testImage of testImages) {
+        expect(testImage).not.toBeNull();
+        expect(testImage).not.toBeUndefined();
+        expect(await (testImage as BunFile).exists()).toBe(true);
+        expect(await testImage.arrayBuffer()).not.toBeNull();
+        expect(testImage.size).toBeGreaterThan(0);
+    }
 })
 
 test("No LODs should be created if the threshold is already met by the input image", async () => {
-  const res = await generateLODs(testImage, testImage.size / 1000);
-  expect(res).toEqual({result: [{ detailLevel: 0, blob: testImage }], error: null});
+    for (const testImage of testImages) {
+        const res = await generateLODs(testImage, testImage.size / 1000);
+        expect(res).toEqual({result: [{ detailLevel: 0, blob: testImage }], error: null});
+    }
 });
 
 //No sense in LOD'ifying svgs
@@ -44,8 +57,18 @@ test("No LODs should be created if the input image is an unsupported type", asyn
     expect(res.error).toEqual("Unsupported image type: image/thisformatdoesnotexist");
 });
 
+test("The last LOD generated should be below the threshold", async () => {
+    const thresholdKB = 10;
+    for (const testImage of testImages) {
+        const {result, error} = await generateLODs(testImage, thresholdKB);
+        expect(error).toBeNull();
+        const lastLOD = result![result!.length - 1];
+        expect(lastLOD.blob.size / 1000).toBeLessThanOrEqual(thresholdKB);
+    }
+});
+
 test("A 160 kb image with threshold 10kb should be downscaled 4 times", async () => {
-    const res = await generateLODs(testImage, 10);
+    const res = await generateLODs(pngTestImage, 10);
     expect(res.error).toBeNull();
     expect(res.result).not.toBeNull();
     expect(res.result).not.toBeUndefined();
@@ -61,17 +84,44 @@ test("A 160 kb image with threshold 10kb should be downscaled 4 times", async ()
 })
 
 test("Content type is preserved during LOD generation", async () => {
-    const res = await generateLODs(testImage, 10);
+    for (const testImage of testImages) {
+        const res = await generateLODs(testImage, 10);
+        expect(res.error).toBeNull();
+        expect(res.result).not.toBeNull();
+        expect(res.result).not.toBeUndefined();
+        const expectedType = testImage.type;
+        for (const lod of res.result!) {
+            expect(lod.blob.type).toEqual(expectedType);
+        }
+    }
+})
+
+const getAlphaTestRes = await fetchBlobFromFile("src/assets/testData/alphaChannelTest.png");
+if (getAlphaTestRes.error !== null) {
+    console.error(getAlphaTestRes.error);
+    throw new Error("Failed to fetch test image: alphaChannelTest.png");
+}
+const alphaChannelTestImage = getAlphaTestRes.result;
+
+test("Downscaling preserves alpha channnel", async () => {
+    const res = await generateLODs(alphaChannelTestImage, 10);
     expect(res.error).toBeNull();
     expect(res.result).not.toBeNull();
     expect(res.result).not.toBeUndefined();
-    const expectedType = testImage.type;
+    expect(res.result).toHaveLength(4);
+
     for (const lod of res.result!) {
-        expect(lod.blob.type).toEqual(expectedType);
+        const data = await lod.blob.arrayBuffer();
+        expect(data).not.toBeNull();
+        expect(data).not.toBeUndefined();
+        expect(data.byteLength).toBeGreaterThan(0);
+
+        // Check if the image has an alpha channel
+        const metadata = await sharp(Buffer.from(data)).metadata();
+        expect(metadata.hasAlpha).toBe(true);
+
+        const outfile = Bun.file("src/assets/generated/alphaChannelTestLOD"+lod.detailLevel+".png");
+        await Bun.write(outfile, data);
     }
 })
-/*
-test("Downscaling preserves alpha channnel", async () => {
-    expect(false, "This aint implemented yet").toBe(true);
-})
-*/
+

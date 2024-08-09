@@ -14,19 +14,21 @@
             }
     },
     "assets": [
-            {
-                    "id": 1,
-                    "useCase": "environment",
-                    "single": {
-                            "source": "https://http.cat/images/404.jpg",
-                            "width": 750,
-                            "height": 600
-                    }
+            {   
+                "type": "single",
+                "useCase": "environment",
+                "single": {
+                        "id": 1,
+                        "source": "https://http.cat/images/404.jpg",
+                        "width": 750,
+                        "height": 600
+                }
             },
             {
-                "id": 1,
+                "type": "collection",
                 "useCase": "environment",
                 "collection": {
+                        "id": 1,
                         "sources": [
                             {
                                 "transform": {
@@ -46,8 +48,45 @@
                                 "xScale": 1,
                                 "yScale": 1
                         },
-                        "name": "ImmaKillThatCat"
+                        "name": "SingleAssetCollection"
                 }
+        },
+        {
+            "type": "collection",
+            "useCase": "environment",
+            "collection": {
+                "id": 1,
+                "sources": [
+                {
+                        "transform": {
+                                "xOffset": 150,
+                                "yOffset": 0,
+                                "zIndex": 1,
+                                "xScale": 1,
+                                "yScale": 1
+                        }, 
+                        "graphicalAssetId": 1
+                },
+                {
+                        "transform": {
+                                "xOffset": -150,
+                                "yOffset": 0,
+                                "zIndex": 0,
+                                "xScale": 1,
+                                "yScale": 1
+                        }, 
+                        "graphicalAssetId": 1
+                }
+                ],
+                "transform": {
+                        "xOffset": 0,
+                        "yOffset": 0,
+                        "zIndex": 0,
+                        "xScale": 0.5,
+                        "yScale": 0.5
+                },
+                "name": "BakeTestCollection"
+            }
         }
     ]
 }

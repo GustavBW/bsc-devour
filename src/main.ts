@@ -1,4 +1,5 @@
 import { getCommandById } from './commands/commandRegistry.ts';
+import type { ApplicationContext } from './ts/metaTypes.ts';
 
 export const VERSION = "0.0.1";
 
@@ -17,7 +18,8 @@ if (command === undefined) {
   console.log('No such command: ' + funcIdentifier);
   process.exit(1);
 } else {
-  const { result, error } = await command.func(args.slice(1));
+  const context: ApplicationContext = {};
+  const { result, error } = await command.func(args.slice(1), context);
   if (error !== null) {
     console.log(error);
     process.exit(1);

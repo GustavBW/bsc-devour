@@ -2,7 +2,7 @@ import sharp from 'sharp';
 import type { ResErr } from '../ts/metaTypes.ts';
 import type { LODDTO } from '../ts/types.ts';
 
-const downscalableImageTypes = ["IMAGE/JPEG", "IMAGE/PNG", "IMAGE/WEBP", "IMAGE/AVIF", "IMAGE/GIF", "IMAGE/TIFF"].map(k => k.toLowerCase());
+const downscalableImageTypes = ["IMAGE/JPEG", "IMAGE/PNG", "IMAGE/WEBP", "IMAGE/GIF", "IMAGE/TIFF"].map(k => k.toLowerCase());
 /**
  * @author GustavBW
  * @since 0.0.1
@@ -45,8 +45,6 @@ const formatInstanceToType = (instance: sharp.Sharp, type: string): ResErr<sharp
         case "png": formattedInstance = instance.png({compressionLevel: 9}); break;
         case "image/webp":
         case "webp": formattedInstance = instance.webp({lossless: true}); break;
-        case "image/avif":
-        case "avif": formattedInstance = instance.avif({lossless: true}); break;
         case "image/gif":
         case "gif": formattedInstance = instance.gif(); break;
         case "image/tiff":

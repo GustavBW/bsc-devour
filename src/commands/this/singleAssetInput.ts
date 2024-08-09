@@ -1,13 +1,13 @@
 import { fetchBlobFromUrl } from '../../networking/blobFetcher.ts';
 import { readCompactTransformNotation, readThresholdArg, readUrlArg, readUseCaseArg } from '../../processing/cliInputProcessor.ts';
-import type { CLIFunc, ResErr } from '../../ts/metaTypes.ts';
+import type { ApplicationContext, CLIFunc, ResErr } from '../../ts/metaTypes.ts';
 import { UNIT_TRANSFORM, type AssetUseCase, type TransformDTO } from '../../ts/types.ts';
 
 /**
  * @author GustavBW
  * @since 0.0.1
  */
-const handleSingleAssetCLIInput = (args: string[]): Promise<ResErr<string>> => {
+const handleSingleAssetCLIInput = (args: string[], context: ApplicationContext): Promise<ResErr<string>> => {
     let url: string
     let useCase: AssetUseCase
     let transform: TransformDTO | null = UNIT_TRANSFORM
@@ -59,8 +59,8 @@ export const SINGLE_ASSET_INPUT_CMD: CLIFunc<string> = {
     documentation: `
     Devours a single asset from the given source.
     The source may be an http url or a filepath.
-    The transform is order "xOffset yOffset zIndex, xScale yScale"
+    The transform is in order "xOffset yOffset zIndex, xScale yScale"
     `,
-    abstractExample: "node devour this source=\"url\" useCase=\"icon\" | \"environment\" | \"player\" transform=\"1 1 0, 1 1\" treshold=\"kb's\"",
+    abstractExample: "bun devour this source=\"url\" useCase=\"icon\" | \"environment\" | \"player\" transform=\"1 1 0, 1 1\" treshold=\"kb's\" dsn=\"host port, user password, dbName, sslMode\"",
 }
 

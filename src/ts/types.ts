@@ -55,6 +55,9 @@ export type AssetEntry = {
  */
 export type AssetEntryDTO  ={
     transform: TransformDTO,
+    /**
+     * Id of existing graphical asset
+     */
     graphicalAssetId: number,
 }
 /**
@@ -99,58 +102,47 @@ export type GraphicAsset = {
 	height: number,
 	blob: Blob //Only available if "hasLODs" is false
 }
+// Define common fields
+interface IngestFileAssetBase {
+    useCase: AssetUseCase;
+}
 
+// Define specific variants
+export interface IngestFileSingleAsset extends IngestFileAssetBase {
+    type: "single";
+    single: {
+        id: number;
+        source?: string;
+        width?: number;
+        height?: number;
+    };
+}
+
+export interface IngestFileCollectionAsset extends IngestFileAssetBase {
+    type: "collection";
+    collection: {
+        id: number;
+        sources?: AssetEntryDTO[];
+        transform?: TransformDTO;
+        name?: string;
+    };
+}
+
+// Create the discriminated union
+export type IngestFileAssetEntry = IngestFileSingleAsset | IngestFileCollectionAsset;
+export type IngestFileSettings = {
+    version: string,
+    maxLOD: number,
+    LODThreshold: number,
+    allowedFailures: number,
+    dsn: DBDSN,
+}
 /**
  * @author GustavBW
  * @since 0.0.1
  */
 export type AutoIngestScript = {
-	settings: {
-		version: string | undefined, // assumes newest
-        /**
-         * uint32 - default 0 - any amount
-         */
-		maxLOD: number | undefined,
-        /**
-         * uint32 - default 0 - num. kilobytes
-         */
-		LODThreshhold: number | undefined,
-        /**
-         * int32 - default 0 - num. allowed failures
-         */
-		allowedFailures: number | undefined,
-		dsn: DBDSN,
-	},
-	assets: [
-		{
-			type: AssetType,
-			useCase: AssetUseCase,
-            /**
-             * if single
-             */
-			source: string | undefined, 			
-            /**
-             * uint32 - if single
-             */
-			width: number | undefined, 			
-            /**
-             * uint32 - if single
-             */
-			height: number | undefined, 
-
-            /**
-             * if collection
-             */
-			sources: AssetEntryDTO[] | undefined, 	
-             /**
-             * if collection
-             */
-			transform: TransformDTO | undefined,
-             /**
-             * if collection
-             */
-			name: string | undefined,
-		}
-	]
+	settings: IngestFileSettings,
+	assets: IngestFileAssetEntry[]
 }
 	

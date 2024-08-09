@@ -1,4 +1,4 @@
-import type { AssetUseCase, TransformDTO } from '../ts/types.ts';
+import type { AssetUseCase, DBDSN, TransformDTO } from '../ts/types.ts';
 import type { Error, ResErr } from '../ts/metaTypes.ts';
 import { isValidNumber, isValidUrl } from './typeChecker.ts';
 
@@ -31,7 +31,48 @@ export const readThresholdArg = (arg: string): ResErr<number> => {
     return {result: null, error: "Invalid threshold argument"};
 }
 
-export const readCompactTransformNotation = (arg: string): {result: TransformDTO | null, error: Error | null} => {
+export const readCompactDSNNotation = (arg: string): ResErr<DBDSN> => {
+    //Expect dsn="host port, user password, dbName, sslMode"
+    const parts = arg.split("=");
+    if (parts.length !== 2) {
+        return {result: null, error: "Invalid DSN notation"};
+    }
+    const dataPart = parts[1].replaceAll("\"", "");
+    const data = dataPart.split(",");
+    if (data.length !== 4) {
+        return {result: null, error: "Wrong number of comma separated segments in DSN"};
+    }
+    const hostAndPort = data[0].trim().split(" ");
+    if (hostAndPort.length !== 2) {
+        return {result: null, error: "Missing either host or port in DSN"};
+    }
+    const host = hostAndPort[0].trim();
+    const port = parseInt(hostAndPort[1].trim());
+    if (!isValidNumber(port)) {
+        return {result: null, error: "Invalid port in DSN"};
+    }
+    const userAndPassword = data[1].trim().split(" ");
+    if (userAndPassword.length !== 2) {
+        return {result: null, error: "Missing either user or password in DSN"};
+    }
+    const user = userAndPassword[0].trim();
+    const password = userAndPassword[1].trim();
+    const dbName = data[2].trim();
+    const sslMode = data[3].trim();
+    return {
+        result: {
+            host,
+            port,
+            user,
+            password,
+            dbName,
+            sslMode,
+        },
+        error: null,
+    }
+}
+
+export const readCompactTransformNotation = (arg: string): ResErr<TransformDTO> => {
     // Expect: transform="0 0 0, 0 0"
     const parts = arg.split('=');
     if (parts.length !== 2) {

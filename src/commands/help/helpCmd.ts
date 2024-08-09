@@ -1,4 +1,4 @@
-import type { CLIFunc, Error, ResErr } from '../../ts/metaTypes.ts';
+import type { ApplicationContext, CLIFunc, Error, ResErr } from '../../ts/metaTypes.ts';
 import { getCommands } from '../commandRegistry.ts';
 import { VERSION } from '../../main.ts';
 
@@ -8,7 +8,11 @@ import { VERSION } from '../../main.ts';
  */
 export const formatTopLevelHelpString = (): string => {
     const availableCommands = getCommands();
-    let helpString = "Devour v. " + VERSION + "\nAvailable commands:\n";
+    let helpString = "Devour v. " + VERSION + "\n";
+	
+	helpString += "Supported image formats: png, jpeg, tiff, gif & webp\n\n";
+	helpString += "Available commands:\n";
+
     for (const command of availableCommands) {
         helpString += `\t${command.identifier}: ${command.abstractExample}\n`;
         helpString += `\t\t${command.documentation}\n`;
@@ -21,7 +25,7 @@ export const formatTopLevelHelpString = (): string => {
  * @author GustavBW
  * @since 0.0.1
  */
-export const getSubCategoryHelpString = (args: string[]): Promise<ResErr<string>> => {
+export const getSubCategoryHelpString = (args: string[], context: ApplicationContext): Promise<ResErr<string>> => {
     const subcategory = args[0];
     
     switch (subcategory) {
@@ -48,7 +52,7 @@ export const HELP_CMD: CLIFunc<string> = {
     Prints this message.
     Available sub-categories are:
         ingestFileFormat`,
-    abstractExample: "node devour help <sub-category>",
+    abstractExample: "bun devour help <sub-category>",
 }
 
 /**
