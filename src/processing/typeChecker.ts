@@ -1,12 +1,12 @@
-import type { FieldValidatorFunction, TypeDeclaration } from "../ts/metaTypes";
-import { Type } from "../ts/metaTypes";
+import type { FieldValidatorFunction, ImageFileType, ImageMIMEType, ResErr, TypeDeclaration } from "../ts/metaTypes";
+import { IMAGE_TYPES, Type } from "../ts/metaTypes";
 
 export const isValidFloat = (arg: any): boolean => {
     return isValidNumber(Number.parseFloat(arg));
 }
 
 export const isValidInteger = (arg: any): boolean => {
-    const num = Number(arg); // Convert the argument to a number
+    const num = Number(arg);
     return isValidNumber(num) && Number.isInteger(num);
 }
 
@@ -16,6 +16,27 @@ export const isValidNumber = (arg: number): boolean => {
 
 export const isValidUrl = (url: string): boolean => {
     return url.length > 1;
+}
+
+/**
+ * @since 0.0.1
+ * @author GustavBW
+ * @param type type observed
+ * @param expectedMIMEType type expected
+ * @returns the corresponding ImageMIMEType if the type conforms to the expectedMIMEType, else an error
+ */
+export const findConformingMIMEType = (type: string): ResErr<ImageMIMEType> => {
+    let correspondingMIMEType: ImageMIMEType | null = null;
+    for (const key of Object.keys(IMAGE_TYPES)) {
+        if (IMAGE_TYPES[key].includes(type as (ImageMIMEType | ImageFileType))) {
+            correspondingMIMEType = IMAGE_TYPES[key][0];
+            break;
+        }
+    }
+    if (correspondingMIMEType === null) {
+        return { result: null, error: `No corresponding MIME type found for type: ${type}` };
+    }
+    return { result: correspondingMIMEType, error: null };
 }
 
 /**

@@ -1,5 +1,5 @@
 import {test, expect} from "bun:test";
-import { conformsToType, optionalType, typeUnionOR, validateSimpleType } from "./typeChecker";
+import { conformsToType, findConformingMIMEType, optionalType, typeUnionOR, validateSimpleType } from "./typeChecker";
 import { Type } from "../ts/metaTypes";
 
 
@@ -186,4 +186,23 @@ test("conformsToType should work with an optional type union", async () => {
     expect(typeErrB).toBeNull();
     const typeErrC = conformsToType(objectC, typeDeclaration);
     expect(typeErrC).toBeNull();
+});
+
+//Tests of findConformingMIMEType
+test("findConformingMIMEType should return the correct MIME type if any", async () => {
+    const jpegTypeNames = ["jpeg", "jpg", "image/jpeg", "image/jpg"];
+    for (const name of jpegTypeNames) {
+        const {result, error} = findConformingMIMEType(name);
+        expect(error).toBeNull();
+        expect(result).toBe("image/jpeg");
+    }
+});
+
+test("findConformingMIMEType should return an error if no MIME type is found", async () => {
+    const invalidCases = ["image/invalid", "invalid", "image/invalidType", null, undefined, ""];
+    for (const name of invalidCases) {
+        const {result, error} = findConformingMIMEType(name as string);
+        expect(error).not.toBeNull();
+        expect(result).toBeNull();
+    }
 });

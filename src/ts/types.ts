@@ -1,5 +1,5 @@
 import { optionalType, typeUnionOR } from "../processing/typeChecker";
-import { Type, type TypeDeclaration } from "./metaTypes";
+import { Type, type ImageMIMEType, type TypeDeclaration } from "./metaTypes";
 
 /**
  * CLI shortHand: "xOff yOff zIndex, xScale yScale", example: transform="0f 0f 0, 0f 0f"
@@ -111,8 +111,6 @@ export const DBDSN_TYPEDECL: TypeDeclaration = {
     dbName: Type.STRING,
     sslMode: optionalType(Type.STRING),
 }
-
-export type ImageMIMEType = "image/jpeg" | "image/jpg" | "image/avif" | "image/tiff" | "image/webp" | "image/png" | "image/gif" | "image/bmp" | "image/svg+xml";
 
 export type GraphicAsset = {
 	id: number,

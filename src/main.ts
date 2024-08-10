@@ -1,5 +1,5 @@
 import { getCommandById } from './commands/commandRegistry.ts';
-import { initializeLogger, onApplicationShutdown } from './logging/simpleLogger.ts';
+import { initializeLogger, onApplicationShutdown as loggerShutdown } from './logging/simpleLogger.ts';
 import type { ApplicationContext } from './ts/metaTypes.ts';
 
 export const VERSION = "0.0.1";
@@ -18,7 +18,7 @@ const shutdown = async () => {
   if (context !== undefined) {
     context.logger.log("[main] Shutting down");
   }
-  await onApplicationShutdown();
+  await loggerShutdown();
   process.exit(0);
 }
 
