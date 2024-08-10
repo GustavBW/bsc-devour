@@ -79,7 +79,8 @@ test("A 160 kb image with threshold 10kb should be downscaled 4 times", async ()
     for (const lod of res.result!) {
         const outfile = Bun.file("src/assets/generated/testImageLOD"+lod.detailLevel+".png");
         const data = await lod.blob.arrayBuffer();
-        Bun.write(outfile, data);
+        const bytesWritten = await Bun.write(outfile, data);
+        expect(bytesWritten).toEqual(data.byteLength);
     }
 })
 
@@ -121,7 +122,8 @@ test("Downscaling preserves alpha channnel", async () => {
         expect(metadata.hasAlpha).toBe(true);
 
         const outfile = Bun.file("src/assets/generated/alphaChannelTestLOD"+lod.detailLevel+".png");
-        await Bun.write(outfile, data);
+        const bytesWritten = await Bun.write(outfile, data);
+        expect(bytesWritten).toEqual(data.byteLength);
     }
 })
 

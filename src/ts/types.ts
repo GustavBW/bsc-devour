@@ -1,3 +1,4 @@
+import { optionalType, Type, type TypeDeclaration } from "./metaTypes";
 
 /**
  * CLI shortHand: "xOff yOff zIndex, xScale yScale", example: transform="0f 0f 0, 0f 0f"
@@ -32,6 +33,13 @@ export type Transform = {
 	"yScale": number, 
 }
 export type TransformDTO = Omit<Transform, "id">;
+export const TRANSFORMDTO_TYPEDECL: TypeDeclaration = {
+    xOffset: Type.FLOAT,
+    yOffset: Type.FLOAT,
+    zIndex: Type.INTEGER,
+    xScale: Type.FLOAT,
+    yScale: Type.FLOAT,
+}
 export const UNIT_TRANSFORM: Transform = { 
     id: undefined,
     xOffset: 0,
@@ -59,6 +67,10 @@ export type AssetEntryDTO  ={
      * Id of existing graphical asset
      */
     graphicalAssetId: number,
+}
+export const ASSETENTRYDTO_TYPEDECL: TypeDeclaration = {
+    transform: Type.OBJECT,
+    graphicalAssetId: Type.INTEGER,
 }
 /**
  * Represents some graphical asset in varying levels of detail (downscaled) 
@@ -90,6 +102,14 @@ export type DBDSN = {
     dbName: string,
     sslMode: string
 }
+export const DBDSN_TYPEDECL: TypeDeclaration = {
+    host: Type.STRING,
+    port: Type.INTEGER,
+    user: Type.STRING,
+    password: Type.STRING,
+    dbName: Type.STRING,
+    sslMode: optionalType(Type.STRING),
+}
 
 export type ImageMIMEType = "image/jpeg" | "image/jpg" | "image/avif" | "image/tiff" | "image/webp" | "image/png" | "image/gif" | "image/bmp" | "image/svg+xml";
 
@@ -102,30 +122,61 @@ export type GraphicAsset = {
 	height: number,
 	blob: Blob //Only available if "hasLODs" is false
 }
+export const GRAPHICASSET_TYPEDECL: TypeDeclaration = {
+    id: Type.INTEGER,
+    useCase: Type.STRING,
+    type: Type.STRING,
+    hasLODs: Type.BOOLEAN,
+    width: Type.INTEGER,
+    height: Type.INTEGER,
+    blob: Type.OBJECT,
+}
 // Define common fields
 interface IngestFileAssetBase {
     useCase: AssetUseCase;
+    id: number;
 }
 
 // Define specific variants
 export interface IngestFileSingleAsset extends IngestFileAssetBase {
     type: "single";
     single: {
-        id: number;
-        source?: string;
+        source: string;
         width?: number;
         height?: number;
     };
+}
+export const INGESTFILESINGLEASSET_TYPEDECL: TypeDeclaration = {
+    type: Type.STRING,
+    useCase: Type.STRING,
+    id: Type.INTEGER,
+    single: Type.OBJECT,
+}
+
+export type IngestFileCollectionField = {
+    sources: AssetEntryDTO[],
+    transform?: TransformDTO,
+    name?: string,
+}
+export const INGESTFILECOLLECTIONFIELD_TYPEDECL: TypeDeclaration = {
+    sources: Type.ARRAY,
+    transform: optionalType(Type.OBJECT),
+    name: optionalType(Type.STRING),
 }
 
 export interface IngestFileCollectionAsset extends IngestFileAssetBase {
     type: "collection";
     collection: {
-        id: number;
-        sources?: AssetEntryDTO[];
+        sources: AssetEntryDTO[];
         transform?: TransformDTO;
         name?: string;
     };
+}
+export const INGESTFILECOLLECTIONASSET_TYPEDECL: TypeDeclaration = {
+    type: Type.STRING,
+    useCase: Type.STRING,
+    id: Type.INTEGER,
+    collection: Type.OBJECT,
 }
 
 // Create the discriminated union

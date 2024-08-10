@@ -1,7 +1,7 @@
-import { readUrlArg } from '../../processing/cliInputProcessor.ts';
+import { readCompactDSNNotation, readCompactDSNNotationRaw, readCompactTransformNotation, readCompactTransformNotationRaw, readUrlArg } from '../../processing/cliInputProcessor.ts';
+import { conformsToType } from '../../processing/typeChecker.ts';
 import type { ApplicationContext, CLIFunc, ResErr } from '../../ts/metaTypes.ts';
-import type { AutoIngestScript, IngestFileAssetEntry, IngestFileCollectionAsset, IngestFileSingleAsset } from '../../ts/types.ts';
-
+import { ASSETENTRYDTO_TYPEDECL, DBDSN_TYPEDECL, INGESTFILECOLLECTIONASSET_TYPEDECL, INGESTFILECOLLECTIONFIELD_TYPEDECL, INGESTFILESINGLEASSET_TYPEDECL, TRANSFORMDTO_TYPEDECL, type AutoIngestScript, type DBDSN, type IngestFileAssetEntry, type IngestFileCollectionAsset, type IngestFileSingleAsset, type TransformDTO } from '../../ts/types.ts';
 
 /**
  * @author GustavBW
@@ -23,10 +23,15 @@ const handleIngestFileInput = async (args: string[], context: ApplicationContext
         return {result: null, error: "No path argument provided"};
     }
 
-    const {result, error} = await parseIngestFile(url); if (error !== null) {
+    const {result, error} = await readIngestFile(url); if (error !== null) {
         return {result: null, error: error};
     }
-    console.log(result);
+    const verificationResult = verifyIngestFile(result); if (verificationResult.error !== null) {
+        return {result: null, error: verificationResult.error};
+    }
+    const ingestScript = verificationResult.result;
+
+    console.log(ingestScript);
 
     return {result: null, error: "Not implemented yet."};
 }
@@ -48,71 +53,104 @@ export const INGEST_FILE_INPUT_CMD: CLIFunc<string> = {
     abstractExample: "bun devour everything path=\"url\"",
 }
 
-const validateCollectionAssetEntry = (asset: IngestFileCollectionAsset, entryNum: number): string | null => {
-    if (asset.collection === undefined || asset.collection === null) {
-        return "No collection field found in collection asset nr:" + entryNum;
+export const assureUniformTransform = (maybeTransform: string | TransformDTO): ResErr<TransformDTO> => {
+    if (typeof maybeTransform === "string") {
+        const compactNotationRes = readCompactTransformNotationRaw(maybeTransform);
+        if (compactNotationRes.error !== null) {
+            return {result: null, error: compactNotationRes.error};
+        }
+        return {result: compactNotationRes.result, error: null};
+    } else if (typeof maybeTransform === "object") {
+        const typeError = conformsToType(maybeTransform, TRANSFORMDTO_TYPEDECL);
+        if (typeError !== null) {
+            return {result: null, error: "Transform field does not conform to type: " + typeError};
+        }
+        return {result: maybeTransform, error: null};
+    } else {
+        return {result: null, error: "Transform field is not compact CLI notation (string) or an object."};
     }
-    if (asset.collection.id === undefined || asset.collection.id === null) {
-        return "No id field found in collection asset nr:" + entryNum;
+}
+
+export const validateCollectionAssetEntry = (asset: IngestFileCollectionAsset, entryNum: number): string | null => {
+    const topLevelTypeError = conformsToType(asset, INGESTFILECOLLECTIONASSET_TYPEDECL);
+    if (topLevelTypeError != null) {
+        return "Type error in collection asset nr " + entryNum + ": " + topLevelTypeError;
     }
-    if (asset.collection.sources === undefined || asset.collection.sources === null) {
-        return "No sources field found in collection asset nr:" + entryNum;
+
+    const collectionFieldTypeError = conformsToType(asset.collection, INGESTFILECOLLECTIONFIELD_TYPEDECL);
+    if (collectionFieldTypeError != null) {
+        return "Type error in collection field on collection asset nr " + entryNum + ": " + collectionFieldTypeError;
     }
-    if (!Array.isArray(asset.collection.sources) || asset.collection.sources.length === 0) {
-        return "Sources field in collection asset nr:" + entryNum + " is not an array or is an empty array.";
+
+    for (let i = 0; i < asset.collection.sources.length; i++) {
+        const source = asset.collection.sources[i];
+        const sourceTypeError = conformsToType(source, ASSETENTRYDTO_TYPEDECL);
+        if (sourceTypeError !== null) {
+            return "Type error in source nr: " + i + " in collection asset nr: " + entryNum + ": " + sourceTypeError;
+        }
+        const uniformTransformAttempt = assureUniformTransform(source.transform);
+        if (uniformTransformAttempt.error !== null) {
+            return uniformTransformAttempt.error;
+        }
+        source.transform = uniformTransformAttempt.result;
+    }
+
+    return null;
+}
+
+export const validateSingleAssetEntry = (asset: IngestFileSingleAsset, entryNum: number): string | null => {
+    const typeError = conformsToType(asset.single, INGESTFILESINGLEASSET_TYPEDECL);
+    if (typeError != null) {
+        return "Type error in single asset nr:" + entryNum + ":\n\t" + typeError;
     }
     return null;
 }
 
-const validateSingleAssetEntry = (asset: IngestFileSingleAsset, entryNum: number): string | null => {
-    if (asset.single === undefined || asset.single === null) {
-        return "No single field found in single asset nr:" + entryNum;
+export const assureUniformDSN = (dsn: string | DBDSN): ResErr<DBDSN> => {
+    if (typeof dsn === "string") {
+        const compactNotationRes = readCompactDSNNotationRaw(dsn);
+        if (compactNotationRes.error !== null) {
+            return {result: null, error: compactNotationRes.error};
+        }
+        return {result: compactNotationRes.result, error: null};
+    } else if (typeof dsn === "object") {
+        const typeError = conformsToType(dsn, DBDSN_TYPEDECL);
+        if (typeError !== null) {
+            return {result: null, error: "DSN object does not conform to expected type:\n\t" + typeError};
+        }
+        if (dsn.sslMode === undefined || dsn.sslMode === null) {
+            dsn.sslMode = "disable";
+        }
+        return {result: dsn, error: null};
+    } else {
+        return {result: null, error: "DSN field is not compact CLI notation (\"host port, username password, dbName, sslMode\") or an object."};
     }
-    if (asset.single.id === undefined || asset.single.id === null) {
-        return "No id field found in single asset nr:" + entryNum ;
-    }
-    if (asset.single.source === undefined || asset.single.source === null) {
-        return "No source field found in single asset nr:" + entryNum;
-    }
-    return null;
 }
-/**
- * Read the file as a string. Parse the json. Then check the type
- * @author GustavBW
- * @since 0.0.1
- */
-const parseIngestFile = async (url: string): Promise<ResErr<AutoIngestScript>> => {
-    const file = Bun.file(url);
-    const fileExists = await file.exists();
-    if (!fileExists) {
-        return { result: null, error: "File: \""+url+"\" does not exist. WD: " + import.meta.dir };
-    }
-    const fileContents = await file.text();
-    let ingestScript: AutoIngestScript;
-    try {
-        ingestScript = JSON.parse(fileContents);
-    } catch (error) {
-        return { result: null, error: "Failed to parse IngestFile: " + error };
-    }
 
-    if (ingestScript.settings === undefined || ingestScript.settings === null) {
+export const verifyIngestFile = (rawFile: any): ResErr<AutoIngestScript> => {
+    if (rawFile.settings === undefined || rawFile.settings === null) {
         return { result: null, error: "No settings field and corresponding object found in ingest file." };
     }
 
-    if (ingestScript.settings.dsn === undefined || ingestScript.settings.dsn === null) {
+    if (rawFile.settings.dsn === undefined || rawFile.settings.dsn === null) {
         return { result: null, error: "No dsn field found in ingest file under settings." };
     }
+    const uniformDSNAttempt = assureUniformDSN(rawFile.settings.dsn);
+    if (uniformDSNAttempt.error !== null) {
+        return { result: null, error: uniformDSNAttempt.error}
+    }
+    rawFile.settings.dsn = uniformDSNAttempt.result;
 
-    if (ingestScript.assets === undefined || ingestScript.assets === null) {
+    if (rawFile.assets === undefined || rawFile.assets === null) {
         return { result: null, error: "No assets field and corresponding object found in ingest file." };
     }
 
-    if (!Array.isArray(ingestScript.assets) || ingestScript.assets.length === 0) {
+    if (!Array.isArray(rawFile.assets) || rawFile.assets.length === 0) {
         return { result: null, error: "Assets field in ingest file is not an array or is an empty array." };
     }
 
-    for (let i = 0; i < ingestScript.assets.length; i++) {
-        const asset = ingestScript.assets[i];
+    for (let i = 0; i < rawFile.assets.length; i++) {
+        const asset = rawFile.assets[i];
         if (asset.type === undefined || asset.type === null) {
             return { result: null, error: "No type field found in asset nr:" + i };
         }
@@ -136,5 +174,26 @@ const parseIngestFile = async (url: string): Promise<ResErr<AutoIngestScript>> =
         }
     }
 
-    return {result: ingestScript, error: null};
+    return {result: rawFile as AutoIngestScript, error: null};
+}
+/**
+ * Read the file as a string. Then parse as JSON. No type checks so far
+ * @author GustavBW
+ * @since 0.0.1
+ */
+const readIngestFile = async (url: string): Promise<ResErr<any>> => {
+    const file = Bun.file(url);
+    const fileExists = await file.exists();
+    if (!fileExists) {
+        return { result: null, error: "File: \""+url+"\" does not exist. WD: " + import.meta.dir };
+    }
+    const fileContents = await file.text();
+    let ingestScript: any;
+    try {
+        ingestScript = JSON.parse(fileContents);
+    } catch (error) {
+        return { result: null, error: "Failed to parse IngestFile: " + error };
+    }
+
+    return { result: ingestScript, error: null };
 }

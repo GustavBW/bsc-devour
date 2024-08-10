@@ -31,14 +31,14 @@ export const readThresholdArg = (arg: string): ResErr<number> => {
     return {result: null, error: "Invalid threshold argument"};
 }
 
-export const readCompactDSNNotation = (arg: string): ResErr<DBDSN> => {
-    //Expect dsn="host port, user password, dbName, sslMode"
-    const parts = arg.split("=");
-    if (parts.length !== 2) {
-        return {result: null, error: "Invalid DSN notation"};
-    }
-    const dataPart = parts[1].replaceAll("\"", "");
-    const data = dataPart.split(",");
+/**
+ * Expects: host port, user password, dbName, sslMode
+ * @since 0.0.1
+ * @author GustavBW
+ * @returns Either a DBDSN or an error
+ */
+export const readCompactDSNNotationRaw = (arg: string): ResErr<DBDSN> => {
+    const data = arg.split(",");
     if (data.length !== 4) {
         return {result: null, error: "Wrong number of comma separated segments in DSN"};
     }
@@ -72,17 +72,30 @@ export const readCompactDSNNotation = (arg: string): ResErr<DBDSN> => {
     }
 }
 
-export const readCompactTransformNotation = (arg: string): ResErr<TransformDTO> => {
-    // Expect: transform="0 0 0, 0 0"
-    const parts = arg.split('=');
+/**
+ * Expects: dsn="host port, user password, dbName, sslMode"
+ * @since 0.0.1
+ * @author GustavBW
+ * @returns Either a DBDSN or an error
+ */
+export const readCompactDSNNotation = (arg: string): ResErr<DBDSN> => {
+    //Expect dsn="host port, user password, dbName, sslMode"
+    const parts = arg.split("=");
     if (parts.length !== 2) {
-        return {result: null, error: "Invalid transform notation"};
+        return {result: null, error: "Invalid DSN notation"};
     }
     const dataPart = parts[1].replaceAll("\"", "");
-    if (dataPart.length <= 9) {
-        return {result: null, error: "Invalid transform data"};
-    }
-    const [xyzStr, scaleStr] = dataPart.split(',');
+    return readCompactDSNNotationRaw(dataPart);
+}
+
+/**
+ * Expects: 0 0 0, 0 0
+ * @since 0.0.1
+ * @author GustavBW
+ * @returns Either a TransformDTO or an error
+ */
+export const readCompactTransformNotationRaw = (arg: string): ResErr<TransformDTO> => {
+    const [xyzStr, scaleStr] = arg.split(',');
     const xyz = xyzStr.trim().split(" ");
     if (xyz.length !== 3) {
         return {result: null, error: "Invalid transform xyz component"};
@@ -121,4 +134,22 @@ export const readCompactTransformNotation = (arg: string): ResErr<TransformDTO> 
         },
         error: null,
     }
+}
+/**
+ * Expects: transform="0 0 0, 0 0"
+ * @since 0.0.1
+ * @author GustavBW
+ * @returns Either a TransformDTO or an error
+ */
+export const readCompactTransformNotation = (arg: string): ResErr<TransformDTO> => {
+    // Expect: transform="0 0 0, 0 0"
+    const parts = arg.split('=');
+    if (parts.length !== 2) {
+        return {result: null, error: "Invalid transform notation"};
+    }
+    const dataPart = parts[1].replaceAll("\"", "");
+    if (dataPart.length <= 9) {
+        return {result: null, error: "Invalid transform data"};
+    }
+    return readCompactTransformNotationRaw(dataPart);
 }
