@@ -1,5 +1,3 @@
-import type { DBConnection } from "../networking/dbConn";
-import { validateType } from "../processing/typeChecker";
 
 /**
  * @author GustavBW
@@ -38,21 +36,3 @@ export type FieldValidatorFunction = (valueOfField: any) => boolean;
 export type TypeDeclaration = {
     [key: string]: Type | FieldValidatorFunction
 }
-
-export const optionalType = (validator: Type | FieldValidatorFunction): FieldValidatorFunction => {
-    const wrappedValidator = (value: any) => {
-        if (value === undefined || value === null) {
-            return true; // Accept undefined or null as valid for optional fields
-        }
-        if (typeof validator === "function") {
-            return validator(value);
-        }
-        return validateType(validator, value);
-    };
-
-    if (typeof validator !== "function") {
-        wrappedValidator.typeString = validator + " | undefined | null";
-    }
-
-    return wrappedValidator;
-};

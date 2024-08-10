@@ -1,7 +1,7 @@
 import { readCompactDSNNotation, readCompactDSNNotationRaw, readCompactTransformNotation, readCompactTransformNotationRaw, readUrlArg } from '../../processing/cliInputProcessor.ts';
 import { conformsToType } from '../../processing/typeChecker.ts';
 import type { ApplicationContext, CLIFunc, ResErr } from '../../ts/metaTypes.ts';
-import { ASSETENTRYDTO_TYPEDECL, DBDSN_TYPEDECL, INGESTFILECOLLECTIONASSET_TYPEDECL, INGESTFILECOLLECTIONFIELD_TYPEDECL, INGESTFILESINGLEASSET_TYPEDECL, TRANSFORMDTO_TYPEDECL, type AutoIngestScript, type DBDSN, type IngestFileAssetEntry, type IngestFileCollectionAsset, type IngestFileSingleAsset, type TransformDTO } from '../../ts/types.ts';
+import { ASSETENTRYDTO_TYPEDECL, DBDSN_TYPEDECL, INGESTFILECOLLECTIONASSET_TYPEDECL, INGESTFILECOLLECTIONFIELD_TYPEDECL, INGESTFILESINGLEASSET_TYPEDECL, INGESTFILESINGLEASSETFIELD_TYPEDECL, TRANSFORMDTO_TYPEDECL, type AutoIngestScript, type DBDSN, type IngestFileAssetEntry, type IngestFileCollectionAsset, type IngestFileSingleAsset, type TransformDTO } from '../../ts/types.ts';
 
 /**
  * @author GustavBW
@@ -101,8 +101,14 @@ export const validateCollectionAssetEntry = (asset: IngestFileCollectionAsset, e
 export const validateSingleAssetEntry = (asset: IngestFileSingleAsset, entryNum: number): string | null => {
     const typeError = conformsToType(asset.single, INGESTFILESINGLEASSET_TYPEDECL);
     if (typeError != null) {
-        return "Type error in single asset nr:" + entryNum + ":\n\t" + typeError;
+        return "Type error in single asset nr " + entryNum + ": " + typeError;
     }
+
+    const typeErrorOfSingleField = conformsToType(asset, INGESTFILESINGLEASSETFIELD_TYPEDECL);
+    if (typeErrorOfSingleField !== null) {
+        return "Type error in single field of single asset nr " + entryNum + ": " + typeErrorOfSingleField
+    }
+
     return null;
 }
 

@@ -1,4 +1,4 @@
-import type { TypeDeclaration } from "../ts/metaTypes";
+import type { FieldValidatorFunction, TypeDeclaration } from "../ts/metaTypes";
 import { Type } from "../ts/metaTypes";
 
 export const isValidFloat = (arg: any): boolean => {
@@ -6,7 +6,8 @@ export const isValidFloat = (arg: any): boolean => {
 }
 
 export const isValidInteger = (arg: any): boolean => {
-    return isValidNumber(Number.parseInt(arg));
+    const num = Number(arg); // Convert the argument to a number
+    return isValidNumber(num) && Number.isInteger(num);
 }
 
 export const isValidNumber = (arg: number): boolean => {
@@ -41,7 +42,7 @@ export const conformsToType = <T>(object: T, typeDecl: TypeDeclaration): string 
                 }
             } else if (typeof expectedType === "string") {
                 // If the type declaration is a Type enum, check the value's type.
-                if (!validateType(expectedType, value)) {
+                if (!validateSimpleType(expectedType, value)) {
                     return `Field ${key} is expected to exist and be of type "${expectedType}" but had value: ${value}`;
                 }
             }
@@ -50,7 +51,7 @@ export const conformsToType = <T>(object: T, typeDecl: TypeDeclaration): string 
     return null; // All fields conform to the expected types.
 };
 
-export const validateType = (expectedType: Type, value: any): boolean => {
+export const validateSimpleType = (expectedType: Type, value: any): boolean => {
     switch (expectedType) {
         case Type.STRING:
             return typeof value === "string";
@@ -64,7 +65,48 @@ export const validateType = (expectedType: Type, value: any): boolean => {
             return typeof value === "object" && !Array.isArray(value) && value !== null;
         case Type.ARRAY:
             return Array.isArray(value);
+        case null:
+            return value === null;
+        case undefined:
+            return value === undefined;
         default:
             return false;
     }
 };
+
+export const optionalType = (validator: Type | FieldValidatorFunction): FieldValidatorFunction => {
+    const wrappedValidator = (value: any) => {
+        if (value === undefined || value === null) {
+            return true; // Accept undefined or null as valid for optional fields
+        }
+        if (typeof validator === "function") {
+            return validator(value);
+        }
+        return validateSimpleType(validator, value);
+    };
+
+    if (typeof validator !== "function") {
+        wrappedValidator.typeString = validator + "?";
+    }
+
+    return wrappedValidator;
+};
+
+export const typeUnionOR = (...validators: (Type | FieldValidatorFunction)[]): FieldValidatorFunction => {
+    const wrappedValidator = (value: any) => {
+        for (const validator of validators) {
+            if (typeof validator === "function") {
+                if (validator(value)) {
+                    return true;
+                }
+            } else if (validateSimpleType(validator, value)) {
+                return true;
+            }
+        }
+        return false;
+    };
+
+    wrappedValidator.typeString = validators.map(v => typeof v === "function" ? "function" : v).join(" | ");
+
+    return wrappedValidator;
+}

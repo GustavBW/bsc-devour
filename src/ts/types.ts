@@ -1,4 +1,5 @@
-import { optionalType, Type, type TypeDeclaration } from "./metaTypes";
+import { optionalType, typeUnionOR } from "../processing/typeChecker";
+import { Type, type TypeDeclaration } from "./metaTypes";
 
 /**
  * CLI shortHand: "xOff yOff zIndex, xScale yScale", example: transform="0f 0f 0, 0f 0f"
@@ -152,6 +153,16 @@ export const INGESTFILESINGLEASSET_TYPEDECL: TypeDeclaration = {
     id: Type.INTEGER,
     single: Type.OBJECT,
 }
+export type IngestFileSingleAssetField = {
+    source: string,
+    width?: number,
+    height?: number,
+}
+export const INGESTFILESINGLEASSETFIELD_TYPEDECL: TypeDeclaration = {
+    source: Type.STRING,
+    width: optionalType(Type.INTEGER),
+    height: optionalType(Type.INTEGER),
+}
 
 export type IngestFileCollectionField = {
     sources: AssetEntryDTO[],
@@ -160,7 +171,7 @@ export type IngestFileCollectionField = {
 }
 export const INGESTFILECOLLECTIONFIELD_TYPEDECL: TypeDeclaration = {
     sources: Type.ARRAY,
-    transform: optionalType(Type.OBJECT),
+    transform: optionalType(typeUnionOR(Type.OBJECT, Type.STRING)),
     name: optionalType(Type.STRING),
 }
 
