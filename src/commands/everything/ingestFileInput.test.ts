@@ -115,6 +115,7 @@ test("validateSingleAssetEntry should return null on valid input", async () => {
         id: 1,
         single: {
             source: "https://http.cat/images/100.jpg",
+            alias: "YallNeverGuessThisOne",
             width: 100,
             height: 100,
         },
@@ -128,6 +129,7 @@ test("validateSingleAssetEntry should return null on valid input", async () => {
         id: 1,
         single: {
             source: "https://http.cat/images/100.jpg",
+            alias: "YallNeverGuessThisOneEither",
         },
     };
     const error2 = validateSingleAssetEntry(singleAsset2, 0);

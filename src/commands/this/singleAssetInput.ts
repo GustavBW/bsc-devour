@@ -1,6 +1,8 @@
 import { fetchBlobFromUrl } from '../../networking/blobFetcher.ts';
 import { readCompactDSNNotation, readCompactTransformNotation, readThresholdArg, readUrlArg, readUseCaseArg } from '../../processing/cliInputProcessor.ts';
-import type { ApplicationContext, CLIFunc, ResErr } from '../../ts/metaTypes.ts';
+import { getMetaDataAsIfImage } from '../../processing/imageUtil.ts';
+import { findConformingMIMEType } from '../../processing/typeChecker.ts';
+import { IMAGE_TYPES, type ApplicationContext, type CLIFunc, type ResErr } from '../../ts/metaTypes.ts';
 import { UNIT_TRANSFORM, type AssetUseCase, type DBDSN, type TransformDTO } from '../../ts/types.ts';
 
 /**
@@ -66,8 +68,17 @@ const handleSingleAssetCLIInput = async (args: string[], context: ApplicationCon
         useCase = "environment";
     }
     const {result, error} = await fetchBlobFromUrl(url, context); if (error !== null) {
-        context.logger.log(`Error fetching blob: ${error}`);
+        context.logger.log(`Error fetching blob from url ${url}: ${error}`);
         return {result: null, error: error};
+    }
+    const contentTypeRes = findConformingMIMEType(result.type); if (contentTypeRes.error !== null) {
+        context.logger.log(`Error determining MIME type for blob: ${contentTypeRes.error}`);
+        return {result: null, error: contentTypeRes.error};
+    }
+    if (contentTypeRes.result! === IMAGE_TYPES.svg[0]) {
+        if (transform === UNIT_TRANSFORM || (transform.xScale <= 1 && transform.yScale <= 1)) {
+            return {result: null, error: "SVGs must have a transform with non 1 xScale and yScale as they make up the needed width and height properties in this case."};
+        }
     }
 
 

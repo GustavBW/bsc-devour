@@ -3,6 +3,8 @@ Internal CLI-based asset pipeline for BSC
 
 Version: 0.0.1
 
+c/o: GustavBW & KlaesSoerensen
+
 ## How to build
 At project root run:
 ```bash

@@ -1,5 +1,6 @@
 import type { BunFile } from "bun";
 import type { ApplicationContext, ResErr } from "../ts/metaTypes";
+import { findConformingMIMEType } from "../processing/typeChecker";
 
 const contentTypeHeaderNames = ["content-type", "Content-Type", "Content-type", "Content-Type", "content-Type", "CONTENT-TYPE", "ContentType", "contentType"];
 const getTypeFromResponseHeaders = (response: Response, blob: Blob): ResErr<string> => {
@@ -60,8 +61,12 @@ export const fetchBlobOverHTTP = async (url: string, context?: ApplicationContex
                     return { result: null, error: "Could not determine content type: " + typeAttemptURL.error}; 
                 }
             }
+            const {result, error} = findConformingMIMEType(discoveredType); if (error !== null) {
+                context?.logger.log(`Error determining corresponding MIME type for discovered type ${discoveredType}: ${error}`);
+                return { result: null, error: error };
+            }
 
-            blob = new Blob([blob], { type: discoveredType });
+            blob = new Blob([blob], { type: result });
         }
         context?.logger.log(`Blob fetched successfully of type: ${blob.type}`);
         return { result: blob, error: null };
@@ -73,12 +78,21 @@ export const fetchBlobOverHTTP = async (url: string, context?: ApplicationContex
 
 export const fetchBlobFromFile = async (url: string, init?: boolean, context?: ApplicationContext): Promise<ResErr<Blob>> => {
     context?.logger.log(`Fetching blob from file: ${url}`);
-    const file: BunFile = Bun.file(url);
-    const fileExists = await file.exists();
+    let file: BunFile | Blob = Bun.file(url);
+    const fileExists = await (file as BunFile).exists();
     if (!fileExists) {
         context?.logger.log(`File does not exist: ${url}`);
         return { result: null, error: "File does not exist" };
     }
+    const {result, error} = findConformingMIMEType(file.type); if (error !== null) {
+        context?.logger.log(`Error determining MIME type for file ${url}: ${error}`);
+        return { result: null, error: error };
+    }
+    if (result !== file.type) {
+        context?.logger.log(`Replacing existing type of file ${url}: ${file.type} with corresponding MIME type: ${result}`);
+        file = new Blob([file], { type: result });
+    }
+
     if (init) {
         context?.logger.log(`Initializing data in blob from: ${url}`);
         await file.arrayBuffer();

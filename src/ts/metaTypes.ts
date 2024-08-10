@@ -1,4 +1,5 @@
 import type { Logger } from "../logging/simpleLogger";
+import type { DB } from "../networking/dbConn";
 
 /**
  * @author GustavBW
@@ -21,6 +22,7 @@ export type CLIFunc<T> = {
 
 export type ApplicationContext = {
     logger: Logger,
+    db: DB
 }
 
 

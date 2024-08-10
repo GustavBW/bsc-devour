@@ -2,7 +2,12 @@ import sharp from 'sharp';
 import type { ResErr } from '../ts/metaTypes.ts';
 import type { LODDTO } from '../ts/types.ts';
 
-const downscalableImageTypes = ["IMAGE/JPEG", "IMAGE/PNG", "IMAGE/WEBP", "IMAGE/GIF", "IMAGE/TIFF"].map(k => k.toLowerCase());
+const supportedImageTypes = ["IMAGE/JPEG", "IMAGE/PNG", "IMAGE/WEBP", "IMAGE/GIF", "IMAGE/TIFF", "IMAGE/SVG+XML"].map(k => k.toLowerCase());
+
+export const checkIfImageTypeIsSupported = (type: string): boolean => {
+    return supportedImageTypes.includes(type.toLowerCase());
+}
+
 /**
  * @author GustavBW
  * @since 0.0.1
@@ -11,11 +16,14 @@ const downscalableImageTypes = ["IMAGE/JPEG", "IMAGE/PNG", "IMAGE/WEBP", "IMAGE/
  * @returns 
  */
 export async function generateLODs(blob: Blob, sizeThreshold: number): Promise<ResErr<LODDTO[]>> {
-    if(!downscalableImageTypes.includes(blob.type.toLowerCase())) {
+    if(!checkIfImageTypeIsSupported(blob.type.toLowerCase())) {
         return {result: null, error: `Unsupported image type: ${blob.type}`};
     }
     if(blob.size == 0) { // Empty blob detected
         return {result: null, error: "This blob is empty."};
+    }
+    if(blob.type.toLowerCase() === "image/svg+xml") { // No sense in LOD'ifying svgs
+        return {result: [{detailLevel: 0, blob: blob}], error: null};
     }
     const lodsGenerated: LODDTO[] = [{detailLevel: 0, blob: blob}];
     if(blob.size / 1000 < sizeThreshold) { // Already below threshold

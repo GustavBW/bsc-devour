@@ -34,7 +34,7 @@ export type Transform = {
 	"yScale": number, 
 }
 export type TransformDTO = Omit<Transform, "id">;
-export const TRANSFORMDTO_TYPEDECL: TypeDeclaration = {
+export const TRANSFORM_DTO_TYPEDECL: TypeDeclaration = {
     xOffset: Type.FLOAT,
     yOffset: Type.FLOAT,
     zIndex: Type.INTEGER,
@@ -62,15 +62,19 @@ export type AssetEntry = {
  * @author GustavBW
  * @since 0.0.1
  */
-export type AssetEntryDTO  ={
+export type AssetEntryDTO = {
     transform: TransformDTO,
     /**
      * Id of existing graphical asset
      */
     graphicalAssetId: number,
 }
-export const ASSETENTRYDTO_TYPEDECL: TypeDeclaration = {
+export const ASSET_ENTRY_DTO_TYPEDECL: TypeDeclaration = {
     transform: Type.OBJECT,
+    graphicalAssetId: Type.INTEGER,
+}
+export const INGEST_FILE_ASSET_ENTRY_TYPEDECL: TypeDeclaration = {
+    transform: typeUnionOR(Type.OBJECT, Type.STRING),
     graphicalAssetId: Type.INTEGER,
 }
 /**
@@ -119,15 +123,18 @@ export type GraphicAsset = {
 	hasLODs: boolean,
 	width: number,
 	height: number,
+    /** To be derived from blob url if not defined */
+    alias: string | undefined,
 	blob: Blob //Only available if "hasLODs" is false
 }
-export const GRAPHICASSET_TYPEDECL: TypeDeclaration = {
+export const GRAPHIC_ASSET_TYPEDECL: TypeDeclaration = {
     id: Type.INTEGER,
     useCase: Type.STRING,
     type: Type.STRING,
     hasLODs: Type.BOOLEAN,
     width: Type.INTEGER,
     height: Type.INTEGER,
+    alias: optionalType(Type.STRING),
     blob: Type.OBJECT,
 }
 // Define common fields
@@ -139,47 +146,41 @@ interface IngestFileAssetBase {
 // Define specific variants
 export interface IngestFileSingleAsset extends IngestFileAssetBase {
     type: "single";
-    single: {
-        source: string;
-        width?: number;
-        height?: number;
-    };
+    single: IngestFileSingleAssetField;
 }
-export const INGESTFILESINGLEASSET_TYPEDECL: TypeDeclaration = {
+export const INGEST_FILE_SINGLE_ASSET_TYPEDECL: TypeDeclaration = {
     type: Type.STRING,
     useCase: Type.STRING,
     id: Type.INTEGER,
     single: Type.OBJECT,
 }
 export type IngestFileSingleAssetField = {
-    source: string,
-    width?: number,
-    height?: number,
+    source: string;
+    alias?: string;
+    width?: number;
+    height?: number;
 }
-export const INGESTFILESINGLEASSETFIELD_TYPEDECL: TypeDeclaration = {
+export const INGEST_FILE_SINGLE_ASSET_FIELD_TYPEDECL: TypeDeclaration = {
     source: Type.STRING,
+    alias: optionalType(Type.STRING),
     width: optionalType(Type.INTEGER),
     height: optionalType(Type.INTEGER),
 }
 
-export type IngestFileCollectionField = {
-    sources: AssetEntryDTO[],
-    transform?: TransformDTO,
-    name?: string,
-}
-export const INGESTFILECOLLECTIONFIELD_TYPEDECL: TypeDeclaration = {
+export const INGEST_FILE_COLLECTION_FIELD_TYPEDECL: TypeDeclaration = {
     sources: Type.ARRAY,
     transform: optionalType(typeUnionOR(Type.OBJECT, Type.STRING)),
-    name: optionalType(Type.STRING),
+    name: Type.STRING,
 }
 
 export interface IngestFileCollectionAsset extends IngestFileAssetBase {
     type: "collection";
-    collection: {
-        sources: AssetEntryDTO[];
-        transform?: TransformDTO;
-        name?: string;
-    };
+    collection: IngestFileCollectionField;
+}
+export type IngestFileCollectionField = {
+    sources: AssetEntryDTO[],
+    transform?: TransformDTO,
+    name?: string,
 }
 export const INGESTFILECOLLECTIONASSET_TYPEDECL: TypeDeclaration = {
     type: Type.STRING,

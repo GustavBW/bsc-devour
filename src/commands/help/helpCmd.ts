@@ -10,7 +10,7 @@ export const formatTopLevelHelpString = (): string => {
     const availableCommands = getCommands();
     let helpString = "Devour v. " + VERSION + "\n";
 	
-	helpString += "Supported image formats: png, jpeg, tiff, gif & webp\n\n";
+	helpString += "Supported image formats: png, jpeg, tiff, gif, svg & webp\n\n";
 	helpString += "Available commands:\n";
 
     for (const command of availableCommands) {

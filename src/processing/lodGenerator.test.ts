@@ -3,8 +3,10 @@ import type { BunFile } from "bun";
 import { generateLODs } from "./lodGenerator";
 import { fetchBlobFromFile } from "../networking/blobFetcher";
 import sharp from "sharp";
+import { getMetaDataAsIfImage } from "./imageUtil";
 
-const testImageNames = ["testImage.gif", "testImage.jpg", "testImage.png", "testImage.tif", "testImage.webp"];
+//Kindly do not alter ordering
+const testImageNames = ["testImage.gif", "testImage.jpg", "testImage.png", "testImage.tif", "testImage.webp", "testImage.svg"];
 const testImages: Blob[] = [];
 const typesBeingTested = [];
 for (const testFile of testImageNames) {
@@ -37,10 +39,13 @@ test("No LODs should be created if the threshold is already met by the input ima
 });
 
 //No sense in LOD'ifying svgs
-test("No LODs should be created if the input image is an SVG", async () => {
-    const testBlob = new Blob([], {type: "image/svg+xml"});
-    const res = await generateLODs(testBlob, 10);
-    expect(res.error).toEqual("Unsupported image type: image/svg+xml");
+test("Only exactly 1 LOD, lod 0, should be created if the input image is an SVG", async () => {
+    const testBlob = new Blob([testImages[5]], {type: "image/svg+xml"});
+    const res = await generateLODs(testBlob, 1);
+    expect(res.error).toBeNull();
+    expect(res.result).toHaveLength(1);
+    expect(res.result![0].detailLevel).toEqual(0);
+    expect(res.result![0].blob).toEqual(testBlob);
 });
 
 //Empty images should be rejected
@@ -59,6 +64,7 @@ test("No LODs should be created if the input image is an unsupported type", asyn
 
 test("The last LOD generated should be below the threshold", async () => {
     const thresholdKB = 10;
+    //This test MAY fail on the SVG test image, but it really shouldn't happen for a threshold of 10 KB
     for (const testImage of testImages) {
         const {result, error} = await generateLODs(testImage, thresholdKB);
         expect(error).toBeNull();

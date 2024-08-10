@@ -1,7 +1,7 @@
 import { readCompactDSNNotation, readCompactDSNNotationRaw, readCompactTransformNotation, readCompactTransformNotationRaw, readUrlArg } from '../../processing/cliInputProcessor.ts';
 import { conformsToType } from '../../processing/typeChecker.ts';
 import type { ApplicationContext, CLIFunc, ResErr } from '../../ts/metaTypes.ts';
-import { ASSETENTRYDTO_TYPEDECL, DBDSN_TYPEDECL, INGESTFILECOLLECTIONASSET_TYPEDECL, INGESTFILECOLLECTIONFIELD_TYPEDECL, INGESTFILESINGLEASSET_TYPEDECL, INGESTFILESINGLEASSETFIELD_TYPEDECL, TRANSFORMDTO_TYPEDECL, type AutoIngestScript, type DBDSN, type IngestFileAssetEntry, type IngestFileCollectionAsset, type IngestFileSingleAsset, type TransformDTO } from '../../ts/types.ts';
+import { INGEST_FILE_ASSET_ENTRY_TYPEDECL, ASSET_ENTRY_DTO_TYPEDECL, DBDSN_TYPEDECL, INGESTFILECOLLECTIONASSET_TYPEDECL, INGEST_FILE_COLLECTION_FIELD_TYPEDECL, INGEST_FILE_SINGLE_ASSET_TYPEDECL, INGEST_FILE_SINGLE_ASSET_FIELD_TYPEDECL, TRANSFORM_DTO_TYPEDECL, type AutoIngestScript, type DBDSN, type IngestFileAssetEntry, type IngestFileCollectionAsset, type IngestFileSingleAsset, type TransformDTO } from '../../ts/types.ts';
 
 /**
  * @author GustavBW
@@ -61,7 +61,7 @@ export const assureUniformTransform = (maybeTransform: string | TransformDTO): R
         }
         return {result: compactNotationRes.result, error: null};
     } else if (typeof maybeTransform === "object") {
-        const typeError = conformsToType(maybeTransform, TRANSFORMDTO_TYPEDECL);
+        const typeError = conformsToType(maybeTransform, TRANSFORM_DTO_TYPEDECL);
         if (typeError !== null) {
             return {result: null, error: "Transform field does not conform to type: " + typeError};
         }
@@ -77,14 +77,14 @@ export const validateCollectionAssetEntry = (asset: IngestFileCollectionAsset, e
         return "Type error in collection asset nr " + entryNum + ": " + topLevelTypeError;
     }
 
-    const collectionFieldTypeError = conformsToType(asset.collection, INGESTFILECOLLECTIONFIELD_TYPEDECL);
+    const collectionFieldTypeError = conformsToType(asset.collection, INGEST_FILE_COLLECTION_FIELD_TYPEDECL);
     if (collectionFieldTypeError != null) {
         return "Type error in collection field on collection asset nr " + entryNum + ": " + collectionFieldTypeError;
     }
 
     for (let i = 0; i < asset.collection.sources.length; i++) {
         const source = asset.collection.sources[i];
-        const sourceTypeError = conformsToType(source, ASSETENTRYDTO_TYPEDECL);
+        const sourceTypeError = conformsToType(source, INGEST_FILE_ASSET_ENTRY_TYPEDECL);
         if (sourceTypeError !== null) {
             return "Type error in source nr: " + i + " in collection asset nr: " + entryNum + ": " + sourceTypeError;
         }
@@ -99,12 +99,12 @@ export const validateCollectionAssetEntry = (asset: IngestFileCollectionAsset, e
 }
 
 export const validateSingleAssetEntry = (asset: IngestFileSingleAsset, entryNum: number): string | null => {
-    const typeError = conformsToType(asset, INGESTFILESINGLEASSET_TYPEDECL);
+    const typeError = conformsToType(asset, INGEST_FILE_SINGLE_ASSET_TYPEDECL);
     if (typeError != null) {
         return "Type error in single asset nr " + entryNum + ": " + typeError;
     }
 
-    const typeErrorOfSingleField = conformsToType(asset.single, INGESTFILESINGLEASSETFIELD_TYPEDECL);
+    const typeErrorOfSingleField = conformsToType(asset.single, INGEST_FILE_SINGLE_ASSET_FIELD_TYPEDECL);
     if (typeErrorOfSingleField !== null) {
         return "Type error in single field of single asset nr " + entryNum + ": " + typeErrorOfSingleField
     }

@@ -19,7 +19,7 @@
                 "useCase": "environment",
                 "id": 1,
                 "single": {
-                        "source": "https://http.cat/images/404.jpg",
+                        "source": "https://http.cat/images/404.jpg",          
                         "width": 750,
                         "height": 600
                 }
@@ -68,13 +68,7 @@
                         "graphicalAssetId": 1
                 },
                 {
-                        "transform": {
-                                "xOffset": -150,
-                                "yOffset": 0,
-                                "zIndex": 0,
-                                "xScale": 1,
-                                "yScale": 1
-                        }, 
+                        "transform": "-150 0 0, 1 1", 
                         "graphicalAssetId": 1
                 }
                 ],

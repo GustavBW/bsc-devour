@@ -1,5 +1,6 @@
 import { getCommandById } from './commands/commandRegistry.ts';
 import { initializeLogger, onApplicationShutdown as loggerShutdown } from './logging/simpleLogger.ts';
+import { DB_SINGLETON } from './networking/dbConn.ts';
 import type { ApplicationContext } from './ts/metaTypes.ts';
 
 export const VERSION = "0.0.1";
@@ -30,6 +31,7 @@ if (command === undefined) {
 } else {
   context = {
     logger: await initializeLogger(),
+    db: DB_SINGLETON
   };
   context.logger.log("[main] Run args: " + args.join(' '));
   const { result, error } = await command.func(args.slice(1), context);

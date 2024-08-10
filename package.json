@@ -3,7 +3,7 @@
   "module": "index.ts",
   "type": "module",
   "scripts": {
-    "build": "bun build ./src/main.ts --outfile ./dist/devour.js",
+    "build": "tsc && bun build ./src/main.ts --outfile ./dist/devour.js",
     "test": "bun build ./src/main.ts --outfile ./dist/devourTestRun && node ./dist/devourTestRun help funcArg1=\"funcArg1\" funcArg2=\"funcArg1\" --someflag"
   },
   "devDependencies": {
