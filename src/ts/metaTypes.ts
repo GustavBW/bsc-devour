@@ -1,3 +1,4 @@
+import type { Logger } from "../logging/simpleLogger";
 
 /**
  * @author GustavBW
@@ -19,6 +20,7 @@ export type CLIFunc<T> = {
 }
 
 export type ApplicationContext = {
+    logger: Logger,
 }
 
 
@@ -30,9 +32,7 @@ export enum Type {
     OBJECT = "object",
     ARRAY = "array"
 }
-
 export type FieldValidatorFunction = (valueOfField: any) => boolean;
-
 export type TypeDeclaration = {
     [key: string]: Type | FieldValidatorFunction
 }

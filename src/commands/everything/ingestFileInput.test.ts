@@ -1,13 +1,14 @@
 import {test, expect} from 'bun:test';
-import {assureUniformTransform, assureUniformDSN, validateCollectionAssetEntry, validateSingleAssetEntry, verifyIngestFile} from './ingestFileInput';
+import {assureUniformTransform, assureUniformDSN, validateCollectionAssetEntry, validateSingleAssetEntry, verifyIngestFile, readIngestFile} from './ingestFileInput';
 import type { IngestFileCollectionAsset, IngestFileSingleAsset } from '../../ts/types';
+import type { BunFile } from 'bun';
 
+//Tests of "readIngestFile"
+let testFileJson: any;
 test("Test file exists", async () => {
-    const file = Bun.file("src/assets/testData/testIngestFile.json");
-    const fileExists = await file.exists();
-    expect(fileExists).toBe(true);
-    expect(file.type).toBe("application/json;charset=utf-8");
-    expect(file.size).toBeGreaterThan(0);
+    const {result, error} = await readIngestFile("src/assets/testData/testIngestFile.json");
+    expect(error).toBeNull();
+    testFileJson = result;
 });
 
 //Tests of "assureUniformTransform"
@@ -120,12 +121,23 @@ test("validateSingleAssetEntry should return null on valid input", async () => {
     };
     const error = validateSingleAssetEntry(singleAsset, 0);
     expect(error).toBeNull();
+
+    const singleAsset2: IngestFileSingleAsset = {
+        type: "single",
+        useCase: "icon",
+        id: 1,
+        single: {
+            source: "https://http.cat/images/100.jpg",
+        },
+    };
+    const error2 = validateSingleAssetEntry(singleAsset2, 0);
+    expect(error2).toBeNull();
 });
 
 
 //Tests of "verifyIngestFile"
-
-
-//Tests of "readIngestFile"
-
+test("verifyIngestFile should return null on valid input", async () => {
+    const res = verifyIngestFile(testFileJson);
+    expect(res.error).toBeNull();
+});
 

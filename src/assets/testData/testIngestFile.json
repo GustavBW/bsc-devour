@@ -17,8 +17,8 @@
             {   
                 "type": "single",
                 "useCase": "environment",
+                "id": 1,
                 "single": {
-                        "id": 1,
                         "source": "https://http.cat/images/404.jpg",
                         "width": 750,
                         "height": 600
@@ -27,8 +27,8 @@
             {
                 "type": "collection",
                 "useCase": "environment",
+                "id": 1,
                 "collection": {
-                        "id": 1,
                         "sources": [
                             {
                                 "transform": {
@@ -54,8 +54,8 @@
         {
             "type": "collection",
             "useCase": "environment",
+            "id": 2,
             "collection": {
-                "id": 1,
                 "sources": [
                 {
                         "transform": {

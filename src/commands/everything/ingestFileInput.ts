@@ -187,7 +187,7 @@ export const verifyIngestFile = (rawFile: any): ResErr<AutoIngestScript> => {
  * @author GustavBW
  * @since 0.0.1
  */
-const readIngestFile = async (url: string): Promise<ResErr<any>> => {
+export const readIngestFile = async (url: string): Promise<ResErr<any>> => {
     const file = Bun.file(url);
     const fileExists = await file.exists();
     if (!fileExists) {
