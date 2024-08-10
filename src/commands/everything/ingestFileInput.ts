@@ -99,12 +99,12 @@ export const validateCollectionAssetEntry = (asset: IngestFileCollectionAsset, e
 }
 
 export const validateSingleAssetEntry = (asset: IngestFileSingleAsset, entryNum: number): string | null => {
-    const typeError = conformsToType(asset.single, INGESTFILESINGLEASSET_TYPEDECL);
+    const typeError = conformsToType(asset, INGESTFILESINGLEASSET_TYPEDECL);
     if (typeError != null) {
         return "Type error in single asset nr " + entryNum + ": " + typeError;
     }
 
-    const typeErrorOfSingleField = conformsToType(asset, INGESTFILESINGLEASSETFIELD_TYPEDECL);
+    const typeErrorOfSingleField = conformsToType(asset.single, INGESTFILESINGLEASSETFIELD_TYPEDECL);
     if (typeErrorOfSingleField !== null) {
         return "Type error in single field of single asset nr " + entryNum + ": " + typeErrorOfSingleField
     }
