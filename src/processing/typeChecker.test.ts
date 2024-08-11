@@ -1,6 +1,6 @@
 import {test, expect} from "bun:test";
 import { conformsToType, findConformingMIMEType, optionalType, typeUnionOR, validateSimpleType } from "./typeChecker";
-import { Type } from "../ts/metaTypes";
+import { Type, type TypeDeclaration } from "../ts/metaTypes";
 
 
 //Tests of validateType
@@ -42,11 +42,13 @@ test("validateType should return false on invalid array input", async () => {
 });
 
 //Tests of optionalType
-test("optionalType should generate a validator function that returns true on undefined, null and correct type", async () => {
+test("optionalType should generate a validator function that returns true on undefined and correct type", async () => {
     const validator = optionalType(Type.STRING);
     expect(validator).toBeInstanceOf(Function);
     expect(validator(undefined)).toBe(true);
-    expect(validator(null)).toBe(true);
+
+    expect(validator(null)).toBe(false);
+
     expect(validator("string")).toBe(true);
     expect(validator("")).toBe(true);
 });
@@ -95,8 +97,8 @@ test("typeUnionOR should work with optionalType, when written sensibly", async (
     expect(validator(true)).toBe(false);
     
     expect(validator(undefined)).toBe(true);
-    expect(validator(null)).toBe(true);
 
+    expect(validator(null)).toBe(false);
     expect(validator("string")).toBe(true);
     expect(validator("")).toBe(true);
     expect(validator(1)).toBe(true);
@@ -186,6 +188,127 @@ test("conformsToType should work with an optional type union", async () => {
     expect(typeErrB).toBeNull();
     const typeErrC = conformsToType(objectC, typeDeclaration);
     expect(typeErrC).toBeNull();
+});
+
+//Tests of nested TypeDeclarations on nested objects
+test("conformsToType should work with nested TypeDeclarations", async () => {
+    const typeDeclaration: TypeDeclaration = {
+        field: Type.STRING,
+        nested: {
+            field: Type.INTEGER,
+            field2: Type.STRING,
+        }
+    };
+    const validObject = {
+        field: "some",
+        nested: {
+            field: 1,
+            field2: "string",
+        }
+    };
+    const invalidObject = {
+        field: "some",
+        nested: {
+            field: "string",
+            field2: "string",
+        }
+    };
+    const typeErr = conformsToType(validObject, typeDeclaration);
+    expect(typeErr).toBeNull();
+    const typeErr2 = conformsToType(invalidObject, typeDeclaration);
+    expect(typeErr2).not.toBeNull();
+    expect(typeErr2).not.toBeUndefined();
+});
+
+test("conformsToType should work with nested TypeDeclarations and optional fields", async () => {
+    const typeDeclaration: TypeDeclaration = {
+        field: Type.STRING,
+        nested: {
+            field: Type.INTEGER,
+            field2: optionalType(Type.STRING),
+        }
+    };
+    const objectA = {
+        field: "some",
+        nested: {
+            field: 1,
+        }
+    };
+    const objectB = {
+        field: "some",
+        nested: {
+            field: 1,
+            field2: "string",
+        }
+    };
+    const typeErr = conformsToType(objectA, typeDeclaration);
+    expect(typeErr).toBeNull();
+    const typeErrB = conformsToType(objectB, typeDeclaration);
+    expect(typeErrB).toBeNull();
+});
+
+test("conformsToType should work with nested optional TypeDeclarations", async () => {
+    const typeDeclaration: TypeDeclaration = {
+        field: Type.STRING,
+        nested: optionalType({
+            field: Type.INTEGER,
+            field2: Type.STRING,
+        })
+    };
+    const objectA = {
+        field: "some",
+    };
+    const objectB = {
+        field: "some",
+        nested: {
+            field: 1,
+            field2: "string",
+        }
+    };
+    const typeErr = conformsToType(objectA, typeDeclaration);
+    expect(typeErr).toBeNull();
+    const typeErrB = conformsToType(objectB, typeDeclaration);
+    expect(typeErrB).toBeNull();
+});
+test("conformsToType should work with nested TypeDeclaration unions", async () => {
+    const typeDeclaration: TypeDeclaration = {
+        field: Type.STRING,
+        nested: typeUnionOR({
+            field: Type.INTEGER,
+            field2: Type.STRING,
+        }, {
+            field: Type.STRING,
+            field2: Type.INTEGER,
+        })
+    };
+    const objectA = {
+        field: "some",
+        nested: {
+            field: 1,
+            field2: "string",
+        }
+    };
+    const objectB = {
+        field: "some",
+        nested: {
+            field: "string",
+            field2: 1,
+        }
+    };
+    const someInvalidObject = {
+        field: "some",
+        nested: {
+            field: "string",
+            field2: "string",
+        }
+    };
+    const typeErr = conformsToType(objectA, typeDeclaration);
+    expect(typeErr).toBeNull();
+    const typeErrB = conformsToType(objectB, typeDeclaration);
+    expect(typeErrB).toBeNull();
+    const typeErrC = conformsToType(someInvalidObject, typeDeclaration);
+    expect(typeErrC).not.toBeNull();
+    expect(typeErrC).not.toBeUndefined();
 });
 
 //Tests of findConformingMIMEType

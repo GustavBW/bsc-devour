@@ -1,9 +1,12 @@
+import type sharp from 'sharp';
 import { fetchBlobFromUrl } from '../../networking/blobFetcher.ts';
-import { readCompactDSNNotation, readCompactTransformNotation, readThresholdArg, readUrlArg, readUseCaseArg } from '../../processing/cliInputProcessor.ts';
+import { readAliasArg, readCompactDSNNotation, readCompactTransformNotation, readThresholdArg, readUrlArg, readUseCaseArg } from '../../processing/cliInputProcessor.ts';
 import { getMetaDataAsIfImage } from '../../processing/imageUtil.ts';
 import { findConformingMIMEType } from '../../processing/typeChecker.ts';
 import { IMAGE_TYPES, type ApplicationContext, type CLIFunc, type ResErr } from '../../ts/metaTypes.ts';
 import { UNIT_TRANSFORM, type AssetUseCase, type DBDSN, type TransformDTO } from '../../ts/types.ts';
+import { generateLODs } from '../../processing/lodGenerator.ts';
+import { LogLevel } from '../../logging/simpleLogger.ts';
 
 /**
  * @author GustavBW
@@ -14,8 +17,10 @@ const handleSingleAssetCLIInput = async (args: string[], context: ApplicationCon
     let url: string | null = null;
     let useCase: AssetUseCase | null = null;
     let transform: TransformDTO | null = UNIT_TRANSFORM;
-    let threshold: number | null = 1000;
+    let threshold: number | null = null;
     let dsn: DBDSN | null = null;
+    let alias: string | null = null;
+
     for (const arg of args) {
         if (arg.startsWith("source")){
             const {result, error} = readUrlArg(arg);
@@ -57,30 +62,81 @@ const handleSingleAssetCLIInput = async (args: string[], context: ApplicationCon
             }
             dsn = result;
         }
-    }
-
-    if (url === null) {
-        context.logger.log(`No source url provided.`);
-        return Promise.resolve({result: null, error: "No source url provided."});
-    }
-    if (useCase === null) {
-        context.logger.log(`No use case provided, defaulting to "environment".`);
-        useCase = "environment";
-    }
-    const {result, error} = await fetchBlobFromUrl(url, context); if (error !== null) {
-        context.logger.log(`Error fetching blob from url ${url}: ${error}`);
-        return {result: null, error: error};
-    }
-    const contentTypeRes = findConformingMIMEType(result.type); if (contentTypeRes.error !== null) {
-        context.logger.log(`Error determining MIME type for blob: ${contentTypeRes.error}`);
-        return {result: null, error: contentTypeRes.error};
-    }
-    if (contentTypeRes.result! === IMAGE_TYPES.svg[0]) {
-        if (transform === UNIT_TRANSFORM || (transform.xScale <= 1 && transform.yScale <= 1)) {
-            return {result: null, error: "SVGs must have a transform with non 1 xScale and yScale as they make up the needed width and height properties in this case."};
+        if (arg.startsWith("alias")){
+            const {result, error} = readAliasArg(arg);
+            if (error !== null) {
+                context.logger.log(`Error reading alias: ${error}`);
+                return Promise.resolve({result: null, error: error});
+            }
+            alias = result;
         }
     }
 
+    if (url === null) {
+        context.logger.log(`No source url provided.`, LogLevel.ERROR);
+        return Promise.resolve({result: null, error: "No source url provided."});
+    }
+    if (useCase === null) {
+        context.logger.log(`No useCase provided, defaulting to "environment".`);
+        useCase = "environment";
+    }
+    if (alias === null) {
+        alias = url.split("/").pop()!;
+        context.logger.log(`No alias provided defaulting to url-based alias: ${alias}`);
+    }
+    if (threshold === null) {
+        threshold = 10;
+        context.logger.log(`No threshold provided, defaulting to ${threshold}KB.`);
+    }
+    if (dsn === null) {
+        context.logger.log(`No dsn provided.`, LogLevel.ERROR);
+        return Promise.resolve({result: null, error: "No dsn provided."});
+    }
+    const {result, error} = await fetchBlobFromUrl(url, context); if (error !== null) {
+        context.logger.log(`Error fetching blob from url ${url}: ${error}`, LogLevel.ERROR);
+        return {result: null, error: error};
+    }
+    const blob = result;
+    const contentTypeRes = findConformingMIMEType(blob.type); if (contentTypeRes.error !== null) {
+        context.logger.log(`Error determining MIME type for blob: ${contentTypeRes.error}`, LogLevel.ERROR);
+        return {result: null, error: contentTypeRes.error};
+    }
+    const isSVG = contentTypeRes.result! === IMAGE_TYPES.svg[0];
+    let metadataRelevant = false;
+    let metadata: sharp.Metadata;
+    if (isSVG) { // SVG TRANSFORM CASE
+        if (transform === UNIT_TRANSFORM || (transform.xScale <= 1 && transform.yScale <= 1)) {
+            return {result: null, error: "SVGs must have a transform with non 1 xScale and yScale as they make up the needed width and height properties in this case."};
+        }
+    }else{
+        const {result, error} = await getMetaDataAsIfImage(blob, context); if (error !== null) {
+            context.logger.log(`Error getting metadata from image: ${error}`, LogLevel.ERROR);
+            return {result: null, error: error};
+        }
+        metadataRelevant = true;
+        metadata = result;
+    }
+
+    // Generate LODs
+    const lods = await generateLODs(blob, threshold!); if (lods.error !== null) {
+        context.logger.log(`Error generating LODs: ${lods.error}`, LogLevel.ERROR);
+        return {result: null, error: lods.error};
+    }
+
+    // Connect to DB
+    context.db.connect(dsn, context);
+
+    // Upload to DB
+    context.db.instance.uploadAsset({
+        id: undefined,
+        width: metadataRelevant ? metadata!.width! * transform.xScale : transform.xScale,
+        height: metadataRelevant ? metadata!.height! * transform.yScale : transform.yScale,
+        useCase: useCase,
+        type: contentTypeRes.result!,
+        alias: alias,
+        lods: lods.result!,
+    });
+    
 
     return Promise.resolve({result: null, error: "Not implemented yet."});
 }

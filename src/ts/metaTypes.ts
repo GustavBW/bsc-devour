@@ -36,7 +36,7 @@ export enum Type {
 }
 export type FieldValidatorFunction = (valueOfField: any) => boolean;
 export type TypeDeclaration = {
-    [key: string]: Type | FieldValidatorFunction
+    [key: string]: Type | FieldValidatorFunction | TypeDeclaration
 }
 
 export type ImageMIMEType = "image/jpeg" | "image/jpg" | "image/avif" | "image/tiff" | "image/webp" | "image/png" | "image/gif" | "image/bmp" | "image/svg+xml";

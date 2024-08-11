@@ -22,6 +22,14 @@ export const readUseCaseArg = (arg: string): ResErr<AssetUseCase> => {
     return {result: useCase, error: null};
 }
 
+export const readAliasArg = (arg: string): ResErr<string> => { 
+    const split = arg.split("=");
+    if (split.length !== 2) {
+        return {result: null, error: "Invalid alias argument"};
+    }
+    return {result: split[1].replaceAll("\"","").trim(), error: null};
+}
+
 export const readThresholdArg = (arg: string): ResErr<number> => {
     const thresholdStr = arg.split("=")[1].replaceAll("\"", "").trim();
     const threshold = parseInt(thresholdStr);

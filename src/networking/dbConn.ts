@@ -10,6 +10,7 @@ export type UploadableAsset = {
     width: number,
 	height: number,
     useCase: AssetUseCase,
+    alias: string,
 	type: ImageMIMEType, //MIME type
 }
 
@@ -63,6 +64,7 @@ const clearExistingContent = (graphicalAssetId: number, context: ApplicationCont
 const connectDB = (dsn: DBDSN, context: ApplicationContext): void => {
     context.logger.log(`Connecting to database, host: ${dsn.host}, port: ${dsn.port}, name: ${dsn.dbName}, credentials: ${dsn.user} ****`);
     //Connect here
+    //Check db structure
     const connection = null;
     DB_SINGLETON.instance = {
         dsn: dsn,

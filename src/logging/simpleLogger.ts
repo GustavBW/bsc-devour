@@ -21,7 +21,7 @@ const writeMessage = (message: string, level: LogLevel) => {
 }
 
 export const initializeLogger = async (): Promise<Logger> => {
-    const currentLogFileName = `${logDir}/${Date.now()}.txt`;
+    const currentLogFileName = `${logDir}/${formatDate(Date.now())}.txt`;
     await Bun.write(currentLogFileName, new Uint8Array([1,2,3,4,5,6,76,8]), {createPath: true});
     const file = Bun.file(currentLogFileName);
     const exists = await file.exists();
@@ -42,4 +42,17 @@ export const onApplicationShutdown = async () => {
         await logWriter.flush();
         await logWriter.end();
     }
+}
+
+function formatDate(now: number): string {
+    const date = new Date(now);
+
+    const day = String(date.getDate()).padStart(2, '0');
+    const month = String(date.getMonth() + 1).padStart(2, '0'); // Months are 0-based
+    const year = String(date.getFullYear());
+    const hours = String(date.getHours()).padStart(2, '0');
+    const minutes = String(date.getMinutes()).padStart(2, '0');
+    const seconds = String(date.getSeconds()).padStart(2, '0');
+
+    return `${day}${month}${year}_${hours}h${minutes}m${seconds}s`;
 }
