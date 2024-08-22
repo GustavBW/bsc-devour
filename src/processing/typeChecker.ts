@@ -18,6 +18,7 @@ export const isValidUrl = (url: string): boolean => {
     return url.length > 1;
 }
 
+
 /**
  * @since 0.0.1
  * @author GustavBW

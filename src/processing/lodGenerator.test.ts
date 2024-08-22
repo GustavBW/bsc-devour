@@ -6,7 +6,7 @@ import sharp from "sharp";
 import { getMetaDataAsIfImage } from "./imageUtil";
 
 //Kindly do not alter ordering
-const testImageNames = ["testImage.gif", "testImage.jpg", "testImage.png", "testImage.tif", "testImage.webp", "testImage.svg"];
+const testImageNames = ["testImage.gif", "testImage.jpg", "testImage.png", "testImage.tiff", "testImage.webp", "testImage.svg"];
 const testImages: Blob[] = [];
 const typesBeingTested = [];
 for (const testFile of testImageNames) {

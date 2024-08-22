@@ -73,7 +73,7 @@ const handleSingleAssetCLIInput = async (args: string[], context: ApplicationCon
     }
 
     if (url === null) {
-        context.logger.log(`No source url provided.`, LogLevel.ERROR);
+        context.logger.log(`No source provided, 'source="../../.."'.`, LogLevel.ERROR);
         return Promise.resolve({result: null, error: "No source url provided."});
     }
     if (useCase === null) {
@@ -101,7 +101,7 @@ const handleSingleAssetCLIInput = async (args: string[], context: ApplicationCon
         context.logger.log(`Error determining MIME type for blob: ${contentTypeRes.error}`, LogLevel.ERROR);
         return {result: null, error: contentTypeRes.error};
     }
-    const isSVG = contentTypeRes.result! === IMAGE_TYPES.svg[0];
+    const isSVG = contentTypeRes.result === IMAGE_TYPES.svg[0];
     let metadataRelevant = false;
     let metadata: sharp.Metadata;
     if (isSVG) { // SVG TRANSFORM CASE
@@ -124,10 +124,14 @@ const handleSingleAssetCLIInput = async (args: string[], context: ApplicationCon
     }
 
     // Connect to DB
-    context.db.connect(dsn, context);
+    const err = await context.db.connect(dsn, context);
+    if (err !== null) {
+        context.logger.log(`Error connecting to DB: ${err}`, LogLevel.ERROR);
+        return Promise.resolve({result: null, error: err});
+    }
 
     // Upload to DB
-    context.db.instance.uploadAsset({
+    const res = context.db.instance.uploadAsset({
         id: undefined,
         width: metadataRelevant ? metadata!.width! * transform.xScale : transform.xScale,
         height: metadataRelevant ? metadata!.height! * transform.yScale : transform.yScale,
@@ -136,9 +140,13 @@ const handleSingleAssetCLIInput = async (args: string[], context: ApplicationCon
         alias: alias,
         lods: lods.result!,
     });
+    if (res.error !== null) {
+        context.logger.log(`Error uploading asset: ${res.error}`, LogLevel.ERROR);
+        return Promise.resolve({result: null, error: res.error});
+    }
     
 
-    return Promise.resolve({result: null, error: "Not implemented yet."});
+    return Promise.resolve({result: "Success", error: null});
 }
 
 /**

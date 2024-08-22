@@ -6,10 +6,10 @@
             "allowedFailures": 0, 
             "dsn": {
                     "host": "localhost",
-                    "port": 3000,
-                    "user": "testUser",
-                    "password": "password",
-                    "dbName": "testDB",
+                    "port": 8432,
+                    "user": "devour",
+                    "password": "d3v0urP4ssw0rd",
+                    "dbName": "player_persistence_and_assets",
                     "sslMode": "disable"
             }
     },

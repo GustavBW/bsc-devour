@@ -3,7 +3,8 @@
   "module": "index.ts",
   "type": "module",
   "scripts": {
-    "build": "tsc && bun build ./src/main.ts --outfile ./dist/devour.js --target bun",
+    "build": "tsc && bun build ./src/main.ts --outfile=./dist/devour.js --target=bun --minify",
+    "debugBuild": "tsc && bun build src/main.ts --sourcemap=linked --outfile=dist/devour.js --target=bun",
     "test": "bun build ./src/main.ts --outfile ./dist/devourTestRun && node ./dist/devourTestRun help funcArg1=\"funcArg1\" funcArg2=\"funcArg1\" --someflag"
   },
   "devDependencies": {
@@ -13,6 +14,7 @@
     "typescript": "^5.0.0"
   },
   "dependencies": {
+    "postgres": "^3.4.4",
     "sharp": "^0.33.4"
   }
 }
