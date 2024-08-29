@@ -5,7 +5,7 @@
   "scripts": {
     "build": "tsc && bun build ./src/main.ts --outfile=./dist/devour.js --target=bun --minify",
     "debugBuild": "tsc && bun build src/main.ts --sourcemap=linked --outfile=dist/devour.js --target=bun",
-    "test": "bun build ./src/main.ts --outfile ./dist/devourTestRun && node ./dist/devourTestRun help funcArg1=\"funcArg1\" funcArg2=\"funcArg1\" --someflag"
+    "test": "bun run build && bun dist/devour.js everything path=\"./src/assets/testData/testIngestFile.json\""
   },
   "devDependencies": {
     "@types/bun": "latest"
@@ -14,7 +14,8 @@
     "typescript": "^5.0.0"
   },
   "dependencies": {
-    "postgres": "^3.4.4",
+    "@types/pg": "^8.11.8",
+    "pg": "^8.12.0",
     "sharp": "^0.33.4"
   }
 }

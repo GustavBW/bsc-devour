@@ -31,6 +31,10 @@ const handleIngestFileInput = async (args: string[], context: ApplicationContext
     }
     const ingestScript = verificationResult.result;
 
+    const dbErr = await context.db.connect(ingestScript.settings.dsn, context);
+    if (dbErr !== null) {
+        return {result: null, error: dbErr};
+    }
     console.log(ingestScript);
 
     return {result: null, error: "Not implemented yet."};

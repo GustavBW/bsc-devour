@@ -9,7 +9,7 @@
                     "port": 8432,
                     "user": "devour",
                     "password": "d3v0urP4ssw0rd",
-                    "dbName": "player_persistence_and_assets",
+                    "dbName": "ColonyAndAssets",
                     "sslMode": "disable"
             }
     },
