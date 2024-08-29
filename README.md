@@ -14,7 +14,7 @@ A compiled js bundle should now be located in the dist directory
 
 ## How to use
 Go to where the compiled js bundle is located, it should be called something like "devour.js".
-From here run:
+From there run:
 ```bash
 bun devour.js help
 ```

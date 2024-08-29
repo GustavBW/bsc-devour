@@ -1,7 +1,8 @@
+import { LogLevel } from '../../logging/simpleLogger.ts';
 import { readCompactDSNNotation, readCompactDSNNotationRaw, readCompactTransformNotation, readCompactTransformNotationRaw, readUrlArg } from '../../processing/cliInputProcessor.ts';
 import { conformsToType } from '../../processing/typeChecker.ts';
 import type { ApplicationContext, CLIFunc, ResErr } from '../../ts/metaTypes.ts';
-import { INGEST_FILE_ASSET_ENTRY_TYPEDECL, ASSET_ENTRY_DTO_TYPEDECL, DBDSN_TYPEDECL, INGESTFILECOLLECTIONASSET_TYPEDECL, INGEST_FILE_COLLECTION_FIELD_TYPEDECL, INGEST_FILE_SINGLE_ASSET_TYPEDECL, INGEST_FILE_SINGLE_ASSET_FIELD_TYPEDECL, TRANSFORM_DTO_TYPEDECL, type AutoIngestScript, type DBDSN, type IngestFileAssetEntry, type IngestFileCollectionAsset, type IngestFileSingleAsset, type TransformDTO } from '../../ts/types.ts';
+import { INGEST_FILE_COLLECTION_ENTRY_TYPEDECL, COLLECTION_ENTRY_DTO_TYPEDECL, DBDSN_TYPEDECL, INGEST_FILE_COLLECTION_ASSET_TYPEDECL, INGEST_FILE_COLLECTION_FIELD_TYPEDECL, INGEST_FILE_SINGLE_ASSET_TYPEDECL, INGEST_FILE_SINGLE_ASSET_FIELD_TYPEDECL, TRANSFORM_DTO_TYPEDECL, type AutoIngestScript, type DBDSN, type IngestFileAssetEntry, type IngestFileCollectionAsset, type IngestFileSingleAsset, type TransformDTO } from '../../ts/types.ts';
 
 /**
  * @author GustavBW
@@ -22,23 +23,58 @@ const handleIngestFileInput = async (args: string[], context: ApplicationContext
     if (url === "") {
         return {result: null, error: "No path argument provided"};
     }
-
+    context.logger.log("[IngestFile] Reading ingest file from: " + url);
     const {result, error} = await readIngestFile(url); if (error !== null) {
+        context.logger.log("[IngestFile] Failed to read ingest file: \n\t" + error, LogLevel.FATAL);
         return {result: null, error: error};
     }
+    context.logger.log("[IngestFile] Successfully read ingest file.");
+    context.logger.log("[IngestFile] Verifying ingest file.");
     const verificationResult = verifyIngestFile(result); if (verificationResult.error !== null) {
+        context.logger.log("[IngestFile] Failed to verify ingest file: \n\t" + verificationResult.error, LogLevel.FATAL);
         return {result: null, error: verificationResult.error};
     }
     const ingestScript = verificationResult.result;
+    context.logger.log("[IngestFile] Successfully verified ingest file.");
 
+
+    return processIngestFile(ingestScript, context);
+}
+
+const processIngestFile = async (ingestScript: AutoIngestScript, context: ApplicationContext): Promise<ResErr<string>> => {
     const dbErr = await context.db.connect(ingestScript.settings.dsn, context);
     if (dbErr !== null) {
         return {result: null, error: dbErr};
     }
-    console.log(ingestScript);
+    context.logger.log("[IngestFile] Processing ingest file.");
+    
+    for (const asset of ingestScript.assets) {
+        if (asset.type === "single") {
+            const singleAsset = asset as IngestFileSingleAsset;
+            context.logger.log("[IngestFile] Uploading single asset id: " + singleAsset.id);
+            //TODO: LOD gen., etc.
 
-    return {result: null, error: "Not implemented yet."};
+        } else if (asset.type === "collection") {
+            const collectionAsset = asset as IngestFileCollectionAsset;
+            context.logger.log("[IngestFile] Uploading collection name: " + collectionAsset.name);
+            const useCase = collectionAsset.useCase;
+            const name = collectionAsset.name;
+            const entries = collectionAsset.collection.entries;
+            const res = await context.db.instance.establishCollection({
+                useCase: useCase,
+                name: name,
+                entries: entries
+            });
+            if (res.error !== null) {
+                context.logger.log("[IngestFile] Error while establishing collection: \n\t" + res.error, LogLevel.ERROR);
+                return {result: null, error: res.error};
+            }
+        }
+    }
+
+    return {result: "Ingest file succesfully processed and uploaded", error: null};
 }
+
 /**
  * @author GustavBW
  * @since 0.0.1
@@ -76,7 +112,7 @@ export const assureUniformTransform = (maybeTransform: string | TransformDTO): R
 }
 
 export const validateCollectionAssetEntry = (asset: IngestFileCollectionAsset, entryNum: number): string | null => {
-    const topLevelTypeError = conformsToType(asset, INGESTFILECOLLECTIONASSET_TYPEDECL);
+    const topLevelTypeError = conformsToType(asset, INGEST_FILE_COLLECTION_ASSET_TYPEDECL);
     if (topLevelTypeError != null) {
         return "Type error in collection asset nr " + entryNum + ": " + topLevelTypeError;
     }
@@ -86,9 +122,9 @@ export const validateCollectionAssetEntry = (asset: IngestFileCollectionAsset, e
         return "Type error in collection field on collection asset nr " + entryNum + ": " + collectionFieldTypeError;
     }
 
-    for (let i = 0; i < asset.collection.sources.length; i++) {
-        const source = asset.collection.sources[i];
-        const sourceTypeError = conformsToType(source, INGEST_FILE_ASSET_ENTRY_TYPEDECL);
+    for (let i = 0; i < asset.collection.entries.length; i++) {
+        const source = asset.collection.entries[i];
+        const sourceTypeError = conformsToType(source, INGEST_FILE_COLLECTION_ENTRY_TYPEDECL);
         if (sourceTypeError !== null) {
             return "Type error in source nr: " + i + " in collection asset nr: " + entryNum + ": " + sourceTypeError;
         }

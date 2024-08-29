@@ -17,8 +17,8 @@
             {   
                 "type": "single",
                 "useCase": "environment",
-                "id": 1,
                 "single": {
+                        "id": 1,
                         "source": "https://http.cat/images/404.jpg",          
                         "width": 750,
                         "height": 600
@@ -27,59 +27,43 @@
             {
                 "type": "collection",
                 "useCase": "environment",
-                "id": 1,
+                "name": "SingleAssetCollection",
                 "collection": {
-                        "sources": [
-                            {
+                        "entries": [
+                                {
                                 "transform": {
-                                    "xOffset": 0,
-                                    "yOffset": 0,
-                                    "zIndex": 0,
-                                    "xScale": 1,
-                                    "yScale": 1
+                                        "xOffset": 0,
+                                        "yOffset": 0,
+                                        "zIndex": 0,
+                                        "xScale": 1,
+                                        "yScale": 1
                                 }, 
                                 "graphicalAssetId": 1
-                            }
-                        ],
-                        "transform": {
-                                "xOffset": 0,
-                                "yOffset": 0,
-                                "zIndex": 0,
-                                "xScale": 1,
-                                "yScale": 1
-                        },
-                        "name": "SingleAssetCollection"
+                                }
+                        ]
                 }
         },
         {
             "type": "collection",
             "useCase": "environment",
-            "id": 2,
+            "name": "BakeTestCollection",
             "collection": {
-                "sources": [
-                {
-                        "transform": {
-                                "xOffset": 150,
-                                "yOffset": 0,
-                                "zIndex": 1,
-                                "xScale": 1,
-                                "yScale": 1
-                        }, 
-                        "graphicalAssetId": 1
-                },
-                {
-                        "transform": "-150 0 0, 1 1", 
-                        "graphicalAssetId": 1
-                }
-                ],
-                "transform": {
-                        "xOffset": 0,
-                        "yOffset": 0,
-                        "zIndex": 0,
-                        "xScale": 0.5,
-                        "yScale": 0.5
-                },
-                "name": "BakeTestCollection"
+                "entries": [
+                        {
+                                "transform": {
+                                        "xOffset": 150,
+                                        "yOffset": 0,
+                                        "zIndex": 1,
+                                        "xScale": 1,
+                                        "yScale": 1
+                                }, 
+                                "graphicalAssetId": 1
+                        },
+                        {
+                                "transform": "-150 0 0, 1 1", 
+                                "graphicalAssetId": 1
+                        }
+                ]
             }
         }
     ]

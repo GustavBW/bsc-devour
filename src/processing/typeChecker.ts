@@ -180,3 +180,13 @@ export const typedArray = (validator: Type | FieldValidatorFunction | TypeDeclar
 
     return wrappedValidator;
 }
+
+export const rangeOfConstants = (constants: (string | number)[]): FieldValidatorFunction => {
+    const wrappedValidator = (value: any) => {
+        return constants.includes(value);
+    };
+
+    wrappedValidator.typeString = constants.map(c => c.toString()).join(" | ");
+
+    return wrappedValidator;
+}

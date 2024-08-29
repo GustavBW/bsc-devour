@@ -90,8 +90,16 @@ const handleSingleAssetCLIInput = async (args: string[], context: ApplicationCon
     }
     if (dsn === null) {
         context.logger.log(`No dsn provided.`, LogLevel.ERROR);
-        return Promise.resolve({result: null, error: "No dsn provided."});
+        return {result: null, error: "No dsn provided."};
     }
+    
+    // Connect to DB
+    const err = await context.db.connect(dsn, context);
+    if (err !== null) {
+        context.logger.log(`Error connecting to DB: ${err}`, LogLevel.ERROR);
+        return Promise.resolve({result: null, error: err});
+    }
+
     const {result, error} = await fetchBlobFromUrl(url, context); if (error !== null) {
         context.logger.log(`Error fetching blob from url ${url}: ${error}`, LogLevel.ERROR);
         return {result: null, error: error};
@@ -123,15 +131,8 @@ const handleSingleAssetCLIInput = async (args: string[], context: ApplicationCon
         return {result: null, error: lods.error};
     }
 
-    // Connect to DB
-    const err = await context.db.connect(dsn, context);
-    if (err !== null) {
-        context.logger.log(`Error connecting to DB: ${err}`, LogLevel.ERROR);
-        return Promise.resolve({result: null, error: err});
-    }
-
     // Upload to DB
-    const res = context.db.instance.uploadAsset({
+    const res = await context.db.instance.uploadAsset({
         id: undefined,
         width: metadataRelevant ? metadata!.width! * transform.xScale : transform.xScale,
         height: metadataRelevant ? metadata!.height! * transform.yScale : transform.yScale,
@@ -145,7 +146,6 @@ const handleSingleAssetCLIInput = async (args: string[], context: ApplicationCon
         return Promise.resolve({result: null, error: res.error});
     }
     
-
     return Promise.resolve({result: "Success", error: null});
 }
 

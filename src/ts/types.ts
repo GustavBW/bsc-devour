@@ -1,4 +1,4 @@
-import { optionalType, typeUnionOR } from "../processing/typeChecker";
+import { optionalType, rangeOfConstants as anyOfConstants, typeUnionOR } from "../processing/typeChecker";
 import { Type, type ImageMIMEType, type TypeDeclaration } from "./metaTypes";
 
 /**
@@ -10,31 +10,32 @@ export type Transform = {
     /**
      * uint32
      */
-	"id": number | undefined,
+	id: number | undefined,
      /**
      * float32
      */
-	"xOffset": number,
+	xOffset: number,
      /**
      * float32
      */
-	"yOffset": number,
+	yOffset: number,
      /**
      * uint32
      */
-	"zIndex": number,
+	zIndex: number,
      /**
      * float32
      */
-	"xScale": number, 
+	xScale: number, 
      /**
      * float32
      * duly note that the scale parameters take the	place of a width/height parameter if no such exist
      */
-	"yScale": number, 
+	yScale: number, 
 }
 export type TransformDTO = Omit<Transform, "id">;
 export const TRANSFORM_DTO_TYPEDECL: TypeDeclaration = {
+    id: optionalType(Type.INTEGER),
     xOffset: Type.FLOAT,
     yOffset: Type.FLOAT,
     zIndex: Type.INTEGER,
@@ -53,7 +54,7 @@ export const UNIT_TRANSFORM: Transform = {
  * @author GustavBW
  * @since 0.0.1
  */
-export type AssetEntry = {
+export type CollectionEntry = {
 	id: number | undefined,
 	transform: Transform, // internal relative to collection origo
 	graphicalAssetId: number,
@@ -62,18 +63,12 @@ export type AssetEntry = {
  * @author GustavBW
  * @since 0.0.1
  */
-export type AssetEntryDTO = {
-    transform: TransformDTO,
-    /**
-     * Id of existing graphical asset
-     */
-    graphicalAssetId: number,
-}
-export const ASSET_ENTRY_DTO_TYPEDECL: TypeDeclaration = {
+
+export const COLLECTION_ENTRY_DTO_TYPEDECL: TypeDeclaration = {
     transform: Type.OBJECT,
     graphicalAssetId: Type.INTEGER,
 }
-export const INGEST_FILE_ASSET_ENTRY_TYPEDECL: TypeDeclaration = {
+export const INGEST_FILE_COLLECTION_ENTRY_TYPEDECL: TypeDeclaration = {
     transform: typeUnionOR(Type.OBJECT, Type.STRING),
     graphicalAssetId: Type.INTEGER,
 }
@@ -113,10 +108,10 @@ export const DBDSN_TYPEDECL: TypeDeclaration = {
     user: Type.STRING,
     password: Type.STRING,
     dbName: Type.STRING,
-    sslMode: optionalType(Type.STRING),
+    sslMode: optionalType(anyOfConstants(["require", "disable"])),
 }
 
-export type GraphicAsset = {
+export type GraphicalAsset = {
 	id: number,
 	useCase: AssetUseCase,
 	type: ImageMIMEType, //MIME type
@@ -127,10 +122,10 @@ export type GraphicAsset = {
     alias: string | undefined,
 	blob: Blob //Only available if "hasLODs" is false
 }
-export const GRAPHIC_ASSET_TYPEDECL: TypeDeclaration = {
+export const GRAPHICAL_ASSET_TYPEDECL: TypeDeclaration = {
     id: Type.INTEGER,
-    useCase: Type.STRING,
-    type: Type.STRING,
+    useCase: anyOfConstants(["icon", "environment", "player"]),
+    type: anyOfConstants(["image/jpeg", "image/jpg", "image/avif", "image/tiff", "image/webp", "image/png", "image/gif", "image/svg+xml"]),
     hasLODs: Type.BOOLEAN,
     width: Type.INTEGER,
     height: Type.INTEGER,
@@ -140,18 +135,17 @@ export const GRAPHIC_ASSET_TYPEDECL: TypeDeclaration = {
 // Define common fields
 interface IngestFileAssetBase {
     useCase: AssetUseCase;
-    id: number;
 }
 
 // Define specific variants
 export interface IngestFileSingleAsset extends IngestFileAssetBase {
+    id: number;
     type: "single";
     single: IngestFileSingleAssetField;
 }
 export const INGEST_FILE_SINGLE_ASSET_TYPEDECL: TypeDeclaration = {
-    type: Type.STRING,
-    useCase: Type.STRING,
-    id: Type.INTEGER,
+    type: anyOfConstants(["single"]),
+    useCase: anyOfConstants(["icon", "environment", "player"]),
     single: Type.OBJECT,
 }
 export type IngestFileSingleAssetField = {
@@ -162,31 +156,36 @@ export type IngestFileSingleAssetField = {
 }
 export const INGEST_FILE_SINGLE_ASSET_FIELD_TYPEDECL: TypeDeclaration = {
     source: Type.STRING,
+    id: Type.INTEGER,
     alias: optionalType(Type.STRING),
     width: optionalType(Type.INTEGER),
     height: optionalType(Type.INTEGER),
 }
 
 export const INGEST_FILE_COLLECTION_FIELD_TYPEDECL: TypeDeclaration = {
-    sources: Type.ARRAY,
-    transform: optionalType(typeUnionOR(Type.OBJECT, Type.STRING)),
-    name: Type.STRING,
+    entries: Type.ARRAY,
 }
 
 export interface IngestFileCollectionAsset extends IngestFileAssetBase {
     type: "collection";
+    useCase: AssetUseCase;
+    name: string;
     collection: IngestFileCollectionField;
 }
-export type IngestFileCollectionField = {
-    sources: AssetEntryDTO[],
-    transform?: TransformDTO,
-    name?: string,
-}
-export const INGESTFILECOLLECTIONASSET_TYPEDECL: TypeDeclaration = {
-    type: Type.STRING,
-    useCase: Type.STRING,
-    id: Type.INTEGER,
+export const INGEST_FILE_COLLECTION_ASSET_TYPEDECL: TypeDeclaration = {
+    type: anyOfConstants(["collection"]),
+    useCase: anyOfConstants(["icon", "environment", "player"]),
     collection: Type.OBJECT,
+}
+export type CollectionEntryDTO = {
+    transform: TransformDTO,
+    /**
+     * Id of existing graphical asset
+     */
+    graphicalAssetId: number,
+}
+export type IngestFileCollectionField = {
+    entries: CollectionEntryDTO[],
 }
 
 // Create the discriminated union

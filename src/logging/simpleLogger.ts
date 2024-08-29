@@ -14,14 +14,21 @@ export type Logger = {
 const logDir = "./devour-logs";
 let logWriter: FileSink;
 
+const logLevelStyles = {
+    [LogLevel.INFO]: (message: string) => `${message}`,
+    [LogLevel.WARNING]: (message: string) => `#### ${message}`,
+    [LogLevel.ERROR]: (message: string) => `### ${message}`,
+    [LogLevel.FATAL]: (message: string) => `## ${message}`,
+};
+
 const writeMessage = (message: string, level: LogLevel) => {
-    const logMessage = `${new Date().toISOString()} [${level}]: ${message}\n`;
+    const logMessage = logLevelStyles[level](`${new Date().toISOString()} [${level}]: ${message}`) + "\n";
     logWriter.write(new TextEncoder().encode(logMessage));
     logWriter.flush();
 }
 
 export const initializeLogger = async (): Promise<Logger> => {
-    const currentLogFileName = `${logDir}/${formatDate(Date.now())}.txt`;
+    const currentLogFileName = `${logDir}/${formatDate(Date.now())}.md`;
     await Bun.write(currentLogFileName, new Uint8Array([1,2,3,4,5,6,76,8]), {createPath: true});
     const file = Bun.file(currentLogFileName);
     const exists = await file.exists();
