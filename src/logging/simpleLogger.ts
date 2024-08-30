@@ -1,6 +1,7 @@
 import type { BunFile, FileSink } from "bun";
 
 export enum LogLevel {
+    TRACE = "TRACE",
     INFO = "INFO",
     WARNING = "WARNING",
     ERROR = "ERROR",
@@ -15,6 +16,7 @@ const logDir = "./devour-logs";
 let logWriter: FileSink;
 
 const logLevelStyles = {
+    [LogLevel.TRACE]: (message: string) => `${message}`,
     [LogLevel.INFO]: (message: string) => `${message}`,
     [LogLevel.WARNING]: (message: string) => `#### ${message}`,
     [LogLevel.ERROR]: (message: string) => `### ${message}`,

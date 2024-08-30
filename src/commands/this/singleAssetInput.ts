@@ -1,10 +1,10 @@
 import type sharp from 'sharp';
 import { fetchBlobFromUrl } from '../../networking/blobFetcher.ts';
-import { readAliasArg, readCompactDSNNotation, readCompactTransformNotation, readThresholdArg, readUrlArg, readUseCaseArg } from '../../processing/cliInputProcessor.ts';
+import { readAliasArg, readCompactDSNNotation, readCompactTransformNotation, readIDArg, readThresholdArg, readUrlArg, readUseCaseArg } from '../../processing/cliInputProcessor.ts';
 import { getMetaDataAsIfImage } from '../../processing/imageUtil.ts';
 import { findConformingMIMEType } from '../../processing/typeChecker.ts';
 import { IMAGE_TYPES, type ApplicationContext, type CLIFunc, type ResErr } from '../../ts/metaTypes.ts';
-import { UNIT_TRANSFORM, type AssetUseCase, type DBDSN, type TransformDTO } from '../../ts/types.ts';
+import { UNIT_TRANSFORM, type AssetUseCase, type AutoIngestScript, type DBDSN, type TransformDTO } from '../../ts/types.ts';
 import { generateLODs } from '../../processing/lodGenerator.ts';
 import { LogLevel } from '../../logging/simpleLogger.ts';
 
@@ -20,14 +20,24 @@ const handleSingleAssetCLIInput = async (args: string[], context: ApplicationCon
     let threshold: number | null = null;
     let dsn: DBDSN | null = null;
     let alias: string | null = null;
+    let id: number | null = null;
 
     for (const arg of args) {
+        if (arg.startsWith("id")){
+            const {result, error} = readIDArg(arg);
+            if (error === null) { id = result; }
+            else {
+                context.logger.log(`Error reading id: ${error}`); 
+                return {result: null, error: error}; 
+            }
+        }
+
         if (arg.startsWith("source")){
             const {result, error} = readUrlArg(arg);
             if (error === null) { url = result; }
             else {
                 context.logger.log(`Error reading source: ${error}`); 
-                return Promise.resolve({result: null, error: error}); 
+                return {result: null, error: error}; 
             }
         }
         if (arg.startsWith("useCase")){
@@ -35,7 +45,7 @@ const handleSingleAssetCLIInput = async (args: string[], context: ApplicationCon
             if (error === null) { useCase = result; }
             else {
                 context.logger.log(`Error reading useCase: ${error}`); 
-                return Promise.resolve({result: null, error: error}); 
+                return {result: null, error: error}; 
             }
         }
         if (arg.startsWith("transform")){
@@ -43,7 +53,7 @@ const handleSingleAssetCLIInput = async (args: string[], context: ApplicationCon
             if (error === null) { transform = result; }
             else { 
                 context.logger.log(`Error reading transform: ${error}`);
-                return Promise.resolve({result: null, error: error}); 
+                return {result: null, error: error}; 
             }
         }
         if (arg.startsWith("threshold")){
@@ -51,7 +61,7 @@ const handleSingleAssetCLIInput = async (args: string[], context: ApplicationCon
             if (error === null) { threshold = result; }
             else { 
                 context.logger.log(`Error reading threshold: ${error}`);
-                return Promise.resolve({result: null, error: error}); 
+                return {result: null, error: error}; 
             }
         }
         if (arg.startsWith("dsn")){
@@ -66,31 +76,56 @@ const handleSingleAssetCLIInput = async (args: string[], context: ApplicationCon
             const {result, error} = readAliasArg(arg);
             if (error !== null) {
                 context.logger.log(`Error reading alias: ${error}`);
-                return Promise.resolve({result: null, error: error});
+                return {result: null, error: error};
             }
             alias = result;
         }
     }
 
+    if (id === null) {
+        context.logger.log(`No id provided.`, LogLevel.ERROR);
+        return {result: null, error: "No id provided."};
+    }
     if (url === null) {
         context.logger.log(`No source provided, 'source="../../.."'.`, LogLevel.ERROR);
-        return Promise.resolve({result: null, error: "No source url provided."});
+        return {result: null, error: "No source url provided."};
     }
     if (useCase === null) {
-        context.logger.log(`No useCase provided, defaulting to "environment".`);
+        context.logger.log(`No useCase provided, defaulting to "environment".`, LogLevel.WARNING);
         useCase = "environment";
     }
     if (alias === null) {
         alias = url.split("/").pop()!;
-        context.logger.log(`No alias provided defaulting to url-based alias: ${alias}`);
+        context.logger.log(`No alias provided defaulting to url-based alias: ${alias}`, LogLevel.WARNING);
     }
     if (threshold === null) {
         threshold = 10;
-        context.logger.log(`No threshold provided, defaulting to ${threshold}KB.`);
+        context.logger.log(`No threshold provided, defaulting to ${threshold}KB.`, LogLevel.WARNING);
     }
     if (dsn === null) {
         context.logger.log(`No dsn provided.`, LogLevel.ERROR);
         return {result: null, error: "No dsn provided."};
+    }
+
+    const asIngestFile: AutoIngestScript = {
+        settings: {
+            version: "0.0.1",
+            dsn: dsn,
+            LODThreshold: threshold,
+            allowedFailures: 0,
+            maxLOD: 0,
+        },
+        assets: [
+            {
+                type: "single",
+                useCase: useCase,
+                single: {
+                    id: id,
+                    alias: alias,
+                    source: url,
+                }
+            }
+        ]
     }
     
     // Connect to DB

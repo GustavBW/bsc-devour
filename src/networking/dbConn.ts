@@ -60,14 +60,42 @@ const _uploadAsset = async (asset: UploadableAsset, context: ApplicationContext,
         context.logger.log("[db] Error inserting/updating graphical asset: " + (e as any).message, LogLevel.ERROR);
         return {result: null, error: (e as any).message};
     }
-    context.logger.log("Inserted/updated graphical asset id: " + insertRes.rows[0].id);
+    context.logger.log("[db] Inserted/updated graphical asset id: " + insertRes.rows[0].id);
     
-    //Delete existing LODs of former asset (if any)
-    //delete * from LODs where graphicalAsset = asset.id
-
+    if (hasLODS) {
+        context.logger.log("[db] Inserting " + asset.lods.length + " LODs for asset id: " + asset.id);
+        const err = await insertLODS(asset.lods, asset.id, conn, context); if (err !== null) {
+            return {result: null, error: err};
+        }
+    }
+    
     knownExistingAssets.push(asset.id!);
 
-    return {result: null, error: "Not implemented ya daft knob"};
+    context.logger.log("[db] Succesfully inserted new graphical asset id: " + asset.id + " with " + asset.lods.length + " LODs");
+    return {result: "Succesfully inserted new graphical asset id: " + asset.id, error: null};
+}
+
+const insertLODS = async (lods: LODDTO[], assetId: number, conn: pg.Client, context: ApplicationContext): Promise<Error | null> => {
+    try {
+        const valueTuples: [Blob, number, number][] = lods.map((lod) => [lod.blob, lod.detailLevel, assetId]);
+        let valuesSQL = "";
+        for (let i = 0; i < valueTuples.length; i++) {
+            valuesSQL += `($${i * 3 + 1}, $${i * 3 + 2}, $${i * 3 + 3})`;
+            if (i < valueTuples.length - 1) {
+                valuesSQL += ", ";
+            }
+        }
+        const constructedQuery = `
+            INSERT INTO "LOD" (blob, "detailLevel", "graphicalAsset")
+            VALUES ${valuesSQL} RETURNING id;
+        `;
+        context.logger.log("[db] Constructed query: " + constructedQuery);
+        await conn.query(constructedQuery, valueTuples.flat());
+    }catch (e){
+        context.logger.log("[db] Error inserting LODs: " + (e as any).message, LogLevel.ERROR);
+        return (e as any).message;
+    }
+    return null;
 }
 
 export type CollectionSpecification = {
@@ -173,12 +201,12 @@ const clearExistingContent = async (graphicalAssetId: number, context: Applicati
     let deleteLODsRes, getAssetAliasRes;
     try{
         deleteLODsRes = await client.query<any>(`
-            DELETE FROM "LOD" WHERE "graphicalAsset" = $1
-        `, [graphicalAssetId]);
+            DELETE FROM "LOD" WHERE "graphicalAsset" = $1`, 
+            [graphicalAssetId]);
         
         getAssetAliasRes = await client.query<any>(`
-            SELECT alias FROM "GraphicalAsset" WHERE id = $1
-        `, [graphicalAssetId]);
+            SELECT alias FROM "GraphicalAsset" WHERE id = $1`, 
+            [graphicalAssetId]);
     }catch (e) {
         context.logger.log(`[db] Error clearing existing content for asset id: ${graphicalAssetId}, error: \n\t${(e as any).message}`, LogLevel.ERROR);
         return {result: null, error: `Error clearing existing content for asset id: ${graphicalAssetId}, error: \n\t${(e as any).message}`};

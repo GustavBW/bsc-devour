@@ -139,7 +139,6 @@ interface IngestFileAssetBase {
 
 // Define specific variants
 export interface IngestFileSingleAsset extends IngestFileAssetBase {
-    id: number;
     type: "single";
     single: IngestFileSingleAssetField;
 }
@@ -149,6 +148,7 @@ export const INGEST_FILE_SINGLE_ASSET_TYPEDECL: TypeDeclaration = {
     single: Type.OBJECT,
 }
 export type IngestFileSingleAssetField = {
+    id: number;
     source: string;
     alias?: string;
     width?: number;
@@ -164,12 +164,12 @@ export const INGEST_FILE_SINGLE_ASSET_FIELD_TYPEDECL: TypeDeclaration = {
 
 export const INGEST_FILE_COLLECTION_FIELD_TYPEDECL: TypeDeclaration = {
     entries: Type.ARRAY,
+    name: Type.STRING,
 }
 
 export interface IngestFileCollectionAsset extends IngestFileAssetBase {
     type: "collection";
     useCase: AssetUseCase;
-    name: string;
     collection: IngestFileCollectionField;
 }
 export const INGEST_FILE_COLLECTION_ASSET_TYPEDECL: TypeDeclaration = {
@@ -185,6 +185,7 @@ export type CollectionEntryDTO = {
     graphicalAssetId: number,
 }
 export type IngestFileCollectionField = {
+    name: string;
     entries: CollectionEntryDTO[],
 }
 

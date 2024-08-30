@@ -1,5 +1,6 @@
 import { LogLevel } from '../../logging/simpleLogger.ts';
 import { readCompactDSNNotation, readCompactDSNNotationRaw, readCompactTransformNotation, readCompactTransformNotationRaw, readUrlArg } from '../../processing/cliInputProcessor.ts';
+import { processIngestFile } from '../../processing/ingestFileProcessor.ts';
 import { conformsToType } from '../../processing/typeChecker.ts';
 import type { ApplicationContext, CLIFunc, ResErr } from '../../ts/metaTypes.ts';
 import { INGEST_FILE_COLLECTION_ENTRY_TYPEDECL, COLLECTION_ENTRY_DTO_TYPEDECL, DBDSN_TYPEDECL, INGEST_FILE_COLLECTION_ASSET_TYPEDECL, INGEST_FILE_COLLECTION_FIELD_TYPEDECL, INGEST_FILE_SINGLE_ASSET_TYPEDECL, INGEST_FILE_SINGLE_ASSET_FIELD_TYPEDECL, TRANSFORM_DTO_TYPEDECL, type AutoIngestScript, type DBDSN, type IngestFileAssetEntry, type IngestFileCollectionAsset, type IngestFileSingleAsset, type TransformDTO } from '../../ts/types.ts';
@@ -37,42 +38,7 @@ const handleIngestFileInput = async (args: string[], context: ApplicationContext
     const ingestScript = verificationResult.result;
     context.logger.log("[IngestFile] Successfully verified ingest file.");
 
-
     return processIngestFile(ingestScript, context);
-}
-
-const processIngestFile = async (ingestScript: AutoIngestScript, context: ApplicationContext): Promise<ResErr<string>> => {
-    const dbErr = await context.db.connect(ingestScript.settings.dsn, context);
-    if (dbErr !== null) {
-        return {result: null, error: dbErr};
-    }
-    context.logger.log("[IngestFile] Processing ingest file.");
-    
-    for (const asset of ingestScript.assets) {
-        if (asset.type === "single") {
-            const singleAsset = asset as IngestFileSingleAsset;
-            context.logger.log("[IngestFile] Uploading single asset id: " + singleAsset.id);
-            //TODO: LOD gen., etc.
-
-        } else if (asset.type === "collection") {
-            const collectionAsset = asset as IngestFileCollectionAsset;
-            context.logger.log("[IngestFile] Uploading collection name: " + collectionAsset.name);
-            const useCase = collectionAsset.useCase;
-            const name = collectionAsset.name;
-            const entries = collectionAsset.collection.entries;
-            const res = await context.db.instance.establishCollection({
-                useCase: useCase,
-                name: name,
-                entries: entries
-            });
-            if (res.error !== null) {
-                context.logger.log("[IngestFile] Error while establishing collection: \n\t" + res.error, LogLevel.ERROR);
-                return {result: null, error: res.error};
-            }
-        }
-    }
-
-    return {result: "Ingest file succesfully processed and uploaded", error: null};
 }
 
 /**

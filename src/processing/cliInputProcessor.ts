@@ -1,6 +1,19 @@
 import type { AssetUseCase, DBDSN, TransformDTO } from '../ts/types.ts';
 import type { Error, ResErr } from '../ts/metaTypes.ts';
-import { isValidNumber, isValidUrl } from './typeChecker.ts';
+import { isValidInteger, isValidNumber, isValidUrl } from './typeChecker.ts';
+
+export const readIDArg = (arg: string): ResErr<number> => {
+    const idStrSplit = arg.split("=");
+    if (idStrSplit.length !== 2) {
+        return {result: null, error: "Missing segment in id argument"};
+    }
+    const valueStr = idStrSplit[1].replaceAll("\"", "").trim();
+    const id = parseInt(valueStr);
+    if (!isValidInteger(id)) {
+        return {result: null, error: "Invalid id value"};
+    }
+    return {result: id, error: null};
+}
 
 export const readUrlArg = (arg: string): ResErr<string> => {
     let url = arg.split("=")[1].replaceAll("\"", "").trim();

@@ -27,8 +27,8 @@
             {
                 "type": "collection",
                 "useCase": "environment",
-                "name": "SingleAssetCollection",
                 "collection": {
+                        "name": "SingleAssetCollection",
                         "entries": [
                                 {
                                 "transform": {
@@ -46,8 +46,8 @@
         {
             "type": "collection",
             "useCase": "environment",
-            "name": "BakeTestCollection",
             "collection": {
+                "name": "BakeTestCollection",
                 "entries": [
                         {
                                 "transform": {
