@@ -16,12 +16,12 @@ export type UploadableAsset = {
 	type: ImageMIMEType, //MIME type
 }
 const SQL_UPSERT_GRAPHICAL_ASSET = `
-    INSERT INTO GraphicalAsset (id, width, height, "useCase", alias, type, "hasLODs", blob)
+    INSERT INTO "GraphicalAsset" (id, width, height, "useCase", alias, type, "hasLODs", blob)
     VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
     ON CONFLICT (id) DO UPDATE SET 
         width = EXCLUDED.width,
         height = EXCLUDED.height,
-        "useCase" = EXCLUDED.useCase,
+        "useCase" = EXCLUDED."useCase",
         alias = EXCLUDED.alias,
         type = EXCLUDED.type,
         "hasLODs" = EXCLUDED."hasLODs",

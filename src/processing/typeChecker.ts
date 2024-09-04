@@ -120,7 +120,9 @@ export const optionalType = (validator: Type | FieldValidatorFunction | TypeDecl
     if (typeof validator === "string") {
         wrappedValidator.typeString = validator + "?";
     } else if (typeof validator === "object") {
-        wrappedValidator.typeString = "undefined | " + JSON.stringify(validator);
+        wrappedValidator.typeString = JSON.stringify(validator) + "?";
+    } else if (typeof validator === "function") {
+        wrappedValidator.typeString = (validator as any).typeString + "?";
     }
 
     return wrappedValidator;
@@ -144,7 +146,15 @@ export const typeUnionOR = (...validators: (Type | FieldValidatorFunction | Type
         return false;
     };
 
-    wrappedValidator.typeString = validators.map(v => typeof v !== "string" ? typeof v : v).join(" | ");
+    wrappedValidator.typeString = validators.map(validator => {
+        if (typeof validator === "string") {
+            return validator;
+        } else if (typeof validator === "object") {
+            return JSON.stringify(validator);
+        } else {
+            return (validator as any).typeString;
+        }
+    }).join(" | ");
 
     return wrappedValidator;
 }
@@ -176,6 +186,8 @@ export const typedArray = (validator: Type | FieldValidatorFunction | TypeDeclar
         wrappedValidator.typeString = validator + "[]";
     } else if (typeof validator === "object") {
         wrappedValidator.typeString = JSON.stringify(validator) + "[]";
+    } else if (typeof validator === "function") {
+        wrappedValidator.typeString = (validator as any).typeString + "[]";
     }
 
     return wrappedValidator;

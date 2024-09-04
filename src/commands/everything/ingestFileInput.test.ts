@@ -53,9 +53,9 @@ test("assureUniformDSN should return error on invalid compact cli notation input
 });
 
 test("assureUniformDSN should return valid DSN on valid object input", async () => {
-    const result = assureUniformDSN({host: "host", port: 3423, user: "username", password: "password", dbName: "dbName", sslMode: "sslMode"});
+    const result = assureUniformDSN({host: "host", port: 3423, user: "username", password: "password", dbName: "dbName", sslMode: "require"});
     expect(result.error).toBeNull();
-    expect(result.result).toEqual({host: "host", port: 3423, user: "username", password: "password", dbName: "dbName", sslMode: "sslMode"});
+    expect(result.result).toEqual({host: "host", port: 3423, user: "username", password: "password", dbName: "dbName", sslMode: "require"});
 });
 
 test("assureUniformDSN should default sslMode to \"disable\" on missing declaration", async () => {
@@ -76,10 +76,9 @@ test("validateCollectionAssetEntry should return null on valid input", async () 
     const collectionAsset: any = {
         type: "collection",
         useCase: "icon",
-        id: 1,
         collection: {
             name: "SomeNameHere",
-            sources: [{
+            entries: [{
                 transform: {xOffset: 1, yOffset: 2, zIndex: 3, xScale: 4, yScale: 5},
                 graphicalAssetId: 1,
             }],
@@ -96,7 +95,7 @@ test("validateCollectionAssetEntry should return error on missing type field", a
         id: 1,
         collection: {
             name: "true",
-            sources: [{
+            entries: [{
                 transform: {xOffset: 1, yOffset: 2, zIndex: 3, xScale: 4, yScale: 5},
                 graphicalAssetId: 1,
             }],
@@ -112,8 +111,8 @@ test("validateSingleAssetEntry should return null on valid input", async () => {
     const singleAsset: IngestFileSingleAsset = {
         type: "single",
         useCase: "icon",
-        id: 1,
         single: {
+            id: 1,
             source: "https://http.cat/images/100.jpg",
             alias: "YallNeverGuessThisOne",
             width: 100,
@@ -126,8 +125,8 @@ test("validateSingleAssetEntry should return null on valid input", async () => {
     const singleAsset2: IngestFileSingleAsset = {
         type: "single",
         useCase: "icon",
-        id: 1,
         single: {
+            id: 1,
             source: "https://http.cat/images/100.jpg",
             alias: "YallNeverGuessThisOneEither",
         },

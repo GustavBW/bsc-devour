@@ -3,7 +3,7 @@ import { initializeLogger, onApplicationShutdown as loggerShutdown } from './log
 import { DB_SINGLETON } from './networking/dbConn.ts';
 import type { ApplicationContext } from './ts/metaTypes.ts';
 
-export const VERSION = "0.0.1";
+export const VERSION = "0.0.2";
 
 // Get the command-line arguments
 const args = process.argv.slice(2);

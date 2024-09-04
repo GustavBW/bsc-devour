@@ -40,7 +40,6 @@ const handleIngestFileInput = async (args: string[], context: ApplicationContext
 
     return processIngestFile(ingestScript, context);
 }
-
 /**
  * @author GustavBW
  * @since 0.0.1
@@ -54,7 +53,7 @@ export const INGEST_FILE_INPUT_CMD: CLIFunc<string> = {
     documentation: `
     Devours all assets specified in the file according to the given settings.
     The source may be an http url or a filepath.
-    To see an example of the ingest file format, run "bun devour help ingestFileFormat".
+    To see an example of the ingest file format, run "bun devour.js help ingestFileFormat".
     `,
     abstractExample: "bun devour everything path=\"url\"",
 }

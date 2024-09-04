@@ -77,29 +77,22 @@ const INGEST_FILE_FORMAT_EXAMPLE = `
 	},
 	"assets": [
 		{
-			"id": uint32,
+			"type": "collection" | "single",
 			"useCase": "icon" | "environment" | "player",
-
 			"single": {     // mutually exclusive with field "collection"
+				"id": uint32,
+				"alias": string,	
 				//All sources must either be local files or start with \"www\" or \"http\"
 				"source": string, 			
-				"width": uint32, 			
-				"height": uint32		
+				"width": uint32?, 			
+				"height": uint32?		
 			}?,
 			"collection": {
+				"name": string,	
 				"sources": {	
 					"transform": Transform, // internal, relative, as seen below
 					"graphicalAssetId": uint32
-				}[], 		
-				"transform": {
-					"xOffset": float32,
-					"yOffset": float32,
-					"zIndex": uint32,
-					 // the scale parameters acts as width/height if no such exist
-					"xScale": float32, 
-					"yScale": float32
-				}, 	
-				"name": string,			
+				}[] 			
 			}?
 		}
 	]

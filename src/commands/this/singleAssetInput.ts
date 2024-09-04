@@ -168,7 +168,7 @@ const handleSingleAssetCLIInput = async (args: string[], context: ApplicationCon
 
     // Upload to DB
     const res = await context.db.instance.uploadAsset({
-        id: undefined,
+        id: id,
         width: metadataRelevant ? metadata!.width! * transform.xScale : transform.xScale,
         height: metadataRelevant ? metadata!.height! * transform.yScale : transform.yScale,
         useCase: useCase,
@@ -202,6 +202,6 @@ export const SINGLE_ASSET_INPUT_CMD: CLIFunc<string> = {
     Width and height are in pixels and will be derived from retrieved asset if possible.
     Usecase defaults to "environment" if not provided.
     `,
-    abstractExample: "bun devour this source=\"url\" useCase=\"icon\" | \"environment\" | \"player\" transform=\"1 1 0, 1 1\" treshold=\"kb's\" dsn=\"host port, user password, dbName, sslMode\"",
+    abstractExample: "bun devour this source=\"url\" useCase=\"icon\" | \"environment\" | \"player\"? transform=\"1 1 0, 1 1\"? treshold=\"kb's\"?  alias=\"nameOfFile\"? dsn=\"host port, user password, dbName, sslMode\"",
 }
 
