@@ -37,10 +37,10 @@ const getTypeFromURL = (url: string, blob: Blob): ResErr<string> => {
 
 export const fetchBlobOverHTTP = async (url: string, context?: ApplicationContext): Promise<ResErr<Blob>> => {
     try {
-        context?.logger.log(`Fetching blob over http from ${url}`);
+        context?.logger.log(`[fetcher] Fetching blob over http from ${url}`);
         const response = await fetch(url);
         if (!response.ok) {
-            context?.logger.log(`HTTP error! status: ${response.status}`);
+            context?.logger.log(`[fetcher] HTTP error! status: ${response.status}`);
             return { result: null, error: `HTTP error! status: ${response.status}` };
         }
 
@@ -49,52 +49,52 @@ export const fetchBlobOverHTTP = async (url: string, context?: ApplicationContex
             let discoveredType = "";
             const typeAttemptHeaders = getTypeFromResponseHeaders(response, blob);
             if (typeAttemptHeaders.error === null) { 
-                context?.logger.log(`Discovered type from Content-Type header: ${typeAttemptHeaders.result}`);
+                context?.logger.log(`[fetcher] Discovered type from Content-Type header: ${typeAttemptHeaders.result}`);
                 discoveredType = typeAttemptHeaders.result; 
             } else {
                 const typeAttemptURL = getTypeFromURL(url, blob);
                 if (typeAttemptURL.error === null) { 
-                    context?.logger.log(`Discovered type from URL: ${typeAttemptURL.result}`);
+                    context?.logger.log(`[fetcher] Discovered type from URL: ${typeAttemptURL.result}`);
                     discoveredType = typeAttemptURL.result; 
                 } else { 
-                    context?.logger.log(`Could not determine content type: ${typeAttemptURL.error}`);
+                    context?.logger.log(`[fetcher] Could not determine content type: ${typeAttemptURL.error}`);
                     return { result: null, error: "Could not determine content type: " + typeAttemptURL.error}; 
                 }
             }
             const {result, error} = findConformingMIMEType(discoveredType); if (error !== null) {
-                context?.logger.log(`Error determining corresponding MIME type for discovered type ${discoveredType}: ${error}`);
+                context?.logger.log(`[fetcher] Error determining corresponding MIME type for discovered type ${discoveredType}: ${error}`);
                 return { result: null, error: error };
             }
 
             blob = new Blob([blob], { type: result });
         }
-        context?.logger.log(`Blob fetched successfully of type: ${blob.type}`);
+        context?.logger.log(`[fetcher] Blob fetched successfully of type: ${blob.type}`);
         return { result: blob, error: null };
     } catch (error) {
-        context?.logger.log(`Error fetching blob: ${(error as any).message}`);
+        context?.logger.log(`[fetcher] Error fetching blob: ${(error as any).message}`);
         return { result: null, error: (error as any).message };
     }
 }
 
 export const fetchBlobFromFile = async (url: string, init?: boolean, context?: ApplicationContext): Promise<ResErr<Blob>> => {
-    context?.logger.log(`Fetching blob from file: ${url}`);
+    context?.logger.log(`[fetcher] Fetching blob from file: ${url}`);
     let file: BunFile | Blob = Bun.file(url);
     const fileExists = await (file as BunFile).exists();
     if (!fileExists) {
-        context?.logger.log(`File does not exist: ${url}`);
+        context?.logger.log(`[fetcher] File does not exist: ${url}`);
         return { result: null, error: "File does not exist" };
     }
     const {result, error} = findConformingMIMEType(file.type); if (error !== null) {
-        context?.logger.log(`Error determining MIME type for file ${url}: ${error}`);
+        context?.logger.log(`[fetcher] Error determining MIME type for file ${url}: ${error}`);
         return { result: null, error: error };
     }
     if (result !== file.type) {
-        context?.logger.log(`Replacing existing type of file ${url}: ${file.type} with corresponding MIME type: ${result}`);
+        context?.logger.log(`[fetcher] Replacing existing type of file ${url}: ${file.type} with corresponding MIME type: ${result}`);
         file = new Blob([file], { type: result });
     }
 
     if (init) {
-        context?.logger.log(`Initializing data in blob from: ${url}`);
+        context?.logger.log(`[fetcher] Initializing data in blob from: ${url}`);
         await file.arrayBuffer();
     }
     return { result: file, error: null };
