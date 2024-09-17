@@ -94,9 +94,9 @@ export const prepareSingleAssetForUpload = async (asset: IngestFileSingleAssetFi
         return {result: null, error: contentTypeRes.error};
     }
     if (contentTypeRes.result === ImageMIMEType.SVG) { // SVG TRANSFORM CASE
-        if (!asset.width || !asset.height || (asset.width <= 1 && asset.height <= 1)) {
-            context.logger.log(`[sai cmd] SVGs must have a transform with non 1 xScale and yScale as they make up the needed width and height properties in this case.`, LogLevel.ERROR);
-            return {result: null, error: "SVGs must have a transform with non 1 xScale and yScale as they make up the needed width and height properties in this case."};
+        if (!asset.width || !asset.height || (asset.width <= 1 || asset.height <= 1)) {
+            context.logger.log(`[sai cmd] SVGs must have width and height. It can be provided through a transforms' xScale and yScale properties.`, LogLevel.ERROR);
+            return {result: null, error: "SVGs must have width and height. It can be provided through a transforms' xScale and yScale properties."};
         }
     }else{
         const {result, error} = await getMetaDataAsIfImage(blob, context); if (error !== null) {

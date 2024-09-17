@@ -24,6 +24,56 @@
                         "height": 600
                 }
             },
+            {   
+                "type": "single",
+                "useCase": "environment",
+                "single": {
+                        "id": 2,
+                        "source": "./src/assets/testData/testImage.gif"
+                }
+            },
+            {   
+                "type": "single",
+                "useCase": "environment",
+                "single": {
+                        "id": 3,
+                        "source": "./src/assets/testData/testImage.jpg"
+                }
+            },
+            {   
+                "type": "single",
+                "useCase": "environment",
+                "single": {
+                        "id": 4,
+                        "source": "./src/assets/testData/testImage.png"
+                }
+            },
+            {   
+                "type": "single",
+                "useCase": "environment",
+                "single": {
+                        "id": 5,
+                        "source": "./src/assets/testData/testImage.svg",
+                        "width": 750,
+                        "height": 400
+                }
+            },
+            {   
+                "type": "single",
+                "useCase": "environment",
+                "single": {
+                        "id": 6,
+                        "source": "./src/assets/testData/testImage.tiff"
+                }
+            },
+            {   
+                "type": "single",
+                "useCase": "environment",
+                "single": {
+                        "id": 7,
+                        "source": "./src/assets/testData/testImage.webp"
+                }
+            },
             {
                 "type": "collection",
                 "useCase": "environment",
