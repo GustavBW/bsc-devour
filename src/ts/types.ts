@@ -1,5 +1,5 @@
 import { optionalType, rangeOfConstants as anyOfConstants, typeUnionOR } from "../processing/typeChecker";
-import { Type, type ImageMIMEType, type TypeDeclaration } from "./metaTypes";
+import { ImageMIMEType, Type, type TypeDeclaration } from "./metaTypes";
 
 /**
  * CLI shortHand: "xOff yOff zIndex, xScale yScale", example: transform="0f 0f 0, 0f 0f"
@@ -86,14 +86,18 @@ export type LODDTO = {
      */
     detailLevel: number,
     blob: Blob,
+    type: ImageMIMEType,
 }
 
 /**
  * @author GustavBW
  * @since 0.0.1
  */
-export type AssetUseCase = "icon" | "environment" | "player";
-export type AssetType = "single" | "collection";
+export enum AssetUseCase {
+    ICON = "icon",
+    ENVIRONMENT = "environment",
+    PLAYER = "player",
+}
 export type DBDSN = {
     host: string,
     port: number,
@@ -124,27 +128,35 @@ export type GraphicalAsset = {
 }
 export const GRAPHICAL_ASSET_TYPEDECL: TypeDeclaration = {
     id: Type.INTEGER,
-    useCase: anyOfConstants(["icon", "environment", "player"]),
-    type: anyOfConstants(["image/jpeg", "image/jpg", "image/avif", "image/tiff", "image/webp", "image/png", "image/gif", "image/svg+xml"]),
+    useCase: anyOfConstants(Object.values(AssetUseCase)),
+    type: anyOfConstants(Object.values(ImageMIMEType)),
     hasLODs: Type.BOOLEAN,
     width: Type.INTEGER,
     height: Type.INTEGER,
     alias: optionalType(Type.STRING),
     blob: Type.OBJECT,
 }
+
+export enum IngestFileAssetType {
+    SINGLE = "single",
+    COLLECTION = "collection",
+    UNKNOWN = "unknown",
+}
+
 // Define common fields
 interface IngestFileAssetBase {
+    type: IngestFileAssetType;
     useCase: AssetUseCase;
 }
 
 // Define specific variants
 export interface IngestFileSingleAsset extends IngestFileAssetBase {
-    type: "single";
+    type: IngestFileAssetType.SINGLE;
     single: IngestFileSingleAssetField;
 }
 export const INGEST_FILE_SINGLE_ASSET_TYPEDECL: TypeDeclaration = {
-    type: anyOfConstants(["single"]),
-    useCase: anyOfConstants(["icon", "environment", "player"]),
+    type: anyOfConstants([IngestFileAssetType.SINGLE]),
+    useCase: anyOfConstants(Object.values(AssetUseCase)),
     single: Type.OBJECT,
 }
 export type IngestFileSingleAssetField = {
@@ -168,13 +180,13 @@ export const INGEST_FILE_COLLECTION_FIELD_TYPEDECL: TypeDeclaration = {
 }
 
 export interface IngestFileCollectionAsset extends IngestFileAssetBase {
-    type: "collection";
+    type: IngestFileAssetType.COLLECTION;
     useCase: AssetUseCase;
     collection: IngestFileCollectionField;
 }
 export const INGEST_FILE_COLLECTION_ASSET_TYPEDECL: TypeDeclaration = {
-    type: anyOfConstants(["collection"]),
-    useCase: anyOfConstants(["icon", "environment", "player"]),
+    type: anyOfConstants([IngestFileAssetType.COLLECTION]),
+    useCase: anyOfConstants(Object.values(AssetUseCase)),
     collection: Type.OBJECT,
 }
 export type CollectionEntryDTO = {

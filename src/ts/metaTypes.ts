@@ -38,20 +38,49 @@ export type FieldValidatorFunction = (valueOfField: any) => boolean;
 export type TypeDeclaration = {
     [key: string]: Type | FieldValidatorFunction | TypeDeclaration
 }
-
-export type ImageMIMEType = "image/jpeg" | "image/jpg" | "image/avif" | "image/tiff" | "image/webp" | "image/png" | "image/gif" | "image/bmp" | "image/svg+xml";
-export type ImageFileType = "jpeg" | "jpg" | "avif" | "tiff" | "tif" | "webp" | "png" | "gif" | "bmp" | "svg";
+/**
+ * @author GustavBW
+ * @since 0.0.2
+ */
+export enum ImageMIMEType {
+    JPEG = "image/jpeg",
+    JPG = "image/jpg",
+    AVIF = "image/avif",
+    TIFF = "image/tiff",
+    WEBP = "image/webp",
+    PNG = "image/png",
+    GIF = "image/gif",
+    BMP = "image/bmp",
+    SVG = "image/svg+xml"
+}
+/**
+ * @author GustavBW
+ * @since 0.0.2
+ */
+export enum ImageFileType {
+    JPEG = "jpeg",
+    JPG = "jpg",
+    AVIF = "avif",
+    TIFF = "tiff",
+    WEBP = "webp",
+    PNG = "png",
+    GIF = "gif",
+    BMP = "bmp",
+    SVG = "svg"
+}
 /**
  * All possible image format types, even some not supported. 
  * Index 0 of all field values is the MIME type.
+ * @auther GustavBW
+ * @since 0.0.1
  */
-export const IMAGE_TYPES: {[key: string]: [ImageMIMEType, ...(ImageMIMEType | ImageFileType)[]]} = {
-    jpeg: ["image/jpeg", "image/jpg", "jpeg", "jpg"], 
-    avif: ["image/avif", "avif"], 
-    tiff: ["image/tiff", "tiff", "tif"], 
-    webp: ["image/webp", "webp"], 
-    png: ["image/png", "png"], 
-    gif: ["image/gif", "gif"], 
-    bmp: ["image/bmp", "bmp"], 
-    svg: ["image/svg+xml", "svg"],
-}
+export const IMAGE_TYPES: { [key: string]: [ImageMIMEType, ...(ImageMIMEType | ImageFileType)[]] } = {
+    jpeg: [ImageMIMEType.JPEG, ImageMIMEType.JPG, ImageFileType.JPEG, ImageFileType.JPG], 
+    avif: [ImageMIMEType.AVIF, ImageFileType.AVIF], 
+    tiff: [ImageMIMEType.TIFF, ImageFileType.TIFF, ImageFileType.TIFF], 
+    webp: [ImageMIMEType.WEBP, ImageFileType.WEBP], 
+    png: [ImageMIMEType.PNG, ImageFileType.PNG], 
+    gif: [ImageMIMEType.GIF, ImageFileType.GIF], 
+    bmp: [ImageMIMEType.BMP, ImageFileType.BMP], 
+    svg: [ImageMIMEType.SVG, ImageFileType.SVG],
+};

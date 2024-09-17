@@ -4,7 +4,7 @@ import { readAliasArg, readCompactDSNNotation, readCompactTransformNotation, rea
 import { getMetaDataAsIfImage } from '../../processing/imageUtil.ts';
 import { findConformingMIMEType } from '../../processing/typeChecker.ts';
 import { IMAGE_TYPES, type ApplicationContext, type CLIFunc, type ResErr } from '../../ts/metaTypes.ts';
-import { UNIT_TRANSFORM, type AssetUseCase, type AutoIngestScript, type DBDSN, type TransformDTO } from '../../ts/types.ts';
+import { UNIT_TRANSFORM, AssetUseCase, type AutoIngestScript, type DBDSN, type TransformDTO, IngestFileAssetType } from '../../ts/types.ts';
 import { generateLODs } from '../../processing/lodGenerator.ts';
 import { LogLevel } from '../../logging/simpleLogger.ts';
 
@@ -92,7 +92,7 @@ const handleSingleAssetCLIInput = async (args: string[], context: ApplicationCon
     }
     if (useCase === null) {
         context.logger.log(`No useCase provided, defaulting to "environment".`, LogLevel.WARNING);
-        useCase = "environment";
+        useCase = AssetUseCase.ENVIRONMENT;
     }
     if (alias === null) {
         alias = url.split("/").pop()!;
@@ -117,7 +117,7 @@ const handleSingleAssetCLIInput = async (args: string[], context: ApplicationCon
         },
         assets: [
             {
-                type: "single",
+                type: IngestFileAssetType.SINGLE,
                 useCase: useCase,
                 single: {
                     id: id,
@@ -172,9 +172,9 @@ const handleSingleAssetCLIInput = async (args: string[], context: ApplicationCon
         width: metadataRelevant ? metadata!.width! * transform.xScale : transform.xScale,
         height: metadataRelevant ? metadata!.height! * transform.yScale : transform.yScale,
         useCase: useCase,
-        type: contentTypeRes.result!,
+        type: contentTypeRes.result,
         alias: alias,
-        lods: lods.result!,
+        lods: lods.result,
     });
     if (res.error !== null) {
         context.logger.log(`Error uploading asset: ${res.error}`, LogLevel.ERROR);

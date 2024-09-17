@@ -1,5 +1,6 @@
 import { test, expect } from "bun:test";
 import { readUrlArg, readUseCaseArg, readThresholdArg, readCompactTransformNotation, readCompactDSNNotation } from "./cliInputProcessor";
+import { AssetUseCase } from "../ts/types";
 
 test("readUrlArg valid URL", () => {
   const result = readUrlArg('url="https://example.com"');
@@ -13,7 +14,7 @@ test("readUrlArg invalid URL", () => {
 
 test("readUseCaseArg valid useCase icon", () => {
   const result = readUseCaseArg('useCase="icon"');
-  expect(result).toEqual({ result: "icon", error: null });
+  expect(result).toEqual({ result: AssetUseCase.ICON, error: null });
 });
 
 test("readUseCaseArg invalid useCase", () => {

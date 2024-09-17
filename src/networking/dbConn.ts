@@ -1,6 +1,3 @@
-// Some postgresql connector here. 
-
-import type { ErrorLike } from "bun";
 import type { ApplicationContext, Error, ImageMIMEType, ResErr } from "../ts/metaTypes";
 import type { AssetUseCase, CollectionEntryDTO, DBDSN, LODDTO, TransformDTO } from "../ts/types";
 import pg from 'pg'
@@ -23,9 +20,7 @@ const SQL_UPSERT_GRAPHICAL_ASSET = `
         height = EXCLUDED.height,
         "useCase" = EXCLUDED."useCase",
         alias = EXCLUDED.alias,
-        type = EXCLUDED.type,
-        "hasLODs" = EXCLUDED."hasLODs",
-        blob = EXCLUDED.blob
+        type = EXCLUDED.type
     RETURNING id;
 `;
 const _uploadAsset = async (asset: UploadableAsset, context: ApplicationContext, conn: pg.Client, knownExistingAssets: number[]): Promise<ResErr<string>> => {
@@ -41,8 +36,6 @@ const _uploadAsset = async (asset: UploadableAsset, context: ApplicationContext,
     const clearResult = await clearExistingContent(asset.id, context, conn); if (clearResult.error !== null) {
         return {result: null, error: clearResult.error};
     }
-    const hasLODS = asset.lods.length > 1;
-    const blob = hasLODS ? null : asset.lods[0].blob;
 
     let insertRes;
     try {
@@ -52,9 +45,7 @@ const _uploadAsset = async (asset: UploadableAsset, context: ApplicationContext,
             asset.height,
             asset.useCase,
             asset.alias,
-            asset.type,
-            hasLODS,
-            hasLODS ? null : asset.lods[0].blob,
+            asset.type
         ]);
     }catch(e){
         context.logger.log("[db] Error inserting/updating graphical asset: " + (e as any).message, LogLevel.ERROR);
@@ -62,14 +53,12 @@ const _uploadAsset = async (asset: UploadableAsset, context: ApplicationContext,
     }
     context.logger.log("[db] Inserted/updated graphical asset id: " + insertRes.rows[0].id);
     
-    if (hasLODS) {
-        context.logger.log("[db] Inserting " + asset.lods.length + " LODs for asset id: " + asset.id);
-        const err = await insertLODS(asset.lods, asset.id, conn, context); if (err !== null) {
-            return {result: null, error: err};
-        }
+    context.logger.log("[db] Inserting " + asset.lods.length + " LODs for asset id: " + asset.id);
+    const err = await insertLODS(asset.lods, asset.id, conn, context); if (err !== null) {
+        return {result: null, error: err};
     }
     
-    knownExistingAssets.push(asset.id!);
+    knownExistingAssets.push(asset.id);
 
     context.logger.log("[db] Succesfully inserted new graphical asset id: " + asset.id + " with " + asset.lods.length + " LODs");
     return {result: "Succesfully inserted new graphical asset id: " + asset.id, error: null};

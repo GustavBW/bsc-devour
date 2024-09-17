@@ -1,6 +1,6 @@
 import {test, expect} from "bun:test";
 import { conformsToType, findConformingMIMEType, optionalType, typeUnionOR, validateSimpleType } from "./typeChecker";
-import { Type, type TypeDeclaration } from "../ts/metaTypes";
+import { ImageMIMEType, Type, type TypeDeclaration } from "../ts/metaTypes";
 
 
 //Tests of validateType
@@ -317,7 +317,7 @@ test("findConformingMIMEType should return the correct MIME type if any", async 
     for (const name of jpegTypeNames) {
         const {result, error} = findConformingMIMEType(name);
         expect(error).toBeNull();
-        expect(result).toBe("image/jpeg");
+        expect(result).toBe(ImageMIMEType.JPEG);
     }
 });
 

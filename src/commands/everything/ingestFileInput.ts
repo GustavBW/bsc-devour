@@ -3,7 +3,7 @@ import { readCompactDSNNotation, readCompactDSNNotationRaw, readCompactTransform
 import { processIngestFile } from '../../processing/ingestFileProcessor.ts';
 import { conformsToType } from '../../processing/typeChecker.ts';
 import type { ApplicationContext, CLIFunc, ResErr } from '../../ts/metaTypes.ts';
-import { INGEST_FILE_COLLECTION_ENTRY_TYPEDECL, COLLECTION_ENTRY_DTO_TYPEDECL, DBDSN_TYPEDECL, INGEST_FILE_COLLECTION_ASSET_TYPEDECL, INGEST_FILE_COLLECTION_FIELD_TYPEDECL, INGEST_FILE_SINGLE_ASSET_TYPEDECL, INGEST_FILE_SINGLE_ASSET_FIELD_TYPEDECL, TRANSFORM_DTO_TYPEDECL, type AutoIngestScript, type DBDSN, type IngestFileAssetEntry, type IngestFileCollectionAsset, type IngestFileSingleAsset, type TransformDTO } from '../../ts/types.ts';
+import { INGEST_FILE_COLLECTION_ENTRY_TYPEDECL, COLLECTION_ENTRY_DTO_TYPEDECL, DBDSN_TYPEDECL, INGEST_FILE_COLLECTION_ASSET_TYPEDECL, INGEST_FILE_COLLECTION_FIELD_TYPEDECL, INGEST_FILE_SINGLE_ASSET_TYPEDECL, INGEST_FILE_SINGLE_ASSET_FIELD_TYPEDECL, TRANSFORM_DTO_TYPEDECL, type AutoIngestScript, type DBDSN, type IngestFileAssetEntry, type IngestFileCollectionAsset, type IngestFileSingleAsset, type TransformDTO, IngestFileAssetType } from '../../ts/types.ts';
 
 /**
  * @author GustavBW
@@ -139,11 +139,11 @@ export const assureUniformDSN = (dsn: string | DBDSN): ResErr<DBDSN> => {
 }
 
 export const verifyIngestFile = (rawFile: any): ResErr<AutoIngestScript> => {
-    if (rawFile.settings === undefined || rawFile.settings === null) {
+    if (!rawFile.settings || rawFile.settings === null) {
         return { result: null, error: "No settings field and corresponding object found in ingest file." };
     }
 
-    if (rawFile.settings.dsn === undefined || rawFile.settings.dsn === null) {
+    if (!rawFile.settings.dsn || rawFile.settings.dsn === null) {
         return { result: null, error: "No dsn field found in ingest file under settings." };
     }
     const uniformDSNAttempt = assureUniformDSN(rawFile.settings.dsn);
@@ -152,7 +152,7 @@ export const verifyIngestFile = (rawFile: any): ResErr<AutoIngestScript> => {
     }
     rawFile.settings.dsn = uniformDSNAttempt.result;
 
-    if (rawFile.assets === undefined || rawFile.assets === null) {
+    if (!rawFile.assets || rawFile.assets === null) {
         return { result: null, error: "No assets field and corresponding object found in ingest file." };
     }
 
@@ -162,26 +162,32 @@ export const verifyIngestFile = (rawFile: any): ResErr<AutoIngestScript> => {
 
     for (let i = 0; i < rawFile.assets.length; i++) {
         const asset = rawFile.assets[i];
-        if (asset.type === undefined || asset.type === null) {
+        if (!asset.type || asset.type === null) {
             return { result: null, error: "No type field found in asset nr:" + i };
         }
-        if (asset.useCase === undefined || asset.useCase === null) {
+        if (!asset.useCase || asset.useCase === null) {
             return { result: null, error: "No useCase field found in asset nr:" + i };
         }
-        if (asset.type === "single") {
-            const singleAsset = asset as IngestFileSingleAsset;
-            const error = validateSingleAssetEntry(singleAsset, i);
-            if (error !== null) {
-                return { result: null, error: error };
+        switch (asset.type) {
+        case IngestFileAssetType.SINGLE: {
+                const singleAsset = asset as IngestFileSingleAsset;
+                const error = validateSingleAssetEntry(singleAsset, i);
+                if (error !== null) {
+                    return { result: null, error: error };
+                }
+                break;
             }
-        } else if (asset.type === "collection") {
-            const collectionAsset = asset as IngestFileCollectionAsset;
-            const error = validateCollectionAssetEntry(collectionAsset, i);
-            if (error !== null) {
-                return { result: null, error: error };
+        case IngestFileAssetType.COLLECTION: {
+                const collectionAsset = asset as IngestFileCollectionAsset;
+                const error = validateCollectionAssetEntry(collectionAsset, i);
+                if (error !== null) {
+                    return { result: null, error: error };
+                }
+                break;
             }
-        } else {
-            return { result: null, error: "Unknown asset type in asset nr:" + i };
+        default: {
+                return { result: null, error: "Unknown asset type in asset nr:" + i };
+            }
         }
     }
 
