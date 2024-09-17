@@ -3,7 +3,7 @@ import { readCompactDSNNotation, readCompactDSNNotationRaw, readCompactTransform
 import { processIngestFile } from '../../processing/ingestProcessor.ts';
 import { conformsToType } from '../../processing/typeChecker.ts';
 import type { ApplicationContext, CLIFunc, ResErr } from '../../ts/metaTypes.ts';
-import { INGEST_FILE_COLLECTION_ENTRY_TYPEDECL, COLLECTION_ENTRY_DTO_TYPEDECL, DBDSN_TYPEDECL, INGEST_FILE_COLLECTION_ASSET_TYPEDECL, INGEST_FILE_COLLECTION_FIELD_TYPEDECL, INGEST_FILE_SINGLE_ASSET_TYPEDECL, INGEST_FILE_SINGLE_ASSET_FIELD_TYPEDECL, TRANSFORM_DTO_TYPEDECL, type AutoIngestScript, type DBDSN, type IngestFileAssetEntry, type IngestFileCollectionAsset, type IngestFileSingleAsset, type TransformDTO, IngestFileAssetType } from '../../ts/types.ts';
+import { INGEST_FILE_COLLECTION_ENTRY_TYPEDECL, COLLECTION_ENTRY_DTO_TYPEDECL, DBDSN_TYPEDECL, INGEST_FILE_COLLECTION_ASSET_TYPEDECL, INGEST_FILE_COLLECTION_FIELD_TYPEDECL, INGEST_FILE_SINGLE_ASSET_TYPEDECL, INGEST_FILE_SINGLE_ASSET_FIELD_TYPEDECL, TRANSFORM_DTO_TYPEDECL, type AutoIngestScript, type DBDSN, type IngestFileAssetEntry, type IngestFileCollectionAsset, type IngestFileSingleAsset, type TransformDTO, IngestFileAssetType, type IngestFileSettings, INGEST_FILE_SETTINGS_TYPEDECL } from '../../ts/types.ts';
 
 /**
  * @author GustavBW
@@ -37,8 +37,21 @@ const handleIngestFileInput = async (args: string[], context: ApplicationContext
     }
     const ingestScript = verificationResult.result;
     context.logger.log("[if_cmd] Successfully verified ingest file.");
+    printSettingsToLog(ingestScript.settings, context);
 
     return processIngestFile(ingestScript, context);
+}
+
+const printSettingsToLog = (settings: IngestFileSettings, context: ApplicationContext): void => {
+    let constructedStringTable = "";
+    for (const key of Object.keys(settings)) {
+        if (key === "dsn") {
+            constructedStringTable += "\n\t" + key + ": " + "{ xxxx xxxx xxxx xxxx }";
+            continue;
+        }
+        constructedStringTable += "\n\t" + key + ": " + settings[key as keyof typeof settings];
+    }
+    context.logger.log("[if_cmd] Settings for file: " + constructedStringTable);
 }
 /**
  * @author GustavBW
@@ -156,6 +169,10 @@ export const verifyIngestFile = (rawFile: any, context?: ApplicationContext): Re
         return { result: null, error: uniformDSNAttempt.error}
     }
     rawFile.settings.dsn = uniformDSNAttempt.result;
+    const fullSettingsCheckResult = conformsToType(rawFile.settings, INGEST_FILE_SETTINGS_TYPEDECL);
+    if (fullSettingsCheckResult !== null) {
+        return { result: null, error: "Settings field does not conform to type: " + fullSettingsCheckResult };
+    }
 
     if (!rawFile.assets || rawFile.assets === null) {
         return { result: null, error: "No assets field and corresponding object found in ingest file." };

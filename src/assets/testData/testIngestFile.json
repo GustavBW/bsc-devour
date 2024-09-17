@@ -2,7 +2,7 @@
     "settings": {
             "version": "0.0.1", 
             "maxLOD": 6, 
-            "LODThreshhold": 10, 
+            "LODThreshold": 10,
             "allowedFailures": 0, 
             "dsn": {
                     "host": "localhost",

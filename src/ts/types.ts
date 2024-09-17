@@ -210,6 +210,13 @@ export type IngestFileSettings = {
     allowedFailures: number,
     dsn: DBDSN,
 }
+export const INGEST_FILE_SETTINGS_TYPEDECL: TypeDeclaration = {
+    version: Type.STRING,
+    maxLOD: Type.INTEGER,
+    LODThreshold: Type.INTEGER,
+    allowedFailures: Type.INTEGER,
+    dsn: DBDSN_TYPEDECL,
+}
 /**
  * @author GustavBW
  * @since 0.0.1

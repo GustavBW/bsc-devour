@@ -14,6 +14,11 @@ import { findConformingMIMEType } from './typeChecker.ts';
  * @returns 
  */
 export async function generateLODs(blob: Blob, sizeThreshold: number, context?: ApplicationContext, typeOverwrite?: ImageMIMEType): Promise<ResErr<LODDTO[]>> {
+    if(!Number.isInteger(sizeThreshold) || sizeThreshold < 1) {
+        context?.logger.log("[lod gen] Invalid size threshold: " + sizeThreshold, LogLevel.ERROR);
+        return {result: null, error: "Invalid size threshold: " + sizeThreshold};
+    }
+    
     let blobType: ImageMIMEType;
     if(typeOverwrite) {
         blobType = typeOverwrite;

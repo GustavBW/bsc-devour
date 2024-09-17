@@ -72,8 +72,9 @@ const insertLODS = async (lods: LODDTO[], assetId: number, conn: pg.Client, cont
             return [buffer, lod.detailLevel, assetId, lod.type];
         }));
         let valuesSQL = "";
+        const insertsPerTuple = valueTuples[0].length;
         for (let i = 0; i < valueTuples.length; i++) {
-            valuesSQL += `($${i * 3 + 1}, $${i * 3 + 2}, $${i * 3 + 3}, $${i * 3 + 4})`;
+            valuesSQL += `($${i * insertsPerTuple + 1}, $${i * insertsPerTuple + 2}, $${i * insertsPerTuple + 3}, $${i * insertsPerTuple + 4})`;
             if (i < valueTuples.length - 1) {
                 valuesSQL += ", ";
             }
