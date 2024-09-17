@@ -5,5 +5,8 @@
 /src/assets/generated
 /devour-logs
 
+.vscode
+.VSCodeCounter
+
 main.js
 main.js.map

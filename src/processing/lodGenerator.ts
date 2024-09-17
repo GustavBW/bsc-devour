@@ -15,7 +15,7 @@ import { findConformingMIMEType } from './typeChecker.ts';
  */
 export async function generateLODs(blob: Blob, sizeThreshold: number, context?: ApplicationContext, typeOverwrite?: ImageMIMEType): Promise<ResErr<LODDTO[]>> {
     if(!Number.isInteger(sizeThreshold) || sizeThreshold < 1) {
-        context?.logger.log("[lod gen] Invalid size threshold: " + sizeThreshold, LogLevel.ERROR);
+        context?.logger.log("[lod_gen] Invalid size threshold: " + sizeThreshold, LogLevel.ERROR);
         return {result: null, error: "Invalid size threshold: " + sizeThreshold};
     }
     
@@ -30,29 +30,29 @@ export async function generateLODs(blob: Blob, sizeThreshold: number, context?: 
     }
 
     if(!checkIfImageTypeIsSupported(blobType)) {
-        context?.logger.log("[lod gen] Unsupported blob type: " + blob.type, LogLevel.ERROR);
+        context?.logger.log("[lod_gen] Unsupported blob type: " + blob.type, LogLevel.ERROR);
         return {result: null, error: `Unsupported image type: ${blob.type}`};
     }
     if(blob.size == 0) { // Empty blob detected
-        context?.logger.log("[lod gen] Empty blob detected.", LogLevel.ERROR);
+        context?.logger.log("[lod_gen] Empty blob detected.", LogLevel.ERROR);
         return {result: null, error: "This blob is empty."};
     }
     if(blobType === ImageMIMEType.SVG) { // No sense in LOD'ifying svgs
-        context?.logger.log("[lod gen] SVG detected, no LODs needed.");
+        context?.logger.log("[lod_gen] SVG detected, no LODs needed.");
         return {result: [{detailLevel: 0, blob: blob, type: blobType}], error: null};
     }
     const lodsGenerated: LODDTO[] = [{detailLevel: 0, blob: blob, type: blobType}];
     if(blob.size / 1000 < sizeThreshold) { // Already below threshold
-        context?.logger.log("[lod gen] Image already below threshold, size: " + blob.size / 1000 + "KB");
+        context?.logger.log("[lod_gen] Image already below threshold, size: " + blob.size / 1000 + "KB");
         return {result: lodsGenerated, error: null};
     }
     let currentBlob = blob;
     let detailLevel = 1;
     while (currentBlob.size / 1000 > sizeThreshold) {
-        context?.logger.log("[lod gen] Generating detail level: " + detailLevel);
+        context?.logger.log("[lod_gen] Generating detail level: " + detailLevel);
         const {result, error} = await downscaleImage(currentBlob, context);
         if (error !== null) {
-            context?.logger.log("[lod gen] Downscaling failed: " + error, LogLevel.ERROR);
+            context?.logger.log("[lod_gen] Downscaling failed: " + error, LogLevel.ERROR);
             return {result: null, error: error};
         }
         lodsGenerated.push({detailLevel: detailLevel, blob: result, type: blobType});
@@ -93,7 +93,7 @@ export async function downscaleImage(blob: Blob, context?: ApplicationContext): 
 
       const width = Math.floor(metadata.width! / 2);
       const height = Math.floor(metadata.height! / 2);
-      context?.logger.log(`[lod gen] Downscaling to width: ${width}, height: ${height}`);
+      context?.logger.log(`[lod_gen] Downscaling to width: ${width}, height: ${height}`);
 
       const resized = image.resize(width, height);
       const {result, error} = formatInstanceToType(resized, metadata.format!);
