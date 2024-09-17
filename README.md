@@ -1,7 +1,7 @@
 # devour
-Internal CLI-based asset pipeline for BSC
+Internal CLI-based asset pipeline for URSA
 
-Version: 0.0.1
+Version: 0.0.2
 
 c/o: GustavBW & KlaesSoerensen
 

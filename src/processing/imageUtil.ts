@@ -24,10 +24,10 @@ export const checkIfImageTypeIsSupported = (type: string): boolean => {
  * @returns 
  */
 export const getMetaDataAsIfImage = async (blob: Blob, context?: ApplicationContext): Promise<ResErr<sharp.Metadata>> => {
-    context?.logger.log(`Getting metadata as if image of: ${blob.type}`);
+    context?.logger.log(`[img_util] Getting metadata as if image of: ${blob.type}`);
     const findTypeRes = findConformingMIMEType(blob.type);
     if (findTypeRes.error !== null || !checkIfImageTypeIsSupported(findTypeRes.result!)) {
-        context?.logger.log(`Unsupported image type: ${blob.type}`);
+        context?.logger.log(`[img_util] GUnsupported image type: ${blob.type}`);
         return {result: null, error: `Unsupported image type: ${blob.type}`};
     }
     const data = await blob.arrayBuffer();
@@ -35,7 +35,7 @@ export const getMetaDataAsIfImage = async (blob: Blob, context?: ApplicationCont
         const metadata = await sharp(data).metadata();
         return {result: metadata, error: null};
     }catch(e){
-        context?.logger.log(`Error getting metadata: ${e}`);
+        context?.logger.log(`[img_util] GError getting metadata: ${e}`);
         return {result: null, error: (e as any).message};
     }
 }

@@ -62,7 +62,7 @@ test("No LODs should be created if the input image is empty", async () => {
 test("No LODs should be created if the input image is an unsupported type", async () => {
     const testBlob = new Blob([], {type: "image/thisformatdoesnotexist"});
     const res = await generateLODs(testBlob, 10);
-    expect(res.error).toEqual("Unsupported image type: image/thisformatdoesnotexist");
+    expect(res.error).toEqual("No corresponding MIME type found for type: image/thisformatdoesnotexist");
 });
 
 test("The last LOD generated should be below the threshold", async () => {

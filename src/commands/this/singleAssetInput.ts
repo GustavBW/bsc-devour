@@ -3,10 +3,12 @@ import { fetchBlobFromUrl } from '../../networking/blobFetcher.ts';
 import { readAliasArg, readCompactDSNNotation, readCompactTransformNotation, readIDArg, readThresholdArg, readUrlArg, readUseCaseArg } from '../../processing/cliInputProcessor.ts';
 import { getMetaDataAsIfImage } from '../../processing/imageUtil.ts';
 import { findConformingMIMEType } from '../../processing/typeChecker.ts';
-import { IMAGE_TYPES, type ApplicationContext, type CLIFunc, type ResErr } from '../../ts/metaTypes.ts';
-import { UNIT_TRANSFORM, AssetUseCase, type AutoIngestScript, type DBDSN, type TransformDTO, IngestFileAssetType } from '../../ts/types.ts';
+import { IMAGE_TYPES, ImageMIMEType, type ApplicationContext, type CLIFunc, type ResErr } from '../../ts/metaTypes.ts';
+import { UNIT_TRANSFORM, AssetUseCase, type AutoIngestScript, type DBDSN, type TransformDTO, IngestFileAssetType, type IngestFileSingleAsset, type IngestFileSettings, type IngestFileSingleAssetField } from '../../ts/types.ts';
 import { generateLODs } from '../../processing/lodGenerator.ts';
 import { LogLevel } from '../../logging/simpleLogger.ts';
+import type { UploadableAsset } from '../../networking/dbConn.ts';
+import { prepareSingleAssetForUpload } from '../../processing/ingestProcessor.ts';
 
 /**
  * @author GustavBW
@@ -22,6 +24,7 @@ const handleSingleAssetCLIInput = async (args: string[], context: ApplicationCon
     let alias: string | null = null;
     let id: number | null = null;
 
+    // Parse Args
     for (const arg of args) {
         if (arg.startsWith("id")){
             const {result, error} = readIDArg(arg);
@@ -82,6 +85,7 @@ const handleSingleAssetCLIInput = async (args: string[], context: ApplicationCon
         }
     }
 
+    // Check Args
     if (id === null) {
         context.logger.log(`[sai cmd] No id provided.`, LogLevel.ERROR);
         return {result: null, error: "No id provided."};
@@ -107,76 +111,31 @@ const handleSingleAssetCLIInput = async (args: string[], context: ApplicationCon
         return {result: null, error: "No dsn provided."};
     }
 
-    const asIngestFile: AutoIngestScript = {
-        settings: {
-            version: "0.0.1",
-            dsn: dsn,
-            LODThreshold: threshold,
-            allowedFailures: 0,
-            maxLOD: 0,
-        },
-        assets: [
-            {
-                type: IngestFileAssetType.SINGLE,
-                useCase: useCase,
-                single: {
-                    id: id,
-                    alias: alias,
-                    source: url,
-                }
-            }
-        ]
+    // Format to uniform format
+    const settings: IngestFileSettings = {
+        version: "0.0.1",
+        dsn: dsn,
+        LODThreshold: threshold,
+        allowedFailures: 0,
+        maxLOD: 0,
     }
-    
-    // Connect to DB
-    const err = await context.db.connect(dsn, context);
-    if (err !== null) {
-        context.logger.log(`[sai cmd] Error connecting to DB: ${err}`, LogLevel.ERROR);
-        return Promise.resolve({result: null, error: err});
+    const singleAsset: IngestFileSingleAssetField = {
+        id: id,
+        alias: alias,
+        source: url,
+        width: transform.xScale,
+        height: transform.yScale,
     }
 
-    const {result, error} = await fetchBlobFromUrl(url, context); if (error !== null) {
-        context.logger.log(`[sai cmd] Error fetching blob from url ${url}: ${error}`, LogLevel.ERROR);
-        return {result: null, error: error};
+    // Prepare for upload
+    const preparationResult = await prepareSingleAssetForUpload(singleAsset, settings, useCase, context); if (preparationResult.error !== null) {
+        context.logger.log(`[sai cmd] Error preparing asset for upload: ${preparationResult.error}`, LogLevel.ERROR);
+        return {result: null, error: preparationResult.error};
     }
-    const blob = result;
-    const contentTypeRes = findConformingMIMEType(blob.type); if (contentTypeRes.error !== null) {
-        context.logger.log(`[sai cmd] Error determining MIME type for blob: ${contentTypeRes.error}`, LogLevel.ERROR);
-        return {result: null, error: contentTypeRes.error};
-    }
-    const isSVG = contentTypeRes.result === IMAGE_TYPES.svg[0];
-    let metadataRelevant = false;
-    let metadata: sharp.Metadata;
-    if (isSVG) { // SVG TRANSFORM CASE
-        if (transform === UNIT_TRANSFORM || (transform.xScale <= 1 && transform.yScale <= 1)) {
-            context.logger.log(`[sai cmd] SVGs must have a transform with non 1 xScale and yScale as they make up the needed width and height properties in this case.`, LogLevel.ERROR);
-            return {result: null, error: "SVGs must have a transform with non 1 xScale and yScale as they make up the needed width and height properties in this case."};
-        }
-    }else{
-        const {result, error} = await getMetaDataAsIfImage(blob, context); if (error !== null) {
-            context.logger.log(`[sai cmd] Error getting metadata from image: ${error}`, LogLevel.ERROR);
-            return {result: null, error: error};
-        }
-        metadataRelevant = true;
-        metadata = result;
-    }
-
-    // Generate LODs
-    const lods = await generateLODs(blob, threshold!, context, contentTypeRes.result); if (lods.error !== null) {
-        context.logger.log(`[sai cmd] Error generating LODs: ${lods.error}`, LogLevel.ERROR);
-        return {result: null, error: lods.error};
-    }
+    const prepared = preparationResult.result;
 
     // Upload to DB
-    const res = await context.db.instance.uploadAsset({
-        id: id,
-        width: metadataRelevant ? metadata!.width! * transform.xScale : transform.xScale,
-        height: metadataRelevant ? metadata!.height! * transform.yScale : transform.yScale,
-        useCase: useCase,
-        type: contentTypeRes.result,
-        alias: alias,
-        lods: lods.result,
-    });
+    const res = await context.db.instance.uploadAsset(prepared);
     if (res.error !== null) {
         context.logger.log(`[sai cmd] Error uploading asset: ${res.error}`, LogLevel.ERROR);
         return Promise.resolve({result: null, error: res.error});

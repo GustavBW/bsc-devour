@@ -1,6 +1,6 @@
 import { LogLevel } from '../../logging/simpleLogger.ts';
 import { readCompactDSNNotation, readCompactDSNNotationRaw, readCompactTransformNotation, readCompactTransformNotationRaw, readUrlArg } from '../../processing/cliInputProcessor.ts';
-import { processIngestFile } from '../../processing/ingestFileProcessor.ts';
+import { processIngestFile } from '../../processing/ingestProcessor.ts';
 import { conformsToType } from '../../processing/typeChecker.ts';
 import type { ApplicationContext, CLIFunc, ResErr } from '../../ts/metaTypes.ts';
 import { INGEST_FILE_COLLECTION_ENTRY_TYPEDECL, COLLECTION_ENTRY_DTO_TYPEDECL, DBDSN_TYPEDECL, INGEST_FILE_COLLECTION_ASSET_TYPEDECL, INGEST_FILE_COLLECTION_FIELD_TYPEDECL, INGEST_FILE_SINGLE_ASSET_TYPEDECL, INGEST_FILE_SINGLE_ASSET_FIELD_TYPEDECL, TRANSFORM_DTO_TYPEDECL, type AutoIngestScript, type DBDSN, type IngestFileAssetEntry, type IngestFileCollectionAsset, type IngestFileSingleAsset, type TransformDTO, IngestFileAssetType } from '../../ts/types.ts';
@@ -24,19 +24,19 @@ const handleIngestFileInput = async (args: string[], context: ApplicationContext
     if (url === "") {
         return {result: null, error: "No path argument provided"};
     }
-    context.logger.log("[IngestFile] Reading ingest file from: " + url);
+    context.logger.log("[if_cmd] Reading ingest file from: " + url);
     const {result, error} = await readIngestFile(url); if (error !== null) {
-        context.logger.log("[IngestFile] Failed to read ingest file: \n\t" + error, LogLevel.FATAL);
+        context.logger.log("[if_cmd] Failed to read ingest file: \n\t" + error, LogLevel.FATAL);
         return {result: null, error: error};
     }
-    context.logger.log("[IngestFile] Successfully read ingest file.");
-    context.logger.log("[IngestFile] Verifying ingest file.");
-    const verificationResult = verifyIngestFile(result); if (verificationResult.error !== null) {
-        context.logger.log("[IngestFile] Failed to verify ingest file: \n\t" + verificationResult.error, LogLevel.FATAL);
+    context.logger.log("[if_cmd] Successfully read ingest file.");
+    context.logger.log("[if_cmd] Verifying ingest file.");
+    const verificationResult = verifyIngestFile(result, context); if (verificationResult.error !== null) {
+        context.logger.log("[if_cmd] Failed to verify ingest file: \n\t" + verificationResult.error, LogLevel.FATAL);
         return {result: null, error: verificationResult.error};
     }
     const ingestScript = verificationResult.result;
-    context.logger.log("[IngestFile] Successfully verified ingest file.");
+    context.logger.log("[if_cmd] Successfully verified ingest file.");
 
     return processIngestFile(ingestScript, context);
 }
@@ -103,7 +103,7 @@ export const validateCollectionAssetEntry = (asset: IngestFileCollectionAsset, e
     return null;
 }
 
-export const validateSingleAssetEntry = (asset: IngestFileSingleAsset, entryNum: number): string | null => {
+export const validateSingleAssetEntry = (asset: IngestFileSingleAsset, entryNum: number, context?: ApplicationContext): string | null => {
     const typeError = conformsToType(asset, INGEST_FILE_SINGLE_ASSET_TYPEDECL);
     if (typeError != null) {
         return "Type error in single asset nr " + entryNum + ": " + typeError;
@@ -112,6 +112,11 @@ export const validateSingleAssetEntry = (asset: IngestFileSingleAsset, entryNum:
     const typeErrorOfSingleField = conformsToType(asset.single, INGEST_FILE_SINGLE_ASSET_FIELD_TYPEDECL);
     if (typeErrorOfSingleField !== null) {
         return "Type error in single field of single asset nr " + entryNum + ": " + typeErrorOfSingleField
+    }
+
+    if(!asset.single.alias || asset.single.alias === null) {
+        asset.single.alias = asset.single.source.split("/").pop()!;
+        context?.logger.log("[ingest] No alias provided for single asset nr: " + entryNum + ", using source name as alias: " + asset.single.alias, LogLevel.WARNING);
     }
 
     return null;
@@ -138,7 +143,7 @@ export const assureUniformDSN = (dsn: string | DBDSN): ResErr<DBDSN> => {
     }
 }
 
-export const verifyIngestFile = (rawFile: any): ResErr<AutoIngestScript> => {
+export const verifyIngestFile = (rawFile: any, context?: ApplicationContext): ResErr<AutoIngestScript> => {
     if (!rawFile.settings || rawFile.settings === null) {
         return { result: null, error: "No settings field and corresponding object found in ingest file." };
     }
@@ -171,7 +176,7 @@ export const verifyIngestFile = (rawFile: any): ResErr<AutoIngestScript> => {
         switch (asset.type) {
         case IngestFileAssetType.SINGLE: {
                 const singleAsset = asset as IngestFileSingleAsset;
-                const error = validateSingleAssetEntry(singleAsset, i);
+                const error = validateSingleAssetEntry(singleAsset, i, context);
                 if (error !== null) {
                     return { result: null, error: error };
                 }

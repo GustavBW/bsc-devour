@@ -13,8 +13,8 @@ export type UploadableAsset = {
 	type: ImageMIMEType, //MIME type
 }
 const SQL_UPSERT_GRAPHICAL_ASSET = `
-    INSERT INTO "GraphicalAsset" (id, width, height, "useCase", alias, type, "hasLODs", blob)
-    VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
+    INSERT INTO "GraphicalAsset" (id, width, height, "useCase", alias, type)
+    VALUES ($1, $2, $3, $4, $5, $6)
     ON CONFLICT (id) DO UPDATE SET 
         width = EXCLUDED.width,
         height = EXCLUDED.height,
@@ -66,16 +66,16 @@ const _uploadAsset = async (asset: UploadableAsset, context: ApplicationContext,
 
 const insertLODS = async (lods: LODDTO[], assetId: number, conn: pg.Client, context: ApplicationContext): Promise<Error | null> => {
     try {
-        const valueTuples: [Blob, number, number][] = lods.map((lod) => [lod.blob, lod.detailLevel, assetId]);
+        const valueTuples: [Blob, number, number, ImageMIMEType][] = lods.map((lod) => [lod.blob, lod.detailLevel, assetId, lod.type]);
         let valuesSQL = "";
         for (let i = 0; i < valueTuples.length; i++) {
-            valuesSQL += `($${i * 3 + 1}, $${i * 3 + 2}, $${i * 3 + 3})`;
+            valuesSQL += `($${i * 3 + 1}, $${i * 3 + 2}, $${i * 3 + 3}, $${i * 3 + 4})`;
             if (i < valueTuples.length - 1) {
                 valuesSQL += ", ";
             }
         }
         const constructedQuery = `
-            INSERT INTO "LOD" (blob, "detailLevel", "graphicalAsset")
+            INSERT INTO "LOD" (blob, "detailLevel", "graphicalAsset", "type")
             VALUES ${valuesSQL} RETURNING id;
         `;
         context.logger.log("[db] Constructed query: " + constructedQuery);
@@ -109,7 +109,7 @@ const _establishCollection = async (collection: CollectionSpecification, context
 
     for (let i = 0; i < collection.entries.length; i++) {
         const entry = collection.entries[i];
-        context.logger.log("Inserting collection entry #"+i+" for AssetCollection id: " + assignedID);
+        context.logger.log("[db] Inserting collection entry #"+i+" for AssetCollection id: " + assignedID);
         try {
             const err = await insertCollectionEntry(assignedID, entry, conn, context, knownExistingAssets); if (err !== null) {
                 return {result: null, error: err};
@@ -119,7 +119,7 @@ const _establishCollection = async (collection: CollectionSpecification, context
             return {result: null, error: "Error inserting collection entry #"+i+" in db: \n\t" + (e as any).message};
         }
     }
-    context.logger.log("Succesfully established AssetCollection id: " + assignedID);
+    context.logger.log("[db] Succesfully established AssetCollection id: " + assignedID);
     return {result: "Succesfully established AssetCollection id: " + assignedID, error: null};
 }
 /**
@@ -163,7 +163,7 @@ const insertTransform = async (transform: TransformDTO, conn: pg.Client, context
     let transformRes;
     try {
         transformRes = await conn.query<{id: number}>(
-            `INSERT INTO "Transform" (xOffset, yOffset, zIndex, xScale, yScale) VALUES ($1, $2, $3, $4, $5) RETURNING id`,
+            `INSERT INTO "Transform" ("xOffset", "yOffset", "zIndex", "xScale", "yScale") VALUES ($1, $2, $3, $4, $5) RETURNING id`,
             [transform.xOffset, transform.yOffset, transform.zIndex, transform.xScale, transform.yScale]
         )
     }catch (e){
