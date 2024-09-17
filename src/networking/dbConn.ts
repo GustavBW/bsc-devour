@@ -66,7 +66,11 @@ const _uploadAsset = async (asset: UploadableAsset, context: ApplicationContext,
 
 const insertLODS = async (lods: LODDTO[], assetId: number, conn: pg.Client, context: ApplicationContext): Promise<Error | null> => {
     try {
-        const valueTuples: [Blob, number, number, ImageMIMEType][] = lods.map((lod) => [lod.blob, lod.detailLevel, assetId, lod.type]);
+        const valueTuples: [Buffer, number, number, ImageMIMEType][] = await Promise.all(lods.map(async (lod) => {
+            const arrayBuffer = await lod.blob.arrayBuffer();
+            const buffer = Buffer.from(arrayBuffer);
+            return [buffer, lod.detailLevel, assetId, lod.type];
+        }));
         let valuesSQL = "";
         for (let i = 0; i < valueTuples.length; i++) {
             valuesSQL += `($${i * 3 + 1}, $${i * 3 + 2}, $${i * 3 + 3}, $${i * 3 + 4})`;
