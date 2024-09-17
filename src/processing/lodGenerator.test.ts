@@ -4,6 +4,7 @@ import { generateLODs } from "./lodGenerator";
 import { fetchBlobFromFile } from "../networking/blobFetcher";
 import sharp from "sharp";
 import { getMetaDataAsIfImage } from "./imageUtil";
+import type { ImageMIMEType } from "../ts/metaTypes";
 
 //Kindly do not alter ordering
 const testImageNames = ["testImage.gif", "testImage.jpg", "testImage.png", "testImage.tiff", "testImage.webp", "testImage.svg"];
@@ -28,13 +29,15 @@ test("Expect test images to exist", async () => {
         expect(await (testImage as BunFile).exists()).toBe(true);
         expect(await testImage.arrayBuffer()).not.toBeNull();
         expect(testImage.size).toBeGreaterThan(0);
+        expect(testImage.type).not.toBeNull();
+        expect(testImage.type).not.toBeUndefined();
     }
 })
 
 test("No LODs should be created if the threshold is already met by the input image", async () => {
     for (const testImage of testImages) {
         const res = await generateLODs(testImage, testImage.size / 1000);
-        expect(res).toEqual({result: [{ detailLevel: 0, blob: testImage }], error: null});
+        expect(res).toEqual({result: [{ detailLevel: 0, blob: testImage, type: testImage.type as ImageMIMEType }], error: null});
     }
 });
 

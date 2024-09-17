@@ -13,7 +13,7 @@ import { LogLevel } from '../../logging/simpleLogger.ts';
  * @since 0.0.1
  */
 const handleSingleAssetCLIInput = async (args: string[], context: ApplicationContext): Promise<ResErr<string>> => {
-    context.logger.log("Handling single asset input, args: " + args.join(", "));
+    context.logger.log("[sai cmd] Handling single asset input, args: " + args.join(", "));
     let url: string | null = null;
     let useCase: AssetUseCase | null = null;
     let transform: TransformDTO | null = UNIT_TRANSFORM;
@@ -27,7 +27,7 @@ const handleSingleAssetCLIInput = async (args: string[], context: ApplicationCon
             const {result, error} = readIDArg(arg);
             if (error === null) { id = result; }
             else {
-                context.logger.log(`Error reading id: ${error}`); 
+                context.logger.log(`[sai cmd] Error reading id: ${error}`); 
                 return {result: null, error: error}; 
             }
         }
@@ -36,7 +36,7 @@ const handleSingleAssetCLIInput = async (args: string[], context: ApplicationCon
             const {result, error} = readUrlArg(arg);
             if (error === null) { url = result; }
             else {
-                context.logger.log(`Error reading source: ${error}`); 
+                context.logger.log(`[sai cmd] Error reading source: ${error}`); 
                 return {result: null, error: error}; 
             }
         }
@@ -44,7 +44,7 @@ const handleSingleAssetCLIInput = async (args: string[], context: ApplicationCon
             const {result, error} = readUseCaseArg(arg);
             if (error === null) { useCase = result; }
             else {
-                context.logger.log(`Error reading useCase: ${error}`); 
+                context.logger.log(`[sai cmd] Error reading useCase: ${error}`); 
                 return {result: null, error: error}; 
             }
         }
@@ -52,7 +52,7 @@ const handleSingleAssetCLIInput = async (args: string[], context: ApplicationCon
             const {result, error} = readCompactTransformNotation(arg);
             if (error === null) { transform = result; }
             else { 
-                context.logger.log(`Error reading transform: ${error}`);
+                context.logger.log(`[sai cmd] Error reading transform: ${error}`);
                 return {result: null, error: error}; 
             }
         }
@@ -60,14 +60,14 @@ const handleSingleAssetCLIInput = async (args: string[], context: ApplicationCon
             const {result, error} = readThresholdArg(arg);
             if (error === null) { threshold = result; }
             else { 
-                context.logger.log(`Error reading threshold: ${error}`);
+                context.logger.log(`[sai cmd] Error reading threshold: ${error}`);
                 return {result: null, error: error}; 
             }
         }
         if (arg.startsWith("dsn")){
             const {result, error} = readCompactDSNNotation(arg);
             if (error !== null) {
-                context.logger.log(`Error reading dsn: ${error}`);
+                context.logger.log(`[sai cmd] Error reading dsn: ${error}`);
                 return Promise.resolve({result: null, error: error});
             }
             dsn = result;
@@ -75,7 +75,7 @@ const handleSingleAssetCLIInput = async (args: string[], context: ApplicationCon
         if (arg.startsWith("alias")){
             const {result, error} = readAliasArg(arg);
             if (error !== null) {
-                context.logger.log(`Error reading alias: ${error}`);
+                context.logger.log(`[sai cmd] Error reading alias: ${error}`);
                 return {result: null, error: error};
             }
             alias = result;
@@ -83,27 +83,27 @@ const handleSingleAssetCLIInput = async (args: string[], context: ApplicationCon
     }
 
     if (id === null) {
-        context.logger.log(`No id provided.`, LogLevel.ERROR);
+        context.logger.log(`[sai cmd] No id provided.`, LogLevel.ERROR);
         return {result: null, error: "No id provided."};
     }
     if (url === null) {
-        context.logger.log(`No source provided, 'source="../../.."'.`, LogLevel.ERROR);
+        context.logger.log(`[sai cmd] No source provided, 'source="../../.."'.`, LogLevel.ERROR);
         return {result: null, error: "No source url provided."};
     }
     if (useCase === null) {
-        context.logger.log(`No useCase provided, defaulting to "environment".`, LogLevel.WARNING);
+        context.logger.log(`[sai cmd] No useCase provided, defaulting to "environment".`, LogLevel.WARNING);
         useCase = AssetUseCase.ENVIRONMENT;
     }
     if (alias === null) {
         alias = url.split("/").pop()!;
-        context.logger.log(`No alias provided defaulting to url-based alias: ${alias}`, LogLevel.WARNING);
+        context.logger.log(`[sai cmd] No alias provided defaulting to url-based alias: ${alias}`, LogLevel.WARNING);
     }
     if (threshold === null) {
         threshold = 10;
-        context.logger.log(`No threshold provided, defaulting to ${threshold}KB.`, LogLevel.WARNING);
+        context.logger.log(`[sai cmd] No threshold provided, defaulting to ${threshold}KB.`, LogLevel.WARNING);
     }
     if (dsn === null) {
-        context.logger.log(`No dsn provided.`, LogLevel.ERROR);
+        context.logger.log(`[sai cmd] No dsn provided.`, LogLevel.ERROR);
         return {result: null, error: "No dsn provided."};
     }
 
@@ -131,17 +131,17 @@ const handleSingleAssetCLIInput = async (args: string[], context: ApplicationCon
     // Connect to DB
     const err = await context.db.connect(dsn, context);
     if (err !== null) {
-        context.logger.log(`Error connecting to DB: ${err}`, LogLevel.ERROR);
+        context.logger.log(`[sai cmd] Error connecting to DB: ${err}`, LogLevel.ERROR);
         return Promise.resolve({result: null, error: err});
     }
 
     const {result, error} = await fetchBlobFromUrl(url, context); if (error !== null) {
-        context.logger.log(`Error fetching blob from url ${url}: ${error}`, LogLevel.ERROR);
+        context.logger.log(`[sai cmd] Error fetching blob from url ${url}: ${error}`, LogLevel.ERROR);
         return {result: null, error: error};
     }
     const blob = result;
     const contentTypeRes = findConformingMIMEType(blob.type); if (contentTypeRes.error !== null) {
-        context.logger.log(`Error determining MIME type for blob: ${contentTypeRes.error}`, LogLevel.ERROR);
+        context.logger.log(`[sai cmd] Error determining MIME type for blob: ${contentTypeRes.error}`, LogLevel.ERROR);
         return {result: null, error: contentTypeRes.error};
     }
     const isSVG = contentTypeRes.result === IMAGE_TYPES.svg[0];
@@ -149,11 +149,12 @@ const handleSingleAssetCLIInput = async (args: string[], context: ApplicationCon
     let metadata: sharp.Metadata;
     if (isSVG) { // SVG TRANSFORM CASE
         if (transform === UNIT_TRANSFORM || (transform.xScale <= 1 && transform.yScale <= 1)) {
+            context.logger.log(`[sai cmd] SVGs must have a transform with non 1 xScale and yScale as they make up the needed width and height properties in this case.`, LogLevel.ERROR);
             return {result: null, error: "SVGs must have a transform with non 1 xScale and yScale as they make up the needed width and height properties in this case."};
         }
     }else{
         const {result, error} = await getMetaDataAsIfImage(blob, context); if (error !== null) {
-            context.logger.log(`Error getting metadata from image: ${error}`, LogLevel.ERROR);
+            context.logger.log(`[sai cmd] Error getting metadata from image: ${error}`, LogLevel.ERROR);
             return {result: null, error: error};
         }
         metadataRelevant = true;
@@ -161,8 +162,8 @@ const handleSingleAssetCLIInput = async (args: string[], context: ApplicationCon
     }
 
     // Generate LODs
-    const lods = await generateLODs(blob, threshold!); if (lods.error !== null) {
-        context.logger.log(`Error generating LODs: ${lods.error}`, LogLevel.ERROR);
+    const lods = await generateLODs(blob, threshold!, context, contentTypeRes.result); if (lods.error !== null) {
+        context.logger.log(`[sai cmd] Error generating LODs: ${lods.error}`, LogLevel.ERROR);
         return {result: null, error: lods.error};
     }
 
@@ -177,7 +178,7 @@ const handleSingleAssetCLIInput = async (args: string[], context: ApplicationCon
         lods: lods.result,
     });
     if (res.error !== null) {
-        context.logger.log(`Error uploading asset: ${res.error}`, LogLevel.ERROR);
+        context.logger.log(`[sai cmd] Error uploading asset: ${res.error}`, LogLevel.ERROR);
         return Promise.resolve({result: null, error: res.error});
     }
     

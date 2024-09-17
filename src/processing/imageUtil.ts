@@ -1,11 +1,19 @@
 import sharp from "sharp";
-import type { ApplicationContext, ResErr } from "../ts/metaTypes";
+import { ImageMIMEType, type ApplicationContext, type ResErr } from "../ts/metaTypes";
 import { findConformingMIMEType } from "./typeChecker";
 
-const supportedImageTypes = ["IMAGE/JPEG", "IMAGE/PNG", "IMAGE/WEBP", "IMAGE/GIF", "IMAGE/TIFF", "IMAGE/SVG+XML"].map(k => k.toLowerCase());
+export const SUPPORTED_IMAGE_TYPES = {
+    JPEG: ImageMIMEType.JPEG,
+    PNG: ImageMIMEType.PNG,
+    WEBP: ImageMIMEType.WEBP,
+    GIF: ImageMIMEType.GIF,
+    TIFF: ImageMIMEType.TIFF,
+    SVG: ImageMIMEType.SVG
+}
+const supportedTypesLowerCased = Object.values(SUPPORTED_IMAGE_TYPES).map((type) => type.toLowerCase());
 
 export const checkIfImageTypeIsSupported = (type: string): boolean => {
-    return supportedImageTypes.includes(type.toLowerCase());
+    return supportedTypesLowerCased.includes(type.toLowerCase());
 }
 /**
  * NB: For svgs, width and height relates to the viewport properties. Not pixels.

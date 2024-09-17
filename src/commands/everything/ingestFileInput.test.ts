@@ -1,6 +1,6 @@
 import {test, expect} from 'bun:test';
 import {assureUniformTransform, assureUniformDSN, validateCollectionAssetEntry, validateSingleAssetEntry, verifyIngestFile, readIngestFile} from './ingestFileInput';
-import type { IngestFileCollectionAsset, IngestFileSingleAsset } from '../../ts/types';
+import { AssetUseCase, IngestFileAssetType, type IngestFileCollectionAsset, type IngestFileSingleAsset } from '../../ts/types';
 import type { BunFile } from 'bun';
 
 //Tests of "readIngestFile"
@@ -109,8 +109,8 @@ test("validateCollectionAssetEntry should return error on missing type field", a
 //Tests of "validateSingleAssetEntry"
 test("validateSingleAssetEntry should return null on valid input", async () => {
     const singleAsset: IngestFileSingleAsset = {
-        type: "single",
-        useCase: "icon",
+        type: IngestFileAssetType.SINGLE,
+        useCase: AssetUseCase.ICON,
         single: {
             id: 1,
             source: "https://http.cat/images/100.jpg",
@@ -123,8 +123,8 @@ test("validateSingleAssetEntry should return null on valid input", async () => {
     expect(error).toBeNull();
 
     const singleAsset2: IngestFileSingleAsset = {
-        type: "single",
-        useCase: "icon",
+        type: IngestFileAssetType.SINGLE,
+        useCase: AssetUseCase.ICON,
         single: {
             id: 1,
             source: "https://http.cat/images/100.jpg",
