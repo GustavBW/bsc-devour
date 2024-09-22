@@ -1,0 +1,95 @@
+{
+    "settings": {
+        "version": "0.0.1", 
+        "maxLOD": 6, 
+        "LODThreshold": 10,
+        "allowedFailures": 0, 
+        "dsn": {
+                "host": "localhost",
+                "port": 8432,
+                "user": "devour",
+                "password": "d3v0urP4ssw0rd",
+                "dbName": "ColonyAndAssets",
+                "sslMode": "disable"
+        }
+    },
+    "assets": [
+        {
+            "type": "single", "useCase": "icon", "single": {
+                "id": 1, "source": "https://upload.wikimedia.org/wikipedia/commons/5/5a/Black_question_mark.png"
+            }
+        },
+        {
+            "type": "single", "useCase": "icon", "single": {
+                "id": 2, "source": "https://upload.wikimedia.org/wikipedia/commons/f/f3/Exclamation_mark.png"
+            }
+        },
+        {
+            "type": "single", "useCase": "environment", "single": {
+                "width": 100, "height": 200,
+                "id": 3, "source": "./tempLocationPin.svg"
+            }
+        },
+        {
+            "type": "single", "useCase": "environment", "single": {
+                "width": 100, "height": 100,
+                "id": 4, "source": "./tempHouse.svg"    
+            }
+        },
+
+        {
+            "type": "collection", "useCase": "environment", "collection": {
+                "name": "questionMarks",
+                "id": 5, "sources": [
+                    {
+                        "transform": "0 0 1, 1 1",
+                        "graphicalAssetId": 1
+                    },
+                    {
+                        "transform": "50 50 0, .5 .5",
+                        "graphicalAssetId": 1
+                    },
+                    {
+                        "transform": "50 -50 0, .5 .5",
+                        "graphicalAssetId": 1
+                    },
+                    {
+                        "transform": "-50 50 0, .5 .5",
+                        "graphicalAssetId": 1
+                    },
+                    {
+                        "transform": "-50 -50 0, .5 .5",
+                        "graphicalAssetId": 1
+                    }
+                ]
+            }
+        },
+        {
+            "type": "collection", "useCase": "environment", "collection": {
+                "name": "exclamationMarks",
+                "id": 6, "sources": [
+                    {
+                        "transform": "0 0 1, 1 1",
+                        "graphicalAssetId": 2
+                    },
+                    {
+                        "transform": "50 50 0, .5 .5",
+                        "graphicalAssetId": 2
+                    },
+                    {
+                        "transform": "50 -50 0, .5 .5",
+                        "graphicalAssetId": 2
+                    },
+                    {
+                        "transform": "-50 50 0, .5 .5",
+                        "graphicalAssetId": 2
+                    },
+                    {
+                        "transform": "-50 -50 0, .5 .5",
+                        "graphicalAssetId": 2
+                    }
+                ]
+            }
+        }
+    ]
+}

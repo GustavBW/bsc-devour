@@ -1,9 +1,12 @@
 #Node
 /node_modules
 
-/dist
+/dist/*
+!/dist/default
+
 /src/assets/generated
 /devour-logs
+
 
 .vscode
 .VSCodeCounter
