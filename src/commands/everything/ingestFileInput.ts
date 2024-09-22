@@ -182,6 +182,8 @@ export const verifyIngestFile = (rawFile: any, context?: ApplicationContext): Re
         return { result: null, error: "Assets field in ingest file is not an array or is an empty array." };
     }
 
+    let singleCount = 1;
+    let collectionCount = 1;
     for (let i = 0; i < rawFile.assets.length; i++) {
         const asset = rawFile.assets[i];
         if (!asset.type || asset.type === null) {
@@ -193,7 +195,8 @@ export const verifyIngestFile = (rawFile: any, context?: ApplicationContext): Re
         switch (asset.type) {
         case IngestFileAssetType.SINGLE: {
                 const singleAsset = asset as IngestFileSingleAsset;
-                const error = validateSingleAssetEntry(singleAsset, i, context);
+                const error = validateSingleAssetEntry(singleAsset, singleCount, context);
+                singleCount++;
                 if (error !== null) {
                     return { result: null, error: error };
                 }
@@ -201,7 +204,8 @@ export const verifyIngestFile = (rawFile: any, context?: ApplicationContext): Re
             }
         case IngestFileAssetType.COLLECTION: {
                 const collectionAsset = asset as IngestFileCollectionAsset;
-                const error = validateCollectionAssetEntry(collectionAsset, i);
+                const error = validateCollectionAssetEntry(collectionAsset, collectionCount);
+                collectionCount++;
                 if (error !== null) {
                     return { result: null, error: error };
                 }

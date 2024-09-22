@@ -27,20 +27,20 @@
         {
             "type": "single", "useCase": "environment", "single": {
                 "width": 100, "height": 200,
-                "id": 3, "source": "./tempLocationPin.svg"
+                "id": 3, "source": "./default/tempLocationPin.svg"
             }
         },
         {
             "type": "single", "useCase": "environment", "single": {
                 "width": 100, "height": 100,
-                "id": 4, "source": "./tempHouse.svg"    
+                "id": 4, "source": "./default/tempHouse.svg"    
             }
         },
 
         {
             "type": "collection", "useCase": "environment", "collection": {
                 "name": "questionMarks",
-                "id": 5, "sources": [
+                "id": 5, "entries": [
                     {
                         "transform": "0 0 1, 1 1",
                         "graphicalAssetId": 1
@@ -67,7 +67,7 @@
         {
             "type": "collection", "useCase": "environment", "collection": {
                 "name": "exclamationMarks",
-                "id": 6, "sources": [
+                "id": 6, "entries": [
                     {
                         "transform": "0 0 1, 1 1",
                         "graphicalAssetId": 2
