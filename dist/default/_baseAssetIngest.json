@@ -51,6 +51,12 @@
                 "id": 7, "source": "./default/MoonRed.png"
             }
         },
+        {
+            "type": "single", "useCase": "player", "single": {
+                "width": 100, "height": 200,
+                "id": 8, "source": "./default/tempPlayerChar.svg"
+            }
+        },
 
         {
             "type": "collection", "useCase": "environment", "collection": {
