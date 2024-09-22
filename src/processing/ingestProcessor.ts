@@ -18,13 +18,13 @@ export const processIngestFile = async (ingestScript: AutoIngestScript, context:
     for (const asset of ingestScript.assets) {
         const type = asset.type;
         if (errors.length > ingestScript.settings.allowedFailures) {
-            context.logger.log("[ingest] Too many errors, aborting:\n" + errors.join("\n\t"), LogLevel.ERROR);
+            context.logger.logAndPrint("[ingest] Too many errors, aborting:\n" + errors.join("\n\t"), LogLevel.ERROR);
             return {result: null, error: "Too many errors, aborting:\n" + errors.join("\n\t")};
         }
 
         switch (type) {
             case IngestFileAssetType.SINGLE: {
-                context.logger.log("[ingest]\tsingle asset: " + asset.single.alias + " with id: " + asset.single.id);
+                context.logger.logAndPrint("[ingest]\tProcessing asset id " + asset.single.id + ": " + asset.single.alias);
                 const res = await processGraphicalAsset(asset, ingestScript.settings, context);
                 if (res.error !== null) {
                     context.logger.log("[ingest] Error while processing single asset: \n\t" + res.error, LogLevel.ERROR);
@@ -33,7 +33,7 @@ export const processIngestFile = async (ingestScript: AutoIngestScript, context:
                 break;
             }
             case IngestFileAssetType.COLLECTION: {
-                context.logger.log("[ingest]\tcollection asset: " + asset.collection.name);
+                context.logger.logAndPrint("[ingest]\tProcessing collection id " + asset.collection.id + ": " + asset.collection.name);
                 const res = await processCollection(asset, context);
                 if (res.error !== null) {
                     context.logger.log("[ingest] Error while processing single asset: \n\t" + res.error, LogLevel.ERROR);
@@ -73,7 +73,8 @@ const processCollection = async (asset: IngestFileCollectionAsset, context: Appl
     const res = await context.db.instance.establishCollection({
         useCase: asset.useCase,
         name: collection.name,
-        entries: collection.entries
+        entries: collection.entries,
+        id: collection.id
     });
     if (res.error !== null) {
         context.logger.log("[ingest] Error while establishing collection: \n\t" + res.error, LogLevel.ERROR);
@@ -113,12 +114,6 @@ export const prepareSingleAssetForUpload = async (asset: IngestFileSingleAssetFi
         return {result: null, error: lods.error};
     }
 
-    // Connect to DB
-    const err = await context.db.connect(settings.dsn, context);
-    if (err !== null) {
-        context.logger.log(`[sai cmd] Error connecting to DB: ${err}`, LogLevel.ERROR);
-        return Promise.resolve({result: null, error: err});
-    }
     return {
         result: {id: asset.id,
         width: asset.width!,

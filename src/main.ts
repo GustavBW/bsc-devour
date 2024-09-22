@@ -4,7 +4,7 @@ import { DB_SINGLETON } from './networking/dbConn.ts';
 import type { ApplicationContext } from './ts/metaTypes.ts';
 
 export const VERSION = "1.0.0";
-
+const timeStart = Date.now();
 // Get the command-line arguments
 const args = process.argv.slice(2);
 
@@ -42,5 +42,5 @@ if (error !== null) {
   context.logger.log("[main] Command succesfull");
   command.whatToDoWithResult(result);
 }
-
+context.logger.logAndPrint(`[main] Execution time: ${Date.now() - timeStart}ms`);
 shutdown();

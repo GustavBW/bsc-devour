@@ -177,6 +177,7 @@ export const INGEST_FILE_SINGLE_ASSET_FIELD_TYPEDECL: TypeDeclaration = {
 export const INGEST_FILE_COLLECTION_FIELD_TYPEDECL: TypeDeclaration = {
     entries: Type.ARRAY,
     name: Type.STRING,
+    id: Type.INTEGER,
 }
 
 export interface IngestFileCollectionAsset extends IngestFileAssetBase {
@@ -198,6 +199,7 @@ export type CollectionEntryDTO = {
 }
 export type IngestFileCollectionField = {
     name: string;
+    id: number,
     entries: CollectionEntryDTO[],
 }
 

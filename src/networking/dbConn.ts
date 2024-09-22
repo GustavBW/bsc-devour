@@ -23,7 +23,7 @@ const SQL_UPSERT_GRAPHICAL_ASSET = `
         type = EXCLUDED.type
     RETURNING id;
 `;
-const _uploadAsset = async (asset: UploadableAsset, context: ApplicationContext, conn: pg.Client, knownExistingAssets: number[]): Promise<ResErr<string>> => {
+const _uploadAsset = async (asset: UploadableAsset, context: ApplicationContext, conn: pg.Client, cache: ProcessCache): Promise<ResErr<string>> => {
     context.logger.log("[db] Uploading asset id: " + asset.id);
     if (asset.lods.length === 0) {
         context.logger.log("[db] Asset did not have at least 1 LOD", LogLevel.ERROR);
@@ -58,7 +58,7 @@ const _uploadAsset = async (asset: UploadableAsset, context: ApplicationContext,
         return {result: null, error: err};
     }
     
-    knownExistingAssets.push(asset.id);
+    cache.knownExistingAssets.add(asset.id);
 
     context.logger.log("[db] Succesfully inserted new graphical asset id: " + asset.id + " with " + asset.lods.length + " LODs");
     return {result: "Succesfully inserted new graphical asset id: " + asset.id, error: null};
@@ -94,16 +94,34 @@ const insertLODS = async (lods: LODDTO[], assetId: number, conn: pg.Client, cont
 
 export type CollectionSpecification = {
     name: string,
+    id: number,
     useCase: string,
     entries: CollectionEntryDTO[]
 }  
 
-const _establishCollection = async (collection: CollectionSpecification, context: ApplicationContext, conn: pg.Client, knownExistingAssets: number[]): Promise<ResErr<string>> => { 
+const _establishCollection = async (collection: CollectionSpecification, context: ApplicationContext, conn: pg.Client, cache: ProcessCache): Promise<ResErr<string>> => { 
     let res;
     try {
+        //1: Does collection exist?
+        context.logger.log("[db] Checking for existing collection by id: " + collection.id);
+        const doesPreviousExist = await conn.query(`SELECT id FROM "AssetCollection" WHERE id = $1`, [collection.id]);
+
+        if (doesPreviousExist.rows.length > 0) {
+            context.logger.log("[db] Collection already exists, removing previous collection entries", LogLevel.WARNING);
+            const removeEntriesRes = await conn.query(`DELETE FROM "CollectionEntry" WHERE "assetCollection" = $1 RETURNING transform`, [collection.id]);
+            context.logger.log("[db] Removed " + removeEntriesRes.rowCount + " entries");
+            const idsOfTransformsToRemove = removeEntriesRes.rows.map((row) => row.transform);
+            if (idsOfTransformsToRemove.length > 0) {
+                context.logger.log("[db] Removing orphaned transforms");
+                await conn.query(`DELETE FROM "Transform" WHERE id = ANY($1)`, [idsOfTransformsToRemove]);
+            }
+            context.logger.log("[db] Removing previous collection");
+            await conn.query(`DELETE FROM "AssetCollection" WHERE id = $1`, [collection.id]);
+        }
+
         res = await conn.query<{ id: number }>(
-            `INSERT INTO "AssetCollection" (name, "useCase") VALUES ($1, $2) RETURNING id`,
-            [collection.name, collection.useCase]
+            `INSERT INTO "AssetCollection" (id, name, "useCase") VALUES ($1, $2, $3) RETURNING id`,
+            [collection.id, collection.name, collection.useCase]
         );
     }catch (e){
         context.logger.log("[db] Error establishing collection " + collection.name + " error: " + (e as any).message, LogLevel.ERROR);
@@ -116,7 +134,7 @@ const _establishCollection = async (collection: CollectionSpecification, context
         const entry = collection.entries[i];
         context.logger.log("[db] Inserting collection entry #"+i+" for AssetCollection id: " + assignedID);
         try {
-            const err = await insertCollectionEntry(assignedID, entry, conn, context, knownExistingAssets); if (err !== null) {
+            const err = await insertCollectionEntry(assignedID, entry, conn, context, cache); if (err !== null) {
                 return {result: null, error: err};
             }
         } catch (e) {
@@ -130,9 +148,9 @@ const _establishCollection = async (collection: CollectionSpecification, context
 /**
  * @throws THROWS!
  */
-const insertCollectionEntry = async (collectionId: number, entry: CollectionEntryDTO, conn: pg.Client, context: ApplicationContext, knownExistingAssets: number[]): Promise<Error | null> => {
+const insertCollectionEntry = async (collectionId: number, entry: CollectionEntryDTO, conn: pg.Client, context: ApplicationContext, cache: ProcessCache): Promise<Error | null> => {
     // Check if the referenced asset exists before proceeding
-    if (!knownExistingAssets.includes(entry.graphicalAssetId)) {
+    if (!cache.knownExistingAssets.has(entry.graphicalAssetId)) {
         context.logger.log("[db] Asset id " + entry.graphicalAssetId + " not found in known existing assets. Checking db");
         const res = await conn.query(`SELECT id FROM "GraphicalAsset" WHERE id = $1`, [entry.graphicalAssetId]);
         if (res.rows.length === 0) {
@@ -264,6 +282,10 @@ const tableCheck = async (conn: pg.Client, context: ApplicationContext): Promise
     }
 }
 
+export type ProcessCache = {
+    knownExistingAssets: Set<number>
+}
+
 async function connectDB(dsn: DBDSN, context: ApplicationContext): Promise<Error | null> {
     context.logger.log(`[db] Connecting to database, host: ${dsn.host}, port: ${dsn.port}, name: ${dsn.dbName}, credentials: ${dsn.user} ****`);
     const { Client } = pg;
@@ -292,13 +314,14 @@ async function connectDB(dsn: DBDSN, context: ApplicationContext): Promise<Error
         return JSON.stringify(error);
     }
 
-    //Cache-like
-    const knownExistingAssets: number[] = []
+    const processCache: ProcessCache = {
+        knownExistingAssets: new Set<number>(),
+    }
 
     DB_SINGLETON.instance = {
         dsn: dsn,                           //Using a closure here to act like a private field in the object
-        uploadAsset: (uploadableAsset) => _uploadAsset(uploadableAsset, context, client, knownExistingAssets),
-        establishCollection: (collection) => _establishCollection(collection, context, client, knownExistingAssets),
+        uploadAsset: (uploadableAsset) => _uploadAsset(uploadableAsset, context, client, processCache),
+        establishCollection: (collection) => _establishCollection(collection, context, client, processCache),
     }
 
     return null;

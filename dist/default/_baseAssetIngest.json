@@ -36,11 +36,26 @@
                 "id": 4, "source": "./default/tempHouse.svg"    
             }
         },
+        {
+            "type": "single", "useCase": "environment", "single": {
+                "id": 5, "source": "./default/GreenGasGiant.jpeg"
+            }
+        },
+        {
+            "type": "single", "useCase": "environment", "single": {
+                "id": 6, "source": "./default/Moon.jpg"
+            }
+        },
+        {
+            "type": "single", "useCase": "environment", "single": {
+                "id": 7, "source": "./default/MoonRed.png"
+            }
+        },
 
         {
             "type": "collection", "useCase": "environment", "collection": {
                 "name": "questionMarks",
-                "id": 5, "entries": [
+                "id": 1, "entries": [
                     {
                         "transform": "0 0 1, 1 1",
                         "graphicalAssetId": 1
@@ -67,7 +82,7 @@
         {
             "type": "collection", "useCase": "environment", "collection": {
                 "name": "exclamationMarks",
-                "id": 6, "entries": [
+                "id": 2, "entries": [
                     {
                         "transform": "0 0 1, 1 1",
                         "graphicalAssetId": 2
@@ -87,6 +102,33 @@
                     {
                         "transform": "-50 -50 0, .5 .5",
                         "graphicalAssetId": 2
+                    }
+                ]
+            }
+        },
+        {
+            "type": "collection", "useCase": "environment", "collection": {
+                "name": "houses",
+                "id": 3, "entries": [
+                    {
+                        "transform": "0 0 1, 1 1",
+                        "graphicalAssetId": 4
+                    },
+                    {
+                        "transform": "50 50 0, .5 .5",
+                        "graphicalAssetId": 4
+                    },
+                    {
+                        "transform": "50 -50 0, .5 .5",
+                        "graphicalAssetId": 4
+                    },
+                    {
+                        "transform": "-50 50 0, .5 .5",
+                        "graphicalAssetId": 4
+                    },
+                    {
+                        "transform": "-50 -50 0, .5 .5",
+                        "graphicalAssetId": 4
                     }
                 ]
             }

@@ -10,6 +10,7 @@ export enum LogLevel {
 
 export type Logger = {
     log: (message: string, level?: LogLevel) => void;
+    logAndPrint: (message: string, level?: LogLevel) => void;
 }
 
 const logDir = "./devour-logs";
@@ -38,11 +39,17 @@ export const initializeLogger = async (): Promise<Logger> => {
         console.error("Failed to create log file. No logging will be done.");
     }
     logWriter = file.writer();
+    
+    const logMethod = (message: string, level: LogLevel = LogLevel.INFO) => {
+        writeMessage(message, level);
+    }
 
     return {
-        log: (message: string, level: LogLevel = LogLevel.INFO) => {
-            writeMessage(message, level);
-        }
+        log: logMethod,
+        logAndPrint: (message: string, level: LogLevel = LogLevel.INFO) => {
+            console.log("["+level+"] "+message);
+            logMethod(message, level);
+        }   
     }
 }
 
