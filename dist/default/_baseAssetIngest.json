@@ -57,6 +57,12 @@
                 "id": 8, "source": "./default/tempPlayerChar.svg"
             }
         },
+        {
+            "type": "single", "useCase": "icon", "single": {
+                "alias": "videoIcon",
+                "id": 9, "source": "https://cdn-icons-png.flaticon.com/512/159/159596.png"
+            }
+        },
 
         {
             "type": "collection", "useCase": "environment", "collection": {
