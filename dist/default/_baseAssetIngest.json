@@ -38,7 +38,7 @@
         },
         {
             "type": "single", "useCase": "environment", "single": {
-                "id": 5, "source": "./default/GreenGasGiant.jpeg"
+                "id": 5, "source": "./default/GreenGasGiant.png"
             }
         },
         {
@@ -48,7 +48,7 @@
         },
         {
             "type": "single", "useCase": "environment", "single": {
-                "id": 7, "source": "./default/MoonRed.png"
+                "id": 7, "source": "./default/RedMoon.png"
             }
         },
         {
