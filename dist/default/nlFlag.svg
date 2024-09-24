@@ -1,0 +1,5 @@
+<svg id="nl-flag" width="200" height="200" xmlns="http://www.w3.org/2000/svg">
+  <rect width="200" height="66.666666666" fill="red"/>
+    <rect width="200" height="66.666666666666666666" y="66.666666666666666666" fill="white"/>
+    <rect width="200" height="67" y="133.33333333333333333333333333333" fill="blue"/>
+</svg>

@@ -1,0 +1,7 @@
+<svg id="se-flag" width="200" height="200" xmlns="http://www.w3.org/2000/svg">
+  <rect width="200" height="200" fill="yellow"/>
+  <rect width="50" height="80" x="0" y="0" fill="blue" />
+  <rect width="50" height="80" x="0" y="120" fill="blue" />
+  <rect width="110" height="80" x="90" y="0" fill="blue" />
+  <rect width="110" height="80" x="90" y="120" fill="blue" />
+</svg>

@@ -1,0 +1,7 @@
+<svg id="dk-flag" width="200" height="200" xmlns="http://www.w3.org/2000/svg">
+  <rect width="200" height="200" fill="white"/>
+  <rect width="60" height="90" x="0" y="0" fill="red" />
+  <rect width="60" height="90" x="0" y="110" fill="red" />
+  <rect width="120" height="90" x="80" y="0" fill="red" />
+  <rect width="120" height="90" x="80" y="110" fill="red" />
+</svg>

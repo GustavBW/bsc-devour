@@ -70,33 +70,38 @@
         },
         {
             "type": "single", "useCase": "icon", "single": {
-                "id": 11, "source": "./default/dkFlag.webp"
+                "width": 200, "height": 200,
+                "id": 11, "source": "./default/dkFlag.svg"
             }
         },
         {
             "type": "single", "useCase": "icon", "single": {
-                "id": 12, "source": "./default/norway-flag.jpg"
+                "width": 200, "height": 200,
+                "id": 12, "source": "./default/noFlag.svg"
             }
         },
         {
             "type": "single", "useCase": "icon", "single": {
-                "id": 13, "source": "./default/SwedenFlag.webp"
+                "width": 200, "height": 200,
+                "id": 13, "source": "./default/seFlag.svg"
             }
         },
         {
             "type": "single", "useCase": "icon", "single": {
-                "width": 200, "height": 100,
+                "width": 200, "height": 200,
                 "id": 14, "source": "./default/ukFlag.svg"
             }
         },
         {
             "type": "single", "useCase": "icon", "single": {
-                "id": 15, "source": "./default/Flag-Germany.webp"
+                "width": 200, "height": 200,
+                "id": 15, "source": "./default/deFlag.svg"
             }
         },
         {
             "type": "single", "useCase": "icon", "single": {
-                "id": 16, "source": "./default/NLFlag.png"
+                "width": 200, "height": 200,
+                "id": 16, "source": "./default/nlFlag.png"
             }
         },
 
