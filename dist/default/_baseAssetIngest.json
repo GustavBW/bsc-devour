@@ -68,6 +68,37 @@
                 "id": 10, "source": "./default/enterKeyIcon.png"
             }
         },
+        {
+            "type": "single", "useCase": "icon", "single": {
+                "id": 11, "source": "./default/dkFlag.webp"
+            }
+        },
+        {
+            "type": "single", "useCase": "icon", "single": {
+                "id": 12, "source": "./default/norway-flag.jpg"
+            }
+        },
+        {
+            "type": "single", "useCase": "icon", "single": {
+                "id": 13, "source": "./default/SwedenFlag.webp"
+            }
+        },
+        {
+            "type": "single", "useCase": "icon", "single": {
+                "width": 200, "height": 100,
+                "id": 14, "source": "./default/ukFlag.svg"
+            }
+        },
+        {
+            "type": "single", "useCase": "icon", "single": {
+                "id": 15, "source": "./default/Flag-Germany.webp"
+            }
+        },
+        {
+            "type": "single", "useCase": "icon", "single": {
+                "id": 16, "source": "./default/NLFlag.png"
+            }
+        },
 
         {
             "type": "collection", "useCase": "environment", "collection": {
