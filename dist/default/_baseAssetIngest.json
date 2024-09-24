@@ -63,6 +63,11 @@
                 "id": 9, "source": "https://cdn-icons-png.flaticon.com/512/159/159596.png"
             }
         },
+        {
+            "type": "single", "useCase": "icon", "single": {
+                "id": 10, "source": "./default/enterKeyIcon.png"
+            }
+        },
 
         {
             "type": "collection", "useCase": "environment", "collection": {
