@@ -1,15 +1,7 @@
-<svg id="uk-flag" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 60 60" width="200" height="200">
-<clipPath id="s">
-	<path d="M0,0 v60 h60 v-60 z"/>
-</clipPath>
-<clipPath id="t">
-	<path d="M30,30 h30 v30 z v30 h-30 z h-30 v-30 z v-30 h30 z"/>
-</clipPath>
-<g clip-path="url(#s)">
-	<path d="M0,0 v60 h60 v-60 z" fill="#012169"/>
-	<path d="M0,0 L60,60 M60,0 L0,60" stroke="#fff" stroke-width="12"/>
-	<path d="M0,0 L60,60 M60,0 L0,60" clip-path="url(#t)" stroke="#C8102E" stroke-width="8"/>
-	<path d="M30,0 v60 M0,30 h60" stroke="#fff" stroke-width="18"/>
-	<path d="M30,0 v60 M0,30 h60" stroke="#C8102E" stroke-width="10"/>
-</g>
+<svg id="uk-flag" width="200" height="200" xmlns="http://www.w3.org/2000/svg">
+  <rect width="200" height="200" fill="red"/>
+  <rect width="90" height="90" x="0" y="0" fill="white" />
+  <rect width="90" height="90" x="0" y="110" fill="white" />
+  <rect width="90" height="90" x="110" y="0" fill="white" />
+  <rect width="90" height="90" x="110" y="110" fill="white" />
 </svg>
