@@ -119,6 +119,11 @@
                 "id": 19, "source": "./default/RustPlanetTexture.jpg"
             }
         },
+        {
+            "type": "single", "useCase": "environment", "single": {
+                "id": 20, "source": "./default/IceMoonTexture.jpg"
+            }
+        },
 
         {
             "type": "collection", "useCase": "environment", "collection": {
