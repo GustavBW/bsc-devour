@@ -1,0 +1,18 @@
+<svg id="left-double-arrow" width="200" height="200" xmlns="http://www.w3.org/2000/svg">
+  <path fill="white" stroke="white" d="
+    M200 0
+    L110 100
+    L200 200
+    L180 200
+    L90 100
+    L180 0
+    Z
+    M120 0
+    L20 100
+    L120 200
+    L100 200
+    L0 100
+    L100 0
+    Z
+  " />
+</svg>

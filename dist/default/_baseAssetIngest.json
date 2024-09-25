@@ -131,7 +131,14 @@
         },
         {
             "type": "single", "useCase": "icon", "single": {
+                "width": 200, "height": 200,
                 "id": 22, "source": "./default/rightDoubleArrow.svg"
+            }
+        },
+        {
+            "type": "single", "useCase": "icon", "single": {
+                "width": 200, "height": 200,
+                "id": 23, "source": "./default/leftDoubleArrow.svg"
             }
         },
 
