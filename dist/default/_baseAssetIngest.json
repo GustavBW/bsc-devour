@@ -104,6 +104,21 @@
                 "id": 16, "source": "./default/nlFlag.svg"
             }
         },
+        {
+            "type": "single", "useCase": "environment", "single": {
+                "id": 17, "source": "./default/EarthTexture.png"
+            }
+        },
+        {
+            "type": "single", "useCase": "environment", "single": {
+                "id": 18, "source": "./default/MarsTexture.jpg"       
+            }
+        },
+        {
+            "type": "single", "useCase": "environment", "single": {
+                "id": 19, "source": "./default/RustPlanetTexture.jpg"
+            }
+        },
 
         {
             "type": "collection", "useCase": "environment", "collection": {
