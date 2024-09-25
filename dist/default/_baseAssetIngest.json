@@ -124,6 +124,16 @@
                 "id": 20, "source": "./default/IceMoonTexture.jpg"
             }
         },
+        {
+            "type": "single", "useCase": "icon", "single": {
+                "id": 21, "source": "./default/trophy.png"
+            }
+        },
+        {
+            "type": "single", "useCase": "icon", "single": {
+                "id": 22, "source": "./default/rightDoubleArrow.svg"
+            }
+        },
 
         {
             "type": "collection", "useCase": "environment", "collection": {
