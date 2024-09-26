@@ -97,6 +97,10 @@ export enum AssetUseCase {
     ICON = "icon",
     ENVIRONMENT = "environment",
     PLAYER = "player",
+    SPASH_ART = "splashArt",
+    STRUCTURE = "structure",
+    VEHICLE = "vehicle",
+    TEXTURE = "texture",
 }
 export type DBDSN = {
     host: string,
@@ -199,8 +203,8 @@ export type CollectionEntryDTO = {
 }
 export type IngestFileCollectionField = {
     name: string;
-    id: number,
-    entries: CollectionEntryDTO[],
+    id: number;
+    entries: CollectionEntryDTO[];
 }
 
 // Create the discriminated union

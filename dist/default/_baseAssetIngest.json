@@ -25,29 +25,29 @@
             }
         },
         {
-            "type": "single", "useCase": "environment", "single": {
+            "type": "single", "useCase": "icon", "single": {
                 "width": 100, "height": 200,
                 "id": 3, "source": "./default/tempLocationPin.svg"
             }
         },
         {
-            "type": "single", "useCase": "environment", "single": {
+            "type": "single", "useCase": "structure", "single": {
                 "width": 100, "height": 100,
                 "id": 4, "source": "./default/tempHouse.svg"    
             }
         },
         {
-            "type": "single", "useCase": "environment", "single": {
+            "type": "single", "useCase": "texture", "single": {
                 "id": 5, "source": "./default/GreenGasGiant.png"
             }
         },
         {
-            "type": "single", "useCase": "environment", "single": {
+            "type": "single", "useCase": "texture", "single": {
                 "id": 6, "source": "./default/Moon.jpg"
             }
         },
         {
-            "type": "single", "useCase": "environment", "single": {
+            "type": "single", "useCase": "texture", "single": {
                 "id": 7, "source": "./default/RedMoon.png"
             }
         },
@@ -105,22 +105,22 @@
             }
         },
         {
-            "type": "single", "useCase": "environment", "single": {
+            "type": "single", "useCase": "texture", "single": {
                 "id": 17, "source": "./default/EarthTexture.png"
             }
         },
         {
-            "type": "single", "useCase": "environment", "single": {
+            "type": "single", "useCase": "texture", "single": {
                 "id": 18, "source": "./default/MarsTexture.jpg"       
             }
         },
         {
-            "type": "single", "useCase": "environment", "single": {
+            "type": "single", "useCase": "texture", "single": {
                 "id": 19, "source": "./default/RustPlanetTexture.jpg"
             }
         },
         {
-            "type": "single", "useCase": "environment", "single": {
+            "type": "single", "useCase": "texture", "single": {
                 "id": 20, "source": "./default/IceMoonTexture.jpg"
             }
         },
@@ -139,6 +139,30 @@
             "type": "single", "useCase": "icon", "single": {
                 "width": 200, "height": 200,
                 "id": 23, "source": "./default/leftDoubleArrow.svg"
+            }
+        },
+        {
+            "type": "single", "useCase": "splashArt", "single": {
+                "width": 1920, "height": 1093,
+                "id": 24, "source": "./default/Lunar-Truck.svg"
+            }
+        },
+        {
+            "type": "single", "useCase": "structure", "single": {
+                "width": 283, "height": 301,
+                "id": 25, "source": "./default/Oxygen-Generator.svg"
+            }
+        },
+        {
+            "type": "single", "useCase": "vehicle", "single": {
+                "width": 162, "height": 133,
+                "id": 27, "source": "./default/Truck-2.svg"
+            }
+        },
+        {
+            "type": "single", "useCase": "structure", "single": {
+                "width": 289, "height": 240,
+                "id": 28, "source": "./default/Dome.svg"
             }
         },
 
