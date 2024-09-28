@@ -165,6 +165,31 @@
                 "id": 28, "source": "./default/Dome.svg"
             }
         },
+        {
+            "type": "single", "useCase": "icon", "single": {
+                "id": 29, "source": "./default/Enter-icon.png"
+            }
+        },
+        {
+            "type": "single", "useCase": "icon", "single": {
+                "id": 30, "source": "./default/Language-icon.png"
+            }
+        },
+        {
+            "type": "single", "useCase": "icon", "single": {
+                "id": 31, "source": "./default/Multiplayer-icon.png"
+            }
+        },
+        {
+            "type": "single", "useCase": "icon", "single": {
+                "id": 32, "source": "./default/Walking-icon.png"
+            }
+        },
+        {
+            "type": "single", "useCase": "icon", "single": {
+                "id": 33, "source": "./default/Welcome-icon.png"
+            }
+        },
 
         {
             "type": "collection", "useCase": "environment", "collection": {
