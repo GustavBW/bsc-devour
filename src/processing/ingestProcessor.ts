@@ -24,9 +24,9 @@ export const processIngestFile = async (ingestScript: AutoIngestScript, context:
     if (subFiles.length < 0) {
         return {result: "Ingest file succesfully processed and uploaded", error: null};
     }
-
+    context.logger.logAndPrint("");
     for (const subFile of subFiles) {
-        context.logger.log("[ingest] Processing sub-file: " + subFile.path);
+        context.logger.logAndPrint("[ingest] Processing sub-file: " + subFile.path);
         const tooManyErrors = await processAssetList(subFile.assets, settings, errors, context);
         if (tooManyErrors) {
             return {result: null, error: "Too many errors, aborting"};

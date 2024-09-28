@@ -222,7 +222,7 @@ export type IngestFileSettings = {
     LODThreshold: number,
     allowedFailures: number,
     dsn: DBDSN,
-    subFiles: SettingsSubFile[] | undefined
+    subFiles?: SettingsSubFile[]
 }
 export const INGEST_FILE_SETTINGS_TYPEDECL: TypeDeclaration = {
     version: Type.STRING,

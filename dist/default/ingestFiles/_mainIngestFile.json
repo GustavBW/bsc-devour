@@ -11,7 +11,13 @@
                 "password": "d3v0urP4ssw0rd",
                 "dbName": "ColonyAndAssets",
                 "sslMode": "disable"
-        }
+        },
+        "subFiles": [
+            {
+                "path": "./default/ingestFiles/iconIngestFile.json",
+                "idRanges": [[1000, 2000]]
+            }
+        ]
     },
     "assets": [
         {

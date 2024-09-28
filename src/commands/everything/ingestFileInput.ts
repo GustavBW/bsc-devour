@@ -3,7 +3,7 @@ import { readCompactDSNNotation, readCompactDSNNotationRaw, readCompactTransform
 import { processIngestFile } from '../../processing/ingestProcessor.ts';
 import { conformsToType } from '../../processing/typeChecker.ts';
 import type { ApplicationContext, CLIFunc, ResErr } from '../../ts/metaTypes.ts';
-import { INGEST_FILE_COLLECTION_ENTRY_TYPEDECL, COLLECTION_ENTRY_DTO_TYPEDECL, DBDSN_TYPEDECL, INGEST_FILE_COLLECTION_ASSET_TYPEDECL, INGEST_FILE_COLLECTION_FIELD_TYPEDECL, INGEST_FILE_SINGLE_ASSET_TYPEDECL, INGEST_FILE_SINGLE_ASSET_FIELD_TYPEDECL, TRANSFORM_DTO_TYPEDECL, type AutoIngestScript, type DBDSN, type IngestFileAssetEntry, type IngestFileCollectionAsset, type IngestFileSingleAsset, type TransformDTO, IngestFileAssetType, type IngestFileSettings, INGEST_FILE_SETTINGS_TYPEDECL, type SettingsSubFile, type AutoIngestSubScript, type PreparedAutoIngestSubScript } from '../../ts/types.ts';
+import { INGEST_FILE_COLLECTION_ENTRY_TYPEDECL, COLLECTION_ENTRY_DTO_TYPEDECL, DBDSN_TYPEDECL, INGEST_FILE_COLLECTION_ASSET_TYPEDECL, INGEST_FILE_COLLECTION_FIELD_TYPEDECL, INGEST_FILE_SINGLE_ASSET_TYPEDECL, INGEST_FILE_SINGLE_ASSET_FIELD_TYPEDECL, TRANSFORM_DTO_TYPEDECL, type AutoIngestScript, type DBDSN, type IngestFileAssetEntry, type IngestFileCollectionAsset, type IngestFileSingleAsset, type TransformDTO, IngestFileAssetType, type IngestFileSettings, INGEST_FILE_SETTINGS_TYPEDECL, type SettingsSubFile, type AutoIngestSubScript, type PreparedAutoIngestSubScript, INGEST_FILE_SUB_FILE_TYPEDECL } from '../../ts/types.ts';
 import { checkIDRangesOfSubFiles, verifyIngestFile, verifyIngestFileAssets, verifySubFileIDAssignments } from './ingestFileVerifier.ts';
 
 /**
@@ -41,7 +41,7 @@ const handleIngestFileInput = async (args: string[], context: ApplicationContext
     printSettingsToLog(ingestScript.settings, context);
 
     const subFileResult = await handleSubFiles(ingestScript.settings.subFiles, context); if (subFileResult.error !== null) {
-        context.logger.log("[if_cmd] Failed to verify sub-files: \n\t" + subFileResult.error, LogLevel.FATAL);
+        context.logger.log("[if_cmd] Failed to handle sub-files: \n\t" + subFileResult.error, LogLevel.FATAL);
         return {result: null, error: subFileResult.error};
     }
 
@@ -111,7 +111,7 @@ const handleSubFiles = async (subFiles: SettingsSubFile[] | undefined, context: 
     }
     const verifiedSubFiles: PreparedAutoIngestSubScript[] = [];
     for (const subFileDeclaration of subFiles) {
-        const typeCheck = conformsToType(subFileDeclaration, INGEST_FILE_SETTINGS_TYPEDECL); if (typeCheck !== null) {
+        const typeCheck = conformsToType(subFileDeclaration, INGEST_FILE_SUB_FILE_TYPEDECL); if (typeCheck !== null) {
             context.logger.log("[if_cmd] Type error in sub-file declaration: " + typeCheck, LogLevel.ERROR);
             return {result: null, error: "Type error in sub-file declaration: " + typeCheck};
         }
