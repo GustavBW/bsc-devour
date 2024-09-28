@@ -1,4 +1,4 @@
-import { optionalType, rangeOfConstants as anyOfConstants, typeUnionOR } from "../processing/typeChecker";
+import { optionalType, rangeOfConstants as anyOfConstants, typeUnionOR, typedArray, typedTuple } from "../processing/typeChecker";
 import { ImageMIMEType, Type, type TypeDeclaration } from "./metaTypes";
 
 /**
@@ -206,7 +206,14 @@ export type IngestFileCollectionField = {
     id: number;
     entries: CollectionEntryDTO[];
 }
-
+export type IngestSubFile = {
+    path: string;
+    idRanges: [number, number][];
+}
+export const INGEST_FILE_SUB_FILE_TYPEDECL: TypeDeclaration = {
+    path: Type.STRING,
+    idRanges: typedArray(typedTuple([Type.INTEGER, Type.INTEGER])),
+}
 // Create the discriminated union
 export type IngestFileAssetEntry = IngestFileSingleAsset | IngestFileCollectionAsset;
 export type IngestFileSettings = {
@@ -215,6 +222,7 @@ export type IngestFileSettings = {
     LODThreshold: number,
     allowedFailures: number,
     dsn: DBDSN,
+    subFiles: IngestSubFile[] | undefined
 }
 export const INGEST_FILE_SETTINGS_TYPEDECL: TypeDeclaration = {
     version: Type.STRING,
@@ -222,6 +230,7 @@ export const INGEST_FILE_SETTINGS_TYPEDECL: TypeDeclaration = {
     LODThreshold: Type.INTEGER,
     allowedFailures: Type.INTEGER,
     dsn: DBDSN_TYPEDECL,
+    subFiles: optionalType(typedArray(INGEST_FILE_SUB_FILE_TYPEDECL)),
 }
 /**
  * @author GustavBW

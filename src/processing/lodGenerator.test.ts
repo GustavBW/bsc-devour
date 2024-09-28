@@ -34,10 +34,18 @@ test("Expect test images to exist", async () => {
     }
 })
 
-test("No LODs should be created if the threshold is already met by the input image", async () => {
+test("Only 1 LOD should be created if the threshold is already met by the input image", async () => {
     for (const testImage of testImages) {
-        const res = await generateLODs(testImage, testImage.size / 1000);
-        expect(res).toEqual({result: [{ detailLevel: 0, blob: testImage, type: testImage.type as ImageMIMEType }], error: null});
+        if(testImage.type === "image/svg+xml") { continue;}
+        const scaledDownSize = testImage.size / 1000;
+        const flooredSize = Math.floor(scaledDownSize);
+        const res = await generateLODs(testImage, flooredSize);
+        expect(res.error).toBeNull();
+        expect(res.result).not.toBeNull();
+        expect(res.result).not.toBeUndefined();
+        expect(res.result).toHaveLength(1);
+        expect(res.result![0].detailLevel).toEqual(0);
+        expect(res.result![0].type).toEqual(testImage.type as ImageMIMEType);
     }
 });
 

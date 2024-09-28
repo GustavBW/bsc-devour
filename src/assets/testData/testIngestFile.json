@@ -78,6 +78,7 @@
                 "type": "collection",
                 "useCase": "environment",
                 "collection": {
+                        "id": 1,
                         "name": "SingleAssetCollection",
                         "entries": [
                                 {
@@ -97,6 +98,7 @@
             "type": "collection",
             "useCase": "environment",
             "collection": {
+                "id": 2,
                 "name": "BakeTestCollection",
                 "entries": [
                         {

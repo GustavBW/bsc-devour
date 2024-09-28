@@ -73,7 +73,13 @@ const INGEST_FILE_FORMAT_EXAMPLE = `
 			"password": string,
 			"dbName": string,
 			"sslMode": string
-		}
+		},
+		//An ingest file may point to other ingest files.
+		//However, these subfiles' settings field, will be ignored
+		"subFiles": {	
+			"path": string,
+			"idRanges": [uint32, uint32][] //Ranges, start and end inclusive
+		}[]
 	},
 	"assets": [
 		{

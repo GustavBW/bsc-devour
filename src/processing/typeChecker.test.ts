@@ -1,5 +1,5 @@
 import {test, expect} from "bun:test";
-import { conformsToType, findConformingMIMEType, optionalType, typeUnionOR, validateSimpleType } from "./typeChecker";
+import { conformsToType, findConformingMIMEType, optionalType, typedArray, typedTuple, typeUnionOR, validateSimpleType } from "./typeChecker";
 import { ImageMIMEType, Type, type TypeDeclaration } from "../ts/metaTypes";
 
 
@@ -329,3 +329,97 @@ test("findConformingMIMEType should return an error if no MIME type is found", a
         expect(result).toBeNull();
     }
 });
+
+test("typedTuple should correctly accept valid input", async () => {
+    const testData = [10, 10];
+    const testDECL = typedTuple([Type.INTEGER, Type.INTEGER]);
+
+    const error = conformsToType(testData, testDECL);
+    expect(error).toBeNull();
+})
+
+test("typedTuple should correctly reject invalid input", async () => {
+    const testData = [[10, "10"], [10, undefined], [10, null], [10, true], [0, false]];
+    const testDECL = typedArray(typedTuple([Type.INTEGER, Type.INTEGER]));
+
+    const error = conformsToType(testData, testDECL);
+    expect(error).not.toBeNull();
+})
+
+test("typedArray should correctly accept valid input", async () => {
+    const testData = [10, 10, 1, Number.MAX_SAFE_INTEGER, Number.MIN_SAFE_INTEGER, 0];
+    const testDECL = typedArray(Type.INTEGER);
+
+    const error = conformsToType(testData, testDECL);
+    expect(error).toBeNull();
+})
+
+test("typedArray should correctly reject invalid input", async () => {
+    const testData = ["10", undefined, null, true, false];
+    const testDECL = typedArray(Type.INTEGER);
+
+    const error = conformsToType(testData, testDECL);
+    expect(error).not.toBeNull();
+})
+
+test("typedArray compound test, successfull", async () => {
+    const testData = [[10, 10], [10, 10], [10, 10], [10, 10], [10, 10]];
+    const testDECL = typedArray(typedTuple([Type.INTEGER, Type.INTEGER]));
+
+    const error = conformsToType(testData, testDECL);
+    expect(error).toBeNull();
+})
+
+test("typedArray compound test, unsuccessfull", async () => {
+    const testData = [[10, 10], [10, "10"], [10, undefined], [10, null], [10, true], [0, false]];
+    const testDECL = typedArray(typedTuple([Type.INTEGER, Type.INTEGER]));
+
+    const error = conformsToType(testData, testDECL);
+    expect(error).not.toBeNull();
+})
+
+test("compound typedArray, typedTuple test, successfull", async () => {
+    const testData = [[[10, 10], [10, 10], [10, 10], [10, 10], [10, 10]]];
+    const testDECL = typedArray(typedTuple([Type.INTEGER, Type.INTEGER]));
+
+    const error = conformsToType(testData, typedArray(testDECL));
+    expect(error).toBeNull();   
+})
+
+test("compound typedArray, typedTuple test, unsuccessfull", async () => {
+    const testData = [[[10, 10], [10, "10"], [10, undefined], [10, null], [10, true], [0, false]]];
+    const testDECL = typedArray(typedTuple([Type.INTEGER, Type.INTEGER]));
+
+    const error = conformsToType(testData, typedArray(testDECL));
+    expect(error).not.toBeNull();   
+})
+
+test("compound optionalType, typedArray, typedTuple test, successfull", async () => {
+    const testData = [[10, 10], [10, 10], [10, 10], [10, 10], [10, 10]];
+    const testDECL = optionalType(typedArray(typedTuple([Type.INTEGER, Type.INTEGER])));
+
+    const error = conformsToType(testData, testDECL);
+    expect(error).toBeNull();  
+    
+    const error2 = conformsToType(undefined, testDECL);
+    expect(error2).toBeNull();
+})
+
+test("compound optionalType, typedArray, typedTuple test, unsuccessfull", async () => {
+    const testData = [[[10, 10], [10, "10"], [10, undefined], [10, null], [10, true], [0, false]]];
+    const testDECL = optionalType(typedArray(typedTuple([Type.INTEGER, Type.INTEGER])));
+
+    const error = conformsToType(testData, testDECL);
+    expect(error).not.toBeNull();  
+    
+    const error2 = conformsToType(null, testDECL);
+    expect(error2).not.toBeNull();
+})
+
+test("compound optionalType, typedArray, typedTuple test, successfull 2", async () => {
+    const testData = [[10, 10], undefined, [0,0]];
+    const testDECL = typedArray(optionalType(typedTuple([Type.INTEGER, Type.INTEGER])));
+
+    const error = conformsToType(testData, testDECL);
+    expect(error).toBeNull();
+})
