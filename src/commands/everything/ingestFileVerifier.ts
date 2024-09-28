@@ -5,8 +5,8 @@ import type { ApplicationContext, Error, ResErr } from "../../ts/metaTypes";
 import { DBDSN_TYPEDECL, INGEST_FILE_COLLECTION_ASSET_TYPEDECL, INGEST_FILE_COLLECTION_ENTRY_TYPEDECL, 
     INGEST_FILE_COLLECTION_FIELD_TYPEDECL, INGEST_FILE_SETTINGS_TYPEDECL, 
     INGEST_FILE_SINGLE_ASSET_FIELD_TYPEDECL, INGEST_FILE_SINGLE_ASSET_TYPEDECL, 
-    IngestFileAssetType, TRANSFORM_DTO_TYPEDECL, type AutoIngestScript, type DBDSN, 
-    type IngestFileCollectionAsset, type IngestFileSingleAsset, type TransformDTO 
+    IngestFileAssetType, TRANSFORM_DTO_TYPEDECL, type AutoIngestScript, type AutoIngestSubScript, type DBDSN, 
+    type IngestFileCollectionAsset, type IngestFileSingleAsset, type SettingsSubFile, type TransformDTO 
 } from "../../ts/types";
 
 export const assureUniformTransform = (maybeTransform: string | TransformDTO): ResErr<TransformDTO> => {
@@ -171,4 +171,55 @@ export const verifyIngestFile = (rawFile: any, context?: ApplicationContext): Re
     }
 
     return {result: rawFile as AutoIngestScript, error: null};
+}
+
+export const checkIDRangesOfSubFiles = (subFiles: SettingsSubFile[], context?: ApplicationContext): Error | undefined => {
+    for (let i = 0; i < subFiles.length; i++) {
+        const subFileA = subFiles[i];
+
+        for (let j = i + 1; j < subFiles.length; j++) {
+            const subFileB = subFiles[j];
+
+            if (subFileA.path === subFileB.path) {
+                context?.logger.log("[if-verifier] Duplicate path in sub-files " + i + " and " + j + ", path of first:" + subFileA.path, LogLevel.ERROR);
+                return "Duplicate path in sub-files " + i + " and " + j + ", path of first:" + subFileA.path;
+            }
+            for (let k = 0; k < subFileA.idRanges.length; k++) {
+                const rangeASubFileA = subFileA.idRanges[k];
+
+                for (let m = 0; m < subFileB.idRanges.length; m++) {
+                    const rangeBSubFileB = subFileB.idRanges[m];
+                    if (rangeASubFileA[0] <= rangeBSubFileB[1] && rangeASubFileA[1] >= rangeBSubFileB[0]) {
+                        context?.logger.log("[if-verifier] ID range overlap between sub-file " + i + " and " + j + ", of paths: " + subFileA.path + " and " + subFileB.path);
+                        return "ID range overlap between sub-file "+i+" and "+j+", of paths: " + subFileA.path + " and " + subFileB.path;
+                    }
+                }
+            }
+        }
+    }
+}
+
+export const verifySubFileIDAssignments = (subFile: SettingsSubFile, script: AutoIngestSubScript, context?: ApplicationContext): Error | undefined => {
+    for (const asset of script.assets) {
+        let id = -1;
+        if (asset.type === IngestFileAssetType.SINGLE) {
+            id = asset.single.id;
+        } else if (asset.type === IngestFileAssetType.COLLECTION) {
+            id = asset.collection.id;
+        } else {
+            context?.logger.log("[if-verifier] Unknown asset type in sub-file. Unable to verify ID assignment.", LogLevel.ERROR);
+            return "Unknown asset type in sub-file. Unable to verify ID assignment.";
+        }
+        let isOkay = false;
+        for (const range of subFile.idRanges) {
+            if (id >= range[0] && id <= range[1]) {
+                isOkay = true;
+            }
+        }
+        if (!isOkay) {
+            context?.logger.log("[if-verifier] ID "+id+" in sub-file "+subFile.path+" is not within assigned id ranges.");
+            return "ID "+id+" in sub-file "+subFile.path+" is not within assigned id ranges.\n\t"
+                + "Ranges (inclusive): "+subFile.idRanges.map(range => "["+range[0]+"->"+range[1]+"]").join(", ");
+        }
+    }
 }

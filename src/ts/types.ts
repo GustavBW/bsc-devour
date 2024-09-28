@@ -206,7 +206,7 @@ export type IngestFileCollectionField = {
     id: number;
     entries: CollectionEntryDTO[];
 }
-export type IngestSubFile = {
+export type SettingsSubFile = {
     path: string;
     idRanges: [number, number][];
 }
@@ -222,7 +222,7 @@ export type IngestFileSettings = {
     LODThreshold: number,
     allowedFailures: number,
     dsn: DBDSN,
-    subFiles: IngestSubFile[] | undefined
+    subFiles: SettingsSubFile[] | undefined
 }
 export const INGEST_FILE_SETTINGS_TYPEDECL: TypeDeclaration = {
     version: Type.STRING,
@@ -231,6 +231,9 @@ export const INGEST_FILE_SETTINGS_TYPEDECL: TypeDeclaration = {
     allowedFailures: Type.INTEGER,
     dsn: DBDSN_TYPEDECL,
     subFiles: optionalType(typedArray(INGEST_FILE_SUB_FILE_TYPEDECL)),
+}
+export type AutoIngestSubScript = {
+	assets: IngestFileAssetEntry[]
 }
 /**
  * @author GustavBW

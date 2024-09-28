@@ -2,12 +2,12 @@ import { LogLevel } from "../logging/simpleLogger";
 import { fetchBlobFromUrl } from "../networking/blobFetcher";
 import type { UploadableAsset } from "../networking/dbConn";
 import { type ApplicationContext, type ResErr, type Error, ImageMIMEType } from "../ts/metaTypes";
-import { AssetUseCase, IngestFileAssetType, type AutoIngestScript, type IngestFileCollectionAsset, type IngestFileCollectionField, type IngestFileSettings, type IngestFileSingleAsset, type IngestFileSingleAssetField } from "../ts/types";
+import { AssetUseCase, IngestFileAssetType, type AutoIngestScript, type AutoIngestSubScript, type IngestFileCollectionAsset, type IngestFileCollectionField, type IngestFileSettings, type IngestFileSingleAsset, type IngestFileSingleAssetField } from "../ts/types";
 import { getMetaDataAsIfImage } from "./imageUtil";
 import { generateLODs } from "./lodGenerator";
 import { findConformingMIMEType } from "./typeChecker";
 
-export const processIngestFile = async (ingestScript: AutoIngestScript, context: ApplicationContext): Promise<ResErr<string>> => {
+export const processIngestFile = async (ingestScript: AutoIngestScript, context: ApplicationContext, subFiles: AutoIngestSubScript[]): Promise<ResErr<string>> => {
     const dbErr = await context.db.connect(ingestScript.settings.dsn, context);
     if (dbErr !== null) {
         return {result: null, error: dbErr};

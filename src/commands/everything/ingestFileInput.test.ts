@@ -1,8 +1,8 @@
 import {test, expect} from 'bun:test';
 import {readIngestFile} from './ingestFileInput';
-import { AssetUseCase, IngestFileAssetType, type IngestFileCollectionAsset, type IngestFileSingleAsset } from '../../ts/types';
+import { AssetUseCase, IngestFileAssetType, type AutoIngestSubScript, type IngestFileCollectionAsset, type IngestFileSingleAsset, type SettingsSubFile } from '../../ts/types';
 import type { BunFile } from 'bun';
-import { assureUniformDSN, assureUniformTransform, validateCollectionAssetEntry, validateSingleAssetEntry, verifyIngestFile } from './ingestFileVerifier';
+import { assureUniformDSN, assureUniformTransform, checkIDRangesOfSubFiles, validateCollectionAssetEntry, validateSingleAssetEntry, verifyIngestFile, verifySubFileIDAssignments } from './ingestFileVerifier';
 
 //Tests of "readIngestFile"
 let testFileJson: any;
@@ -144,3 +144,183 @@ test("verifyIngestFile should return null on valid input", async () => {
     expect(res.error).toBeNull();
 });
 
+test("verifyIngestFile should return error on missing settings field", async () => {
+    const res = verifyIngestFile({assets: []});
+    expect(res.error).not.toBeNull();
+    expect(res.error).not.toBeUndefined();
+});
+
+test("verifySubFileIDAssignments should return undefined on valid input", async () => {
+    const testSubFile: SettingsSubFile = {
+        path: "somePathPathIsNotVerifiedInThisFunction",
+        idRanges: [[1, 10], [20, 30]],
+    }
+    const testScript: AutoIngestSubScript = {
+        assets: [],
+    }
+    const error = verifySubFileIDAssignments(testSubFile, testScript);
+    expect(error).toBeUndefined();
+});
+
+test("verifySubFileIDAssignments with unknown asset type", () => {
+    const subFile: SettingsSubFile = {
+      path: "test.json",
+      idRanges: [[1, 10]]
+    };
+    const script: AutoIngestSubScript = {
+      assets: [{
+        type: IngestFileAssetType.UNKNOWN,
+        useCase: "icon",
+      } as any]
+    };
+  
+    const result = verifySubFileIDAssignments(subFile, script);
+    expect(result).toEqual("Unknown asset type in sub-file. Unable to verify ID assignment.");
+  });
+  
+  test("verifySubFileIDAssignments with multiple ID ranges", () => {
+    const subFile: SettingsSubFile = {
+      path: "test.json",
+      idRanges: [[1, 10], [20, 30]]
+    };
+    const script: AutoIngestSubScript = {
+      assets: [
+        {
+          type: IngestFileAssetType.SINGLE,
+          useCase: AssetUseCase.ICON,
+          single: { id: 5, source: "test1.png" }
+        },
+        {
+          type: IngestFileAssetType.COLLECTION,
+          useCase: AssetUseCase.ICON,
+          collection: { id: 25, name: "testCollection", entries: [] }
+        }
+      ]
+    };
+  
+    const result = verifySubFileIDAssignments(subFile, script);
+    expect(result).toBeUndefined();
+  });
+
+  test("verifySubFileIDAssignments with invalid collection asset ID", () => {
+    const subFile: SettingsSubFile = {
+      path: "test.json",
+      idRanges: [[1, 10]]
+    };
+    const script: AutoIngestSubScript = {
+      assets: [{
+        type: IngestFileAssetType.COLLECTION,
+        useCase: AssetUseCase.ICON,
+        collection: { id: 0, name: "testCollection", entries: [] }
+      }]
+    };
+  
+    const result = verifySubFileIDAssignments(subFile, script);
+    expect(result).not.toBeUndefined();
+    expect(result!.length).toBeGreaterThan("ID 15 in sub-file test.json is not within assigned id ranges".length);
+  });
+
+  test("verifySubFileIDAssignments with invalid single asset ID", () => {
+    const subFile: SettingsSubFile = {
+      path: "test.json",
+      idRanges: [[1, 10]]
+    };
+    const script: AutoIngestSubScript = {
+      assets: [{
+        type: IngestFileAssetType.SINGLE,
+        useCase: AssetUseCase.ICON,
+        single: { id: 15, source: "test.png" }
+      }]
+    };
+  
+    const result = verifySubFileIDAssignments(subFile, script);
+    expect(result).not.toBeUndefined();
+    expect(result!.length).toBeGreaterThan("ID 15 in sub-file test.json is not within assigned id ranges".length);
+  });
+
+  test("verifySubFileIDAssignments with valid collection asset", () => {
+    const subFile: SettingsSubFile = {
+      path: "test.json",
+      idRanges: [[1, 10]]
+    };
+    const script: AutoIngestSubScript = {
+      assets: [{
+        type: IngestFileAssetType.COLLECTION,
+        useCase: AssetUseCase.ICON,
+        collection: { id: 7, name: "testCollection", entries: [] }
+      }]
+    };
+  
+    const result = verifySubFileIDAssignments(subFile, script);
+    expect(result).toBeUndefined();
+  });
+
+  test("verifySubFileIDAssignments with valid single asset", () => {
+    const subFile: SettingsSubFile = {
+      path: "test.json",
+      idRanges: [[1, 10]]
+    };
+    const script: AutoIngestSubScript = {
+      assets: [{
+        type: IngestFileAssetType.SINGLE,
+        useCase: AssetUseCase.ICON,
+        single: { id: 5, source: "test.png" }
+      }]
+    };
+  
+    const result = verifySubFileIDAssignments(subFile, script);
+    expect(result).toBeUndefined();
+  });
+
+test("checkIDRangesOfSubFiles with non-overlapping ranges", () => {
+    const subFiles: SettingsSubFile[] = [
+        { path: "file1.json", idRanges: [[1, 10], [20, 30]] },
+        { path: "file2.json", idRanges: [[40, 50], [60, 70]] }
+    ];
+
+    const result = checkIDRangesOfSubFiles(subFiles);
+    expect(result).toBeUndefined();
+});
+
+test("checkIDRangesOfSubFiles with overlapping ranges between files", () => {
+    const subFiles: SettingsSubFile[] = [
+      { path: "file1.json", idRanges: [[1, 10], [20, 30]] },
+      { path: "file2.json", idRanges: [[25, 35], [40, 50]] }
+    ];
+  
+    const result = checkIDRangesOfSubFiles(subFiles);
+    expect(result).not.toBeUndefined();
+    expect(result!.length).toBeGreaterThan("ID range overlap between sub-file 0 and 1".length);
+});
+
+test("checkIDRangesOfSubFiles with duplicate paths", () => {
+    const subFiles: SettingsSubFile[] = [
+      { path: "file1.json", idRanges: [[1, 10]] },
+      { path: "file1.json", idRanges: [[20, 30]] }
+    ];
+  
+    const result = checkIDRangesOfSubFiles(subFiles);
+    expect(result).not.toBeUndefined();
+    expect(result!.length).toBeGreaterThan("Duplicate path in sub-files 0 and 1".length);
+});
+
+test("checkIDRangesOfSubFiles with overlapping ranges within the same file - which is okay", () => {
+    const subFiles: SettingsSubFile[] = [
+      { path: "file1.json", idRanges: [[1, 10], [5, 15]] }
+    ];
+  
+    const result = checkIDRangesOfSubFiles(subFiles);
+    expect(result).toBeUndefined();
+});
+
+test("checkIDRangesOfSubFiles with multiple files and various scenarios", () => {
+    const subFiles: SettingsSubFile[] = [
+      { path: "file1.json", idRanges: [[1, 10], [20, 30]] },
+      { path: "file2.json", idRanges: [[40, 50]] },
+      { path: "file3.json", idRanges: [[60, 70], [80, 90]] },
+      { path: "file4.json", idRanges: [[100, 110]] }
+    ];
+  
+    const result = checkIDRangesOfSubFiles(subFiles);
+    expect(result).toBeUndefined();
+});

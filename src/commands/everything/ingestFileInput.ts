@@ -3,8 +3,8 @@ import { readCompactDSNNotation, readCompactDSNNotationRaw, readCompactTransform
 import { processIngestFile } from '../../processing/ingestProcessor.ts';
 import { conformsToType } from '../../processing/typeChecker.ts';
 import type { ApplicationContext, CLIFunc, ResErr } from '../../ts/metaTypes.ts';
-import { INGEST_FILE_COLLECTION_ENTRY_TYPEDECL, COLLECTION_ENTRY_DTO_TYPEDECL, DBDSN_TYPEDECL, INGEST_FILE_COLLECTION_ASSET_TYPEDECL, INGEST_FILE_COLLECTION_FIELD_TYPEDECL, INGEST_FILE_SINGLE_ASSET_TYPEDECL, INGEST_FILE_SINGLE_ASSET_FIELD_TYPEDECL, TRANSFORM_DTO_TYPEDECL, type AutoIngestScript, type DBDSN, type IngestFileAssetEntry, type IngestFileCollectionAsset, type IngestFileSingleAsset, type TransformDTO, IngestFileAssetType, type IngestFileSettings, INGEST_FILE_SETTINGS_TYPEDECL } from '../../ts/types.ts';
-import { verifyIngestFile } from './ingestFileVerifier.ts';
+import { INGEST_FILE_COLLECTION_ENTRY_TYPEDECL, COLLECTION_ENTRY_DTO_TYPEDECL, DBDSN_TYPEDECL, INGEST_FILE_COLLECTION_ASSET_TYPEDECL, INGEST_FILE_COLLECTION_FIELD_TYPEDECL, INGEST_FILE_SINGLE_ASSET_TYPEDECL, INGEST_FILE_SINGLE_ASSET_FIELD_TYPEDECL, TRANSFORM_DTO_TYPEDECL, type AutoIngestScript, type DBDSN, type IngestFileAssetEntry, type IngestFileCollectionAsset, type IngestFileSingleAsset, type TransformDTO, IngestFileAssetType, type IngestFileSettings, INGEST_FILE_SETTINGS_TYPEDECL, type SettingsSubFile, type AutoIngestSubScript } from '../../ts/types.ts';
+import { checkIDRangesOfSubFiles, verifyIngestFile, verifyIngestFileAssets, verifySubFileIDAssignments } from './ingestFileVerifier.ts';
 
 /**
  * @author GustavBW
@@ -40,8 +40,14 @@ const handleIngestFileInput = async (args: string[], context: ApplicationContext
     context.logger.log("[if_cmd] Successfully verified main ingest file.");
     printSettingsToLog(ingestScript.settings, context);
 
-    return processIngestFile(ingestScript, context);
+    const subFileResult = await handleSubFiles(ingestScript.settings.subFiles, context); if (subFileResult.error !== null) {
+        context.logger.log("[if_cmd] Failed to verify sub-files: \n\t" + subFileResult.error, LogLevel.FATAL);
+        return {result: null, error: subFileResult.error};
+    }
+
+    return processIngestFile(ingestScript, context, subFileResult.result);
 }
+
 
 const printSettingsToLog = (settings: IngestFileSettings, context: ApplicationContext): void => {
     let constructedStringTable = "";
@@ -92,4 +98,38 @@ export const readIngestFile = async (url: string): Promise<ResErr<any>> => {
     }
 
     return { result: ingestScript, error: null };
+}
+
+
+const handleSubFiles = async (subFiles: SettingsSubFile[] | undefined, context: ApplicationContext): Promise<ResErr<AutoIngestSubScript[]>> => {
+    if(!subFiles || subFiles.length <= 0){
+        return {result: [], error: null};
+    }
+    const rangeCheckError = checkIDRangesOfSubFiles(subFiles, context); if (rangeCheckError) {
+        context.logger.log("[if_cmd] Range check failed: " + rangeCheckError, LogLevel.ERROR);
+        return {result: null, error: rangeCheckError};
+    }
+    const verifiedSubFiles: AutoIngestScript[] = [];
+    for (const subFileDeclaration of subFiles) {
+        const typeCheck = conformsToType(subFileDeclaration, INGEST_FILE_SETTINGS_TYPEDECL); if (typeCheck !== null) {
+            context.logger.log("[if_cmd] Type error in sub-file declaration: " + typeCheck, LogLevel.ERROR);
+            return {result: null, error: "Type error in sub-file declaration: " + typeCheck};
+        }
+        const url = subFileDeclaration.path;
+        const {result, error} = await readIngestFile(url); if (error !== null) {
+            context.logger.log("[if_cmd] Failed to read sub-file: " + url + "\n\t" + error, LogLevel.ERROR);
+            return {result: null, error: error};
+        }
+        const verifyError = verifyIngestFileAssets(result, context); if (verifyError) {
+            context.logger.log("[if_cmd] Failed to verify sub-file: " + url + "\n\t" + verifyError, LogLevel.ERROR);
+            return {result: null, error: verifyError};
+        }
+        const idCheckError = verifySubFileIDAssignments(subFileDeclaration, result, context); if (idCheckError) {
+            context.logger.log("[if_cmd] ID assignment error in sub-file: " + url + "\n\t" + idCheckError, LogLevel.ERROR);
+            return {result: null, error: idCheckError};
+        }
+        const ingestScript = result;
+        verifiedSubFiles.push(ingestScript);
+    }
+    return {result: verifiedSubFiles, error: null};
 }
