@@ -3,7 +3,7 @@ import { readCompactDSNNotation, readCompactDSNNotationRaw, readCompactTransform
 import { processIngestFile } from '../../processing/ingestProcessor.ts';
 import { conformsToType } from '../../processing/typeChecker.ts';
 import type { ApplicationContext, CLIFunc, ResErr } from '../../ts/metaTypes.ts';
-import { INGEST_FILE_COLLECTION_ENTRY_TYPEDECL, COLLECTION_ENTRY_DTO_TYPEDECL, DBDSN_TYPEDECL, INGEST_FILE_COLLECTION_ASSET_TYPEDECL, INGEST_FILE_COLLECTION_FIELD_TYPEDECL, INGEST_FILE_SINGLE_ASSET_TYPEDECL, INGEST_FILE_SINGLE_ASSET_FIELD_TYPEDECL, TRANSFORM_DTO_TYPEDECL, type AutoIngestScript, type DBDSN, type IngestFileAssetEntry, type IngestFileCollectionAsset, type IngestFileSingleAsset, type TransformDTO, IngestFileAssetType, type IngestFileSettings, INGEST_FILE_SETTINGS_TYPEDECL, type SettingsSubFile, type AutoIngestSubScript } from '../../ts/types.ts';
+import { INGEST_FILE_COLLECTION_ENTRY_TYPEDECL, COLLECTION_ENTRY_DTO_TYPEDECL, DBDSN_TYPEDECL, INGEST_FILE_COLLECTION_ASSET_TYPEDECL, INGEST_FILE_COLLECTION_FIELD_TYPEDECL, INGEST_FILE_SINGLE_ASSET_TYPEDECL, INGEST_FILE_SINGLE_ASSET_FIELD_TYPEDECL, TRANSFORM_DTO_TYPEDECL, type AutoIngestScript, type DBDSN, type IngestFileAssetEntry, type IngestFileCollectionAsset, type IngestFileSingleAsset, type TransformDTO, IngestFileAssetType, type IngestFileSettings, INGEST_FILE_SETTINGS_TYPEDECL, type SettingsSubFile, type AutoIngestSubScript, type PreparedAutoIngestSubScript } from '../../ts/types.ts';
 import { checkIDRangesOfSubFiles, verifyIngestFile, verifyIngestFileAssets, verifySubFileIDAssignments } from './ingestFileVerifier.ts';
 
 /**
@@ -101,7 +101,7 @@ export const readIngestFile = async (url: string): Promise<ResErr<any>> => {
 }
 
 
-const handleSubFiles = async (subFiles: SettingsSubFile[] | undefined, context: ApplicationContext): Promise<ResErr<AutoIngestSubScript[]>> => {
+const handleSubFiles = async (subFiles: SettingsSubFile[] | undefined, context: ApplicationContext): Promise<ResErr<PreparedAutoIngestSubScript[]>> => {
     if(!subFiles || subFiles.length <= 0){
         return {result: [], error: null};
     }
@@ -109,7 +109,7 @@ const handleSubFiles = async (subFiles: SettingsSubFile[] | undefined, context: 
         context.logger.log("[if_cmd] Range check failed: " + rangeCheckError, LogLevel.ERROR);
         return {result: null, error: rangeCheckError};
     }
-    const verifiedSubFiles: AutoIngestScript[] = [];
+    const verifiedSubFiles: PreparedAutoIngestSubScript[] = [];
     for (const subFileDeclaration of subFiles) {
         const typeCheck = conformsToType(subFileDeclaration, INGEST_FILE_SETTINGS_TYPEDECL); if (typeCheck !== null) {
             context.logger.log("[if_cmd] Type error in sub-file declaration: " + typeCheck, LogLevel.ERROR);
@@ -128,8 +128,11 @@ const handleSubFiles = async (subFiles: SettingsSubFile[] | undefined, context: 
             context.logger.log("[if_cmd] ID assignment error in sub-file: " + url + "\n\t" + idCheckError, LogLevel.ERROR);
             return {result: null, error: idCheckError};
         }
-        const ingestScript = result;
-        verifiedSubFiles.push(ingestScript);
+        const ingestScript = result as AutoIngestSubScript;
+        verifiedSubFiles.push({
+            path: subFileDeclaration.path,
+            assets: ingestScript.assets,
+        });
     }
     return {result: verifiedSubFiles, error: null};
 }

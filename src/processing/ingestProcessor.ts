@@ -2,30 +2,54 @@ import { LogLevel } from "../logging/simpleLogger";
 import { fetchBlobFromUrl } from "../networking/blobFetcher";
 import type { UploadableAsset } from "../networking/dbConn";
 import { type ApplicationContext, type ResErr, type Error, ImageMIMEType } from "../ts/metaTypes";
-import { AssetUseCase, IngestFileAssetType, type AutoIngestScript, type AutoIngestSubScript, type IngestFileCollectionAsset, type IngestFileCollectionField, type IngestFileSettings, type IngestFileSingleAsset, type IngestFileSingleAssetField } from "../ts/types";
+import { AssetUseCase, IngestFileAssetType, type AutoIngestScript, type AutoIngestSubScript, type IngestFileAssetEntry, type IngestFileCollectionAsset, type IngestFileCollectionField, type IngestFileSettings, type IngestFileSingleAsset, type IngestFileSingleAssetField, type PreparedAutoIngestSubScript } from "../ts/types";
 import { getMetaDataAsIfImage } from "./imageUtil";
 import { generateLODs } from "./lodGenerator";
 import { findConformingMIMEType } from "./typeChecker";
 
-export const processIngestFile = async (ingestScript: AutoIngestScript, context: ApplicationContext, subFiles: AutoIngestSubScript[]): Promise<ResErr<string>> => {
+export const processIngestFile = async (ingestScript: AutoIngestScript, context: ApplicationContext, subFiles: PreparedAutoIngestSubScript[]): Promise<ResErr<string>> => {
     const dbErr = await context.db.connect(ingestScript.settings.dsn, context);
     if (dbErr !== null) {
         return {result: null, error: dbErr};
     }
-    context.logger.log("[ingest] Processing ingest file.");
     let errors: Error[] = [];
-    
-    for (const asset of ingestScript.assets) {
+    const settings = ingestScript.settings;
+    context.logger.logAndPrint("[ingest] Processing main ingest file.");
+
+    const tooManyErrors = await processAssetList(ingestScript.assets, settings, errors, context);
+    if (tooManyErrors) {
+        return {result: null, error: "Too many errors, aborting"};
+    }
+
+    if (subFiles.length < 0) {
+        return {result: "Ingest file succesfully processed and uploaded", error: null};
+    }
+
+    for (const subFile of subFiles) {
+        context.logger.log("[ingest] Processing sub-file: " + subFile.path);
+        const tooManyErrors = await processAssetList(subFile.assets, settings, errors, context);
+        if (tooManyErrors) {
+            return {result: null, error: "Too many errors, aborting"};
+        }
+    }
+    return {result: "Ingest file and subFiles succesfully processed and uploaded", error: null};
+}
+
+/**
+ * @returns true if there's too many errors
+ */
+const processAssetList = async (assets: IngestFileAssetEntry[], settings: IngestFileSettings, errors: Error[], context: ApplicationContext): Promise<boolean> => {
+    for (const asset of assets) {
         const type = asset.type;
-        if (errors.length > ingestScript.settings.allowedFailures) {
+        if (errors.length > settings.allowedFailures) {
             context.logger.logAndPrint("[ingest] Too many errors, aborting:\n" + errors.join("\n\t"), LogLevel.ERROR);
-            return {result: null, error: "Too many errors, aborting:\n" + errors.join("\n\t")};
+            return true;
         }
 
         switch (type) {
             case IngestFileAssetType.SINGLE: {
                 context.logger.logAndPrint("[ingest]\tProcessing asset id " + asset.single.id + ": " + asset.single.alias);
-                const res = await processGraphicalAsset(asset, ingestScript.settings, context);
+                const res = await processGraphicalAsset(asset, settings, context);
                 if (res.error !== null) {
                     context.logger.log("[ingest] Error while processing single asset: \n\t" + res.error, LogLevel.ERROR);
                     errors.push(res.error);
@@ -47,8 +71,7 @@ export const processIngestFile = async (ingestScript: AutoIngestScript, context:
             }
         }
     }
-
-    return {result: "Ingest file succesfully processed and uploaded", error: null};
+    return false;
 }
 
 const processGraphicalAsset = async (asset: IngestFileSingleAsset, settings: IngestFileSettings, context: ApplicationContext): Promise<ResErr<string>> => {

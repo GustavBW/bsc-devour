@@ -232,14 +232,17 @@ export const INGEST_FILE_SETTINGS_TYPEDECL: TypeDeclaration = {
     dsn: DBDSN_TYPEDECL,
     subFiles: optionalType(typedArray(INGEST_FILE_SUB_FILE_TYPEDECL)),
 }
-export type AutoIngestSubScript = {
+export interface AutoIngestSubScript {
 	assets: IngestFileAssetEntry[]
+}
+export interface PreparedAutoIngestSubScript extends AutoIngestSubScript {
+    path: string;
 }
 /**
  * @author GustavBW
  * @since 0.0.1
  */
-export type AutoIngestScript = {
+export interface AutoIngestScript {
 	settings: IngestFileSettings,
 	assets: IngestFileAssetEntry[]
 }
