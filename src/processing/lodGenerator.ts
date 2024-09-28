@@ -42,7 +42,7 @@ export async function generateLODs(blob: Blob, sizeThreshold: number, context?: 
         return {result: [{detailLevel: 0, blob: blob, type: blobType}], error: null};
     }
     const lodsGenerated: LODDTO[] = [{detailLevel: 0, blob: blob, type: blobType}];
-    if(blob.size / 1000 < sizeThreshold) { // Already below threshold
+    if(Math.floor(blob.size / 1000) <= sizeThreshold) { // Already below threshold
         context?.logger.log("[lod_gen] Image already below threshold, size: " + blob.size / 1000 + "KB");
         return {result: lodsGenerated, error: null};
     }

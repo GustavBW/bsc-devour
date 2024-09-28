@@ -1,7 +1,8 @@
 import {test, expect} from 'bun:test';
-import {assureUniformTransform, assureUniformDSN, validateCollectionAssetEntry, validateSingleAssetEntry, verifyIngestFile, readIngestFile} from './ingestFileInput';
+import {readIngestFile} from './ingestFileInput';
 import { AssetUseCase, IngestFileAssetType, type IngestFileCollectionAsset, type IngestFileSingleAsset } from '../../ts/types';
 import type { BunFile } from 'bun';
+import { assureUniformDSN, assureUniformTransform, validateCollectionAssetEntry, validateSingleAssetEntry, verifyIngestFile } from './ingestFileVerifier';
 
 //Tests of "readIngestFile"
 let testFileJson: any;
@@ -77,6 +78,7 @@ test("validateCollectionAssetEntry should return null on valid input", async () 
         type: "collection",
         useCase: "icon",
         collection: {
+            id: 1,
             name: "SomeNameHere",
             entries: [{
                 transform: {xOffset: 1, yOffset: 2, zIndex: 3, xScale: 4, yScale: 5},

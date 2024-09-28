@@ -45,9 +45,17 @@ export const findConformingMIMEType = (type: string): ResErr<ImageMIMEType> => {
  * @since 0.0.1
  * @author GustavBW
  */
-export const conformsToType = <T>(object: T, typeDecl: TypeDeclaration): string | null => {
-    for (const key of Object.keys(typeDecl)) {
-        const validator = typeDecl[key];
+export const conformsToType = <T>(object: T, topLevelValidator: TypeDeclaration | FieldValidatorFunction): string | null => {
+    if (typeof topLevelValidator === "function") {
+        // If the type declaration is a function, use it to validate the object.
+        if (!topLevelValidator(object)) {
+            return `Object does not conform to the expected "${(topLevelValidator as any).typeString}", observed value: ${object}`;
+        }
+        return null;
+    }
+
+    for (const key of Object.keys(topLevelValidator)) {
+        const validator = topLevelValidator[key];
         const value = object[key as keyof T];
 
         if (typeof validator === "object") {
@@ -155,6 +163,41 @@ export const typeUnionOR = (...validators: (Type | FieldValidatorFunction | Type
             return (validator as any).typeString;
         }
     }).join(" | ");
+
+    return wrappedValidator;
+}
+
+export const typedTuple = (validators: (Type | FieldValidatorFunction | TypeDeclaration)[]): FieldValidatorFunction => {
+    const wrappedValidator = (value: any) => {
+        if (!Array.isArray(value) || value.length !== validators.length) {
+            return false;
+        }
+        for (let i = 0; i < validators.length; i++) {
+            const validator = validators[i];
+            if (typeof validator === "function") {
+                if (!validator(value[i])) {
+                    return false;
+                }
+            } else if (typeof validator === "object") {
+                if (conformsToType(value[i], validator as TypeDeclaration) !== null) {
+                    return false;
+                }
+            } else if (!validateSimpleType(validator, value[i])) {
+                return false;
+            }
+        }
+        return true;
+    };
+
+    wrappedValidator.typeString = `[${validators.map(validator => {
+        if (typeof validator === "string") {
+            return validator;
+        } else if (typeof validator === "object") {
+            return JSON.stringify(validator);
+        } else {
+            return (validator as any).typeString;
+        }
+    }).join(", ")}]`;
 
     return wrappedValidator;
 }
