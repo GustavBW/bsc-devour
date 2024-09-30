@@ -63,24 +63,26 @@ const _uploadAsset = async (asset: UploadableAsset, context: ApplicationContext,
     context.logger.log("[db] Succesfully inserted new graphical asset id: " + asset.id + " with " + asset.lods.length + " LODs");
     return {result: "Succesfully inserted new graphical asset id: " + asset.id, error: null};
 }
-
+type ETag = string;
+type DetailLevel = number;
+type AssetID = number;
 const insertLODS = async (lods: LODDTO[], assetId: number, conn: pg.Client, context: ApplicationContext): Promise<Error | null> => {
     try {
-        const valueTuples: [Buffer, number, number, ImageMIMEType][] = await Promise.all(lods.map(async (lod) => {
+        const valueTuples: [Buffer, DetailLevel, AssetID, ImageMIMEType, ETag][] = await Promise.all(lods.map(async (lod) => {
             const arrayBuffer = await lod.blob.arrayBuffer();
             const buffer = Buffer.from(arrayBuffer);
-            return [buffer, lod.detailLevel, assetId, lod.type];
+            return [buffer, lod.detailLevel, assetId, lod.type, lod.etag];
         }));
         let valuesSQL = "";
         const insertsPerTuple = valueTuples[0].length;
         for (let i = 0; i < valueTuples.length; i++) {
-            valuesSQL += `($${i * insertsPerTuple + 1}, $${i * insertsPerTuple + 2}, $${i * insertsPerTuple + 3}, $${i * insertsPerTuple + 4})`;
+            valuesSQL += `($${i * insertsPerTuple + 1}, $${i * insertsPerTuple + 2}, $${i * insertsPerTuple + 3}, $${i * insertsPerTuple + 4}, $${i * insertsPerTuple + 5})`;
             if (i < valueTuples.length - 1) {
                 valuesSQL += ", ";
             }
         }
         const constructedQuery = `
-            INSERT INTO "LOD" (blob, "detailLevel", "graphicalAsset", "type")
+            INSERT INTO "LOD" (blob, "detailLevel", "graphicalAsset", "type", "etag")
             VALUES ${valuesSQL} RETURNING id;
         `;
         context.logger.log("[db] Constructed query: " + constructedQuery);

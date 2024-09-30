@@ -87,6 +87,7 @@ export type LODDTO = {
     detailLevel: number,
     blob: Blob,
     type: ImageMIMEType,
+    etag: string
 }
 
 /**

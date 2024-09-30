@@ -15,7 +15,7 @@
         "subFiles": [
             {
                 "path": "./default/ingestFiles/iconIngestFile.json",
-                "idRanges": [[1000, 2000]]
+                "idRanges": [[1001, 2000]]
             }
         ]
     },

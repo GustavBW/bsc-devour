@@ -2,7 +2,7 @@
     "assets": [
         {
             "type": "single", "useCase": "icon", "single": {
-                "id": 1000, "alias": "TestIcon","source": "https://upload.wikimedia.org/wikipedia/commons/thumb/6/69/How_to_use_icon.svg/2214px-How_to_use_icon.svg.png"
+                "id": 1001, "alias": "TestIcon","source": "https://upload.wikimedia.org/wikipedia/commons/thumb/6/69/How_to_use_icon.svg/2214px-How_to_use_icon.svg.png"
             }
         }
     ]

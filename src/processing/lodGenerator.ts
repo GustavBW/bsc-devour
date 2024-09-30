@@ -4,6 +4,7 @@ import type { LODDTO } from '../ts/types.ts';
 import { checkIfImageTypeIsSupported } from './imageUtil.ts';
 import { LogLevel } from '../logging/simpleLogger.ts';
 import { findConformingMIMEType } from './typeChecker.ts';
+import { computeETag } from './etag.ts';
 
 
 /**
@@ -37,11 +38,21 @@ export async function generateLODs(blob: Blob, sizeThreshold: number, context?: 
         context?.logger.log("[lod_gen] Empty blob detected.", LogLevel.ERROR);
         return {result: null, error: "This blob is empty."};
     }
+    const etagOfLOD0Attempt = await computeETag(blob);
+    if(etagOfLOD0Attempt.error !== null) {
+        context?.logger.log("[lod_gen] Error computing etag for lod: " + etagOfLOD0Attempt.error, LogLevel.ERROR);
+        return {result: null, error: etagOfLOD0Attempt.error};
+    }
+    const lodsGenerated: LODDTO[] = [{
+        detailLevel: 0, 
+        blob: blob, 
+        type: blobType,
+        etag: etagOfLOD0Attempt.result
+    }];
     if(blobType === ImageMIMEType.SVG) { // No sense in LOD'ifying svgs
         context?.logger.log("[lod_gen] SVG detected, no LODs needed.");
-        return {result: [{detailLevel: 0, blob: blob, type: blobType}], error: null};
+        return {result: lodsGenerated, error: null};
     }
-    const lodsGenerated: LODDTO[] = [{detailLevel: 0, blob: blob, type: blobType}];
     if(Math.floor(blob.size / 1000) <= sizeThreshold) { // Already below threshold
         context?.logger.log("[lod_gen] Image already below threshold, size: " + blob.size / 1000 + "KB");
         return {result: lodsGenerated, error: null};
@@ -55,7 +66,17 @@ export async function generateLODs(blob: Blob, sizeThreshold: number, context?: 
             context?.logger.log("[lod_gen] Downscaling failed: " + error, LogLevel.ERROR);
             return {result: null, error: error};
         }
-        lodsGenerated.push({detailLevel: detailLevel, blob: result, type: blobType});
+        const etagAttempt = await computeETag(result);
+        if(etagAttempt.error !== null) {
+            context?.logger.log("[lod_gen] Error computing etag for lod: " + etagAttempt.error, LogLevel.ERROR);
+            return {result: null, error: etagAttempt.error};
+        }
+        lodsGenerated.push({
+            detailLevel: detailLevel, 
+            blob: result, 
+            type: blobType, 
+            etag: etagAttempt.result
+        });
         currentBlob = result;
         detailLevel++;
     }
