@@ -1,0 +1,140 @@
+{
+    "assets": [
+        {
+            "type": "collection", "useCase": "environment", "collection": {
+                "name": "questionMarks",
+                "id": 1, "entries": [
+                    {
+                        "transform": "0 0 1, 1 1",
+                        "graphicalAssetId": 1
+                    },
+                    {
+                        "transform": "50 50 0, .5 .5",
+                        "graphicalAssetId": 1
+                    },
+                    {
+                        "transform": "50 -50 0, .5 .5",
+                        "graphicalAssetId": 1
+                    },
+                    {
+                        "transform": "-50 50 0, .5 .5",
+                        "graphicalAssetId": 1
+                    },
+                    {
+                        "transform": "-50 -50 0, .5 .5",
+                        "graphicalAssetId": 1
+                    }
+                ]
+            }
+        },
+        {
+            "type": "collection", "useCase": "environment", "collection": {
+                "name": "exclamationMarks",
+                "id": 2, "entries": [
+                    {
+                        "transform": "0 0 1, 1 1",
+                        "graphicalAssetId": 2
+                    },
+                    {
+                        "transform": "50 50 0, .5 .5",
+                        "graphicalAssetId": 2
+                    },
+                    {
+                        "transform": "50 -50 0, .5 .5",
+                        "graphicalAssetId": 2
+                    },
+                    {
+                        "transform": "-50 50 0, .5 .5",
+                        "graphicalAssetId": 2
+                    },
+                    {
+                        "transform": "-50 -50 0, .5 .5",
+                        "graphicalAssetId": 2
+                    }
+                ]
+            }
+        },
+        {
+            "type": "collection", "useCase": "environment", "collection": {
+                "name": "houses",
+                "id": 3, "entries": [
+                    {
+                        "transform": "0 0 1, 1 1",
+                        "graphicalAssetId": 4
+                    },
+                    {
+                        "transform": "50 50 0, .5 .5",
+                        "graphicalAssetId": 4
+                    },
+                    {
+                        "transform": "50 -50 0, .5 .5",
+                        "graphicalAssetId": 4
+                    },
+                    {
+                        "transform": "-50 50 0, .5 .5",
+                        "graphicalAssetId": 4
+                    },
+                    {
+                        "transform": "-50 -50 0, .5 .5",
+                        "graphicalAssetId": 4
+                    }
+                ]
+            }
+        },
+        {
+            "type": "collection", "useCase": "environment", "collection": {
+                "name": "Outerwalls-lvl-1",
+                "id": 10, "entries": [
+                    {
+                        "transform": "0 0 1, 1 1",
+                        "graphicalAssetId": 1
+                    }
+                ]
+            }
+        },
+        {
+            "type": "collection", "useCase": "environment", "collection": {
+                "name": "Outerwalls-lvl-2",
+                "id": 11, "entries": [
+                    {
+                        "transform": "0 0 1, 1 1",
+                        "graphicalAssetId": 1
+                    }
+                ]
+            }
+        },
+        {
+            "type": "collection", "useCase": "environment", "collection": {
+                "name": "Outerwalls-lvl-3",
+                "id": 12, "entries": [
+                    {
+                        "transform": "0 0 1, 1 1",
+                        "graphicalAssetId": 1
+                    }
+                ]
+            }
+        },
+        {
+            "type": "collection", "useCase": "environment", "collection": {
+                "name": "Outerwalls-lvl-4",
+                "id": 13, "entries": [
+                    {
+                        "transform": "0 0 1, 1 1",
+                        "graphicalAssetId": 1
+                    }
+                ]
+            }
+        },
+        {
+            "type": "collection", "useCase": "environment", "collection": {
+                "name": "Outerwalls-lvl-5",
+                "id": 14, "entries": [
+                    {
+                        "transform": "0 0 1, 1 1",
+                        "graphicalAssetId": 1
+                    }
+                ]
+            }
+        }
+    ]
+}

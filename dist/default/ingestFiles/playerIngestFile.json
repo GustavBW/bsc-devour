@@ -1,0 +1,10 @@
+{
+    "assets": [
+        {
+            "type": "single", "useCase": "player", "single": {
+                "width": 100, "height": 200,
+                "id": 4001, "source": "./default/player/tempPlayerChar.svg"
+            }
+        }
+    ]
+}

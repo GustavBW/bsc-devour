@@ -1,0 +1,10 @@
+{
+    "assets": [
+        {
+            "type": "single", "useCase": "vehicle", "single": {
+                "width": 162, "height": 133,
+                "id": 6001, "source": "./default/vehicles/Truck-2.svg"
+            }
+        }
+    ]
+}

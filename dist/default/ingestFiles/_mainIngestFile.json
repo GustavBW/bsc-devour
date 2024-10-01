@@ -16,272 +16,34 @@
             {
                 "path": "./default/ingestFiles/iconIngestFile.json",
                 "idRanges": [[1001, 2000]]
+            },
+            {
+                "path": "./default/ingestFiles/structureIngestFile.json",
+                "idRanges": [[2001, 3000]]
+            },
+            {
+                "path": "./default/ingestFiles/textureIngestFile.json",
+                "idRanges": [[3001, 4000]]
+            },
+            {
+                "path": "./default/ingestFiles/playerIngestFile.json",
+                "idRanges": [[4001, 5000]]
+            },
+            {
+                "path": "./default/ingestFiles/splashArtIngestFile.json",
+                "idRanges": [[5001, 6000]]
+            },
+            {
+                "path": "./default/ingestFiles/vehicleIngestFile.json",
+                "idRanges": [[6001, 7000]]
+            },
+            {
+                "path": "./default/ingestFiles/locationCollectionIngestFile.json",
+                "idRanges": [[1, 1000]]
             }
         ]
     },
     "assets": [
-        {
-            "type": "single", "useCase": "icon", "single": {
-                "id": 1, "source": "https://upload.wikimedia.org/wikipedia/commons/5/5a/Black_question_mark.png"
-            }
-        },
-        {
-            "type": "single", "useCase": "icon", "single": {
-                "id": 2, "source": "https://upload.wikimedia.org/wikipedia/commons/f/f3/Exclamation_mark.png"
-            }
-        },
-        {
-            "type": "single", "useCase": "icon", "single": {
-                "width": 100, "height": 200,
-                "id": 3, "source": "./default/tempLocationPin.svg"
-            }
-        },
-        {
-            "type": "single", "useCase": "structure", "single": {
-                "width": 100, "height": 100,
-                "id": 4, "source": "./default/tempHouse.svg"    
-            }
-        },
-        {
-            "type": "single", "useCase": "texture", "single": {
-                "id": 5, "source": "./default/GreenGasGiant.png"
-            }
-        },
-        {
-            "type": "single", "useCase": "texture", "single": {
-                "id": 6, "source": "./default/Moon.jpg"
-            }
-        },
-        {
-            "type": "single", "useCase": "texture", "single": {
-                "id": 7, "source": "./default/RedMoon.png"
-            }
-        },
-        {
-            "type": "single", "useCase": "player", "single": {
-                "width": 100, "height": 200,
-                "id": 8, "source": "./default/tempPlayerChar.svg"
-            }
-        },
-        {
-            "type": "single", "useCase": "icon", "single": {
-                "alias": "videoIcon",
-                "id": 9, "source": "https://cdn-icons-png.flaticon.com/512/159/159596.png"
-            }
-        },
-        {
-            "type": "single", "useCase": "icon", "single": {
-                "id": 10, "source": "./default/enterKeyIcon.png"
-            }
-        },
-        {
-            "type": "single", "useCase": "icon", "single": {
-                "width": 200, "height": 200,
-                "id": 11, "source": "./default/dkFlag.svg"
-            }
-        },
-        {
-            "type": "single", "useCase": "icon", "single": {
-                "width": 200, "height": 200,
-                "id": 12, "source": "./default/noFlag.svg"
-            }
-        },
-        {
-            "type": "single", "useCase": "icon", "single": {
-                "width": 200, "height": 200,
-                "id": 13, "source": "./default/seFlag.svg"
-            }
-        },
-        {
-            "type": "single", "useCase": "icon", "single": {
-                "width": 200, "height": 200,
-                "id": 14, "source": "./default/ukFlag.svg"
-            }
-        },
-        {
-            "type": "single", "useCase": "icon", "single": {
-                "width": 200, "height": 200,
-                "id": 15, "source": "./default/deFlag.svg"
-            }
-        },
-        {
-            "type": "single", "useCase": "icon", "single": {
-                "width": 200, "height": 200,
-                "id": 16, "source": "./default/nlFlag.svg"
-            }
-        },
-        {
-            "type": "single", "useCase": "texture", "single": {
-                "id": 17, "source": "./default/EarthTexture.png"
-            }
-        },
-        {
-            "type": "single", "useCase": "texture", "single": {
-                "id": 18, "source": "./default/MarsTexture.jpg"       
-            }
-        },
-        {
-            "type": "single", "useCase": "texture", "single": {
-                "id": 19, "source": "./default/RustPlanetTexture.jpg"
-            }
-        },
-        {
-            "type": "single", "useCase": "texture", "single": {
-                "id": 20, "source": "./default/IceMoonTexture.jpg"
-            }
-        },
-        {
-            "type": "single", "useCase": "icon", "single": {
-                "id": 21, "source": "./default/trophy.png"
-            }
-        },
-        {
-            "type": "single", "useCase": "icon", "single": {
-                "width": 200, "height": 200,
-                "id": 22, "source": "./default/rightDoubleArrow.svg"
-            }
-        },
-        {
-            "type": "single", "useCase": "icon", "single": {
-                "width": 200, "height": 200,
-                "id": 23, "source": "./default/leftDoubleArrow.svg"
-            }
-        },
-        {
-            "type": "single", "useCase": "splashArt", "single": {
-                "width": 1920, "height": 1093,
-                "id": 24, "source": "./default/Lunar-Truck.svg"
-            }
-        },
-        {
-            "type": "single", "useCase": "structure", "single": {
-                "width": 283, "height": 301,
-                "id": 25, "source": "./default/Oxygen-Generator.svg"
-            }
-        },
-        {
-            "type": "single", "useCase": "vehicle", "single": {
-                "width": 162, "height": 133,
-                "id": 27, "source": "./default/Truck-2.svg"
-            }
-        },
-        {
-            "type": "single", "useCase": "structure", "single": {
-                "width": 289, "height": 240,
-                "id": 28, "source": "./default/Dome.svg"
-            }
-        },
-        {
-            "type": "single", "useCase": "icon", "single": {
-                "id": 29, "source": "./default/Enter-icon.png"
-            }
-        },
-        {
-            "type": "single", "useCase": "icon", "single": {
-                "id": 30, "source": "./default/Language-icon.png"
-            }
-        },
-        {
-            "type": "single", "useCase": "icon", "single": {
-                "id": 31, "source": "./default/Multiplayer-icon.png"
-            }
-        },
-        {
-            "type": "single", "useCase": "icon", "single": {
-                "id": 32, "source": "./default/Walking-icon.png"
-            }
-        },
-        {
-            "type": "single", "useCase": "icon", "single": {
-                "id": 33, "source": "./default/Welcome-icon.png"
-            }
-        },
-        {
-            "type": "single", "useCase": "structure", "single": {
-                "id": 34, "source": "./default/SpacePort.png"
-            }
-        },
-
-        {
-            "type": "collection", "useCase": "environment", "collection": {
-                "name": "questionMarks",
-                "id": 1, "entries": [
-                    {
-                        "transform": "0 0 1, 1 1",
-                        "graphicalAssetId": 1
-                    },
-                    {
-                        "transform": "50 50 0, .5 .5",
-                        "graphicalAssetId": 1
-                    },
-                    {
-                        "transform": "50 -50 0, .5 .5",
-                        "graphicalAssetId": 1
-                    },
-                    {
-                        "transform": "-50 50 0, .5 .5",
-                        "graphicalAssetId": 1
-                    },
-                    {
-                        "transform": "-50 -50 0, .5 .5",
-                        "graphicalAssetId": 1
-                    }
-                ]
-            }
-        },
-        {
-            "type": "collection", "useCase": "environment", "collection": {
-                "name": "exclamationMarks",
-                "id": 2, "entries": [
-                    {
-                        "transform": "0 0 1, 1 1",
-                        "graphicalAssetId": 2
-                    },
-                    {
-                        "transform": "50 50 0, .5 .5",
-                        "graphicalAssetId": 2
-                    },
-                    {
-                        "transform": "50 -50 0, .5 .5",
-                        "graphicalAssetId": 2
-                    },
-                    {
-                        "transform": "-50 50 0, .5 .5",
-                        "graphicalAssetId": 2
-                    },
-                    {
-                        "transform": "-50 -50 0, .5 .5",
-                        "graphicalAssetId": 2
-                    }
-                ]
-            }
-        },
-        {
-            "type": "collection", "useCase": "environment", "collection": {
-                "name": "houses",
-                "id": 3, "entries": [
-                    {
-                        "transform": "0 0 1, 1 1",
-                        "graphicalAssetId": 4
-                    },
-                    {
-                        "transform": "50 50 0, .5 .5",
-                        "graphicalAssetId": 4
-                    },
-                    {
-                        "transform": "50 -50 0, .5 .5",
-                        "graphicalAssetId": 4
-                    },
-                    {
-                        "transform": "-50 50 0, .5 .5",
-                        "graphicalAssetId": 4
-                    },
-                    {
-                        "transform": "-50 -50 0, .5 .5",
-                        "graphicalAssetId": 4
-                    }
-                ]
-            }
-        }
+        
     ]
 }

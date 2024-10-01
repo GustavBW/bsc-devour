@@ -119,8 +119,8 @@ export const verifyIngestFileAssets = (rawFile: any, context?: ApplicationContex
         return "No assets field and corresponding object found in ingest file.";
     }
 
-    if (!Array.isArray(rawFile.assets) || rawFile.assets.length === 0) {
-        return "Assets field in ingest file is not an array or is an empty array.";
+    if (!Array.isArray(rawFile.assets)) {
+        return "Assets field in ingest file is not an array.";
     }
 
     let singleCount = 1;
