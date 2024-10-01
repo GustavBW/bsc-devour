@@ -196,6 +196,11 @@
                 "id": 33, "source": "./default/Welcome-icon.png"
             }
         },
+        {
+            "type": "single", "useCase": "structure", "single": {
+                "id": 34, "source": "./default/SpacePort.png"
+            }
+        },
 
         {
             "type": "collection", "useCase": "environment", "collection": {
