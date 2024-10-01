@@ -6,23 +6,23 @@
                 "id": 1, "entries": [
                     {
                         "transform": "0 0 1, 1 1",
-                        "graphicalAssetId": 1
+                        "graphicalAssetId": 1007
                     },
                     {
                         "transform": "50 50 0, .5 .5",
-                        "graphicalAssetId": 1
+                        "graphicalAssetId": 1007
                     },
                     {
                         "transform": "50 -50 0, .5 .5",
-                        "graphicalAssetId": 1
+                        "graphicalAssetId": 1007
                     },
                     {
                         "transform": "-50 50 0, .5 .5",
-                        "graphicalAssetId": 1
+                        "graphicalAssetId": 1007
                     },
                     {
                         "transform": "-50 -50 0, .5 .5",
-                        "graphicalAssetId": 1
+                        "graphicalAssetId": 1007
                     }
                 ]
             }
@@ -33,50 +33,50 @@
                 "id": 2, "entries": [
                     {
                         "transform": "0 0 1, 1 1",
-                        "graphicalAssetId": 2
+                        "graphicalAssetId": 1008
                     },
                     {
                         "transform": "50 50 0, .5 .5",
-                        "graphicalAssetId": 2
+                        "graphicalAssetId": 1008
                     },
                     {
                         "transform": "50 -50 0, .5 .5",
-                        "graphicalAssetId": 2
+                        "graphicalAssetId": 1008
                     },
                     {
                         "transform": "-50 50 0, .5 .5",
-                        "graphicalAssetId": 2
+                        "graphicalAssetId": 1008
                     },
                     {
                         "transform": "-50 -50 0, .5 .5",
-                        "graphicalAssetId": 2
+                        "graphicalAssetId": 1008
                     }
                 ]
             }
         },
         {
             "type": "collection", "useCase": "environment", "collection": {
-                "name": "houses",
+                "name": "house",
                 "id": 3, "entries": [
                     {
                         "transform": "0 0 1, 1 1",
-                        "graphicalAssetId": 4
+                        "graphicalAssetId": 2001
                     },
                     {
                         "transform": "50 50 0, .5 .5",
-                        "graphicalAssetId": 4
+                        "graphicalAssetId": 2001
                     },
                     {
                         "transform": "50 -50 0, .5 .5",
-                        "graphicalAssetId": 4
+                        "graphicalAssetId": 2001
                     },
                     {
                         "transform": "-50 50 0, .5 .5",
-                        "graphicalAssetId": 4
+                        "graphicalAssetId": 2001
                     },
                     {
                         "transform": "-50 -50 0, .5 .5",
-                        "graphicalAssetId": 4
+                        "graphicalAssetId": 2001
                     }
                 ]
             }
@@ -87,7 +87,7 @@
                 "id": 10, "entries": [
                     {
                         "transform": "0 0 1, 1 1",
-                        "graphicalAssetId": 1
+                        "graphicalAssetId": 2003
                     }
                 ]
             }
@@ -98,7 +98,7 @@
                 "id": 11, "entries": [
                     {
                         "transform": "0 0 1, 1 1",
-                        "graphicalAssetId": 1
+                        "graphicalAssetId": 2004
                     }
                 ]
             }
@@ -109,7 +109,7 @@
                 "id": 12, "entries": [
                     {
                         "transform": "0 0 1, 1 1",
-                        "graphicalAssetId": 1
+                        "graphicalAssetId": 2005
                     }
                 ]
             }
@@ -120,7 +120,7 @@
                 "id": 13, "entries": [
                     {
                         "transform": "0 0 1, 1 1",
-                        "graphicalAssetId": 1
+                        "graphicalAssetId": 2006
                     }
                 ]
             }
@@ -131,7 +131,7 @@
                 "id": 14, "entries": [
                     {
                         "transform": "0 0 1, 1 1",
-                        "graphicalAssetId": 1
+                        "graphicalAssetId": 2007
                     }
                 ]
             }

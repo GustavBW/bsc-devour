@@ -112,8 +112,7 @@
         },
         {
             "type": "single", "useCase": "icon", "single": {
-                "width": 200, "height": 200,
-                "id": 1020, "source": "./default/icons/Asteroids-Minigame-Icon.png"
+                "id": 1021, "source": "./default/icons/Asteroids-Minigame-Icon.png"
             }
         }
     ]
