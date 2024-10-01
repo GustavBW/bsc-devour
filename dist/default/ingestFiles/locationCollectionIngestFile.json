@@ -135,6 +135,39 @@
                     }
                 ]
             }
+        },
+        {
+            "type": "collection", "useCase": "environment", "collection": {
+                "name": "SpacePort-lvl-1", 
+                "id": 20, "entries": [
+                    {
+                        "transform": "0 0 1, 1 1",
+                        "graphicalAssetId": 2009
+                    }
+                ]
+            }
+        },
+        {
+            "type": "collection", "useCase": "environment", "collection": {
+                "name": "Home-lvl-1",
+                "id": 30, "entries": [
+                    {
+                        "transform": "0 0 1, 1 1",
+                        "graphicalAssetId": 2010
+                    }
+                ]
+            }
+        },
+        {
+            "type": "collection", "useCase": "environment", "collection": {
+                "name": "TownHall-lvl-1",
+                "id": 40, "entries": [
+                    {
+                        "transform": "0 0 1, 1 1",
+                        "graphicalAssetId": 2008
+                    }
+                ]
+            }
         }
     ]
 }

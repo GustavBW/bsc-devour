@@ -99,7 +99,16 @@ export type CollectionSpecification = {
     id: number,
     useCase: string,
     entries: CollectionEntryDTO[]
-}  
+}
+
+const SQL_UPSERT_ASSET_COLLECTION = `
+INSERT INTO "AssetCollection" ("id", "name", "useCase") VALUES ($1, $2, $3)
+ON CONFLICT (id) DO UPDATE SET 
+    name = EXCLUDED.name, 
+    "useCase" = EXCLUDED."useCase" , 
+    "collectionEntries" = '{}'
+RETURNING id
+`;
 
 const _establishCollection = async (collection: CollectionSpecification, context: ApplicationContext, conn: pg.Client, cache: ProcessCache): Promise<ResErr<string>> => { 
     let res;
@@ -107,6 +116,12 @@ const _establishCollection = async (collection: CollectionSpecification, context
         //1: Does collection exist?
         context.logger.log("[db] Checking for existing collection by id: " + collection.id);
         const doesPreviousExist = await conn.query(`SELECT id FROM "AssetCollection" WHERE id = $1`, [collection.id]);
+        
+        context.logger.log("[db] Upsert new collection name "+collection.name+" " + (doesPreviousExist.rows.length > 0 ? "with id: " + collection.id : "in place as previous collection"));
+        res = await conn.query<{ id: number }>(
+            SQL_UPSERT_ASSET_COLLECTION,
+            [collection.id, collection.name, collection.useCase]
+        );
 
         if (doesPreviousExist.rows.length > 0) {
             context.logger.log("[db] Collection already exists, removing previous collection entries", LogLevel.WARNING);
@@ -117,14 +132,9 @@ const _establishCollection = async (collection: CollectionSpecification, context
                 context.logger.log("[db] Removing orphaned transforms");
                 await conn.query(`DELETE FROM "Transform" WHERE id = ANY($1)`, [idsOfTransformsToRemove]);
             }
-            context.logger.log("[db] Removing previous collection");
-            await conn.query(`DELETE FROM "AssetCollection" WHERE id = $1`, [collection.id]);
         }
 
-        res = await conn.query<{ id: number }>(
-            `INSERT INTO "AssetCollection" (id, name, "useCase") VALUES ($1, $2, $3) RETURNING id`,
-            [collection.id, collection.name, collection.useCase]
-        );
+
     }catch (e){
         context.logger.log("[db] Error establishing collection " + collection.name + " error: " + (e as any).message, LogLevel.ERROR);
         return {result: null, error: (e as any).message};
