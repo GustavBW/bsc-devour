@@ -44,7 +44,12 @@
         },
         {
             "type": "single", "useCase": "structure", "single": {
-                "id": 2008, "source": "./default/structures/Space-Port.png"
+                "id": 2009, "source": "./default/structures/Space-Port.png"
+            }
+        },
+        {
+            "type": "single", "useCase": "structure", "single": {
+                "id": 2010, "source": "./default/structures/Home.png"
             }
         }
     ]
