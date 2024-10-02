@@ -101,26 +101,20 @@ export const executeValidatorForValue = (value: any, key: any, validator: Abstra
     }
     
     if (typeof validator === 'object') {
-        console.log("[delete me] execute validator for value validator is object, value is: ", value, " key is: ", key, " validator is: ", validator);
         // TypeDeclaration contains a TypeDeclaration
         const nestedError = conformsToType(value, validator as TypeDeclaration);
-        console.log("[delete me] execute validator for value nested error: ", nestedError);
         if (nestedError !== null) {
             return `Field ${key} failed nested type check:\n\t${nestedError}`;
         }
     } else if (typeof validator === 'function') {
-        console.log("[delete me] execute validator for value validator is function, value is: ", value, " key is: ", key, " validator is: ", validator);
         // If the type declaration is a function, use it to validate the field.
         const res = validator(value);
-        console.log("[delete me] execute validator for value res: ", res);
         if (!res) {
             return `Field ${key} does not conform to the expected "${validator.typeString}", observed value: ${JSON.stringify(value)}`;
         }
     } else if (typeof validator === 'string') {
-        console.log("[delete me] execute validator for value validator is string, value is: ", value, " key is: ", key, " validator is: ", validator);
         // If the type declaration is a Type enum, check the value's type.
         const res = validateSimpleType(validator, value);
-        console.log("[delete me] execute validator for value res: ", res);
         if (!res) {
             return `Field ${key} is expected to exist and be of type "${validator}" but had value: ${JSON.stringify(value)}`;
         }

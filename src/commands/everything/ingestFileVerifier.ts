@@ -132,12 +132,10 @@ export const verifyIngestFileSettings = (settings: IngestFileSettings, context?:
         return uniformDSNAttempt.error;
     }
     settings.dsn = uniformDSNAttempt.result;
-    console.error('[delete me] conform check');
     const fullSettingsCheckResult = conformsToType(settings, INGEST_FILE_SETTINGS_TYPEDECL);
     if (fullSettingsCheckResult !== null) {
         return 'Settings field does not conform to type: ' + fullSettingsCheckResult;
     }
-    console.error('[delete me] post conform check ');
 };
 
 export const verifyIngestFileAssets = (assets: IngestFileAssetEntry[], context?: ApplicationContext): Error | undefined => {

@@ -23,21 +23,16 @@ export const validateExactlyOneOf = <T>(target: T, typeDeclaration: TypeDeclarat
 };
 
 export const validateAtLeastOneOf = <T>(target: T, typeDeclaration: TypeDeclaration): Error | undefined => {
-    console.error("[delete me] validateAtLeastOneOf, target is: ", target);
     const keysOfDeclaration = Object.keys(typeDeclaration);
     let keysFound = Object.keys(target as any).filter((key) => keysOfDeclaration.includes(key));
     if (keysFound.length <= 0) {
         return 'Expected at least 1 of "' + joinOmitSeperatorOnLast(keysOfDeclaration) + '" present, but found none';
     }
 
-    console.log("[delete me] validateAtLeastOneOf keysFound: ", keysFound);
-
     //Execute validator
     for (const key of keysFound) {
-        console.log("[delete me] validateAtLeastOneOf validator check on all keys, target: ", target, " key: ", key, " typeDeclaration: ", typeDeclaration);
         const validator = typeDeclaration[key];
-        console.log("[delete me] function: ", JSON.stringify(validator) + " " + typeof validator);
-        const error = executeValidatorForValue(target[key as keyof T], key, typeDeclaration[key]);
+        const error = executeValidatorForValue(target[key as keyof T], key, validator);
         if (error) {
             return error;
         }
