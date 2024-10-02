@@ -49,11 +49,32 @@ export const initializeLogger = async (): Promise<Logger> => {
     return {
         log: logMethod,
         logAndPrint: (message: string, level: LogLevel = LogLevel.INFO) => {
-            console.log('[' + level + '] ' + message);
+            printIt(message, level);
             logMethod(message, level);
         },
     };
 };
+
+const printIt = (message: string, level: LogLevel = LogLevel.INFO) => {
+    const formattedMessage = '[' + level + '] ' + message;
+    switch (level) {
+        case LogLevel.TRACE:
+            console.log(formattedMessage);
+            break;
+        case LogLevel.INFO:
+            console.log(formattedMessage);
+            break;
+        case LogLevel.WARNING:
+            console.warn(formattedMessage);
+            break;
+        case LogLevel.ERROR:
+            console.warn(formattedMessage);
+            break;
+        case LogLevel.FATAL:
+            console.error(formattedMessage);
+            break;
+    }
+}
 
 export const onApplicationShutdown = async () => {
     if (logWriter !== undefined) {

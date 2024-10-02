@@ -37,7 +37,7 @@ context = {
 context.logger.log('[main] Run args: ' + args.join(' '));
 const { result, error } = await command.func(args.slice(1), context);
 if (error !== null) {
-    console.log('[main] [FATAL] ' + error);
+    console.error('[main] [FATAL] ' + error);
 } else {
     context.logger.log('[main] Command succesfull');
     command.whatToDoWithResult(result);

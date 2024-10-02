@@ -6,7 +6,7 @@
     "scripts": {
         "build": "tsc && bun test && bun build ./src/main.ts --outfile=./dist/devour.js --target=bun --minify",
         "debugBuild": "tsc && bun build src/main.ts --sourcemap=linked --outfile=dist/devour.js --target=bun",
-        "test": "bun run build && bun dist/devour.js everything path=\"./src/assets/testData/testIngestFile.json\"",
+        "test": "bun run debugBuild && bun ./src/main.js everything path=\"./dist/default/ingestFiles/_mainIngestFile.json\"",
         "format": "prettier --write \"**/*.{ts,js,json,md}\""
     },
     "devDependencies": {
