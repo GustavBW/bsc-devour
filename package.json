@@ -1,22 +1,24 @@
 {
-  "name": "devour",
-  "module": "index.ts",
-  "type": "module",
-  "version": "0.1.0",
-  "scripts": {
-    "build": "tsc && bun test && bun build ./src/main.ts --outfile=./dist/devour.js --target=bun --minify",
-    "debugBuild": "tsc && bun build src/main.ts --sourcemap=linked --outfile=dist/devour.js --target=bun",
-    "test": "bun run build && bun dist/devour.js everything path=\"./src/assets/testData/testIngestFile.json\""
-  },
-  "devDependencies": {
-    "@types/bun": "latest"
-  },
-  "peerDependencies": {
-    "typescript": "^5.0.0"
-  },
-  "dependencies": {
-    "@types/pg": "^8.11.8",
-    "pg": "^8.12.0",
-    "sharp": "^0.33.4"
-  }
+    "name": "devour",
+    "module": "index.ts",
+    "type": "module",
+    "version": "0.1.0",
+    "scripts": {
+        "build": "tsc && bun test && bun build ./src/main.ts --outfile=./dist/devour.js --target=bun --minify",
+        "debugBuild": "tsc && bun build src/main.ts --sourcemap=linked --outfile=dist/devour.js --target=bun",
+        "test": "bun run build && bun dist/devour.js everything path=\"./src/assets/testData/testIngestFile.json\"",
+        "format": "prettier --write \"**/*.{ts,js,json,md}\""
+    },
+    "devDependencies": {
+        "@types/bun": "latest",
+        "prettier": "^3.3.3"
+    },
+    "peerDependencies": {
+        "typescript": "^5.0.0"
+    },
+    "dependencies": {
+        "@types/pg": "^8.11.8",
+        "pg": "^8.12.0",
+        "sharp": "^0.33.4"
+    }
 }

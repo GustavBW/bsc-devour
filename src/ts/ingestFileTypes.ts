@@ -1,11 +1,11 @@
-import { anyOfConstants, optionalType, typedArray, typedTuple } from "../runtimeTypeChecker/type";
-import { Type, type TypeDeclaration } from "../runtimeTypeChecker/superMetaTypes";
-import { AssetUseCase, DBDSN_TYPEDECL, type DBDSN, type TransformDTO } from "./types";
+import { anyOfConstants, optionalType, typedArray, typedTuple } from '../runtimeTypeChecker/type';
+import { Type, type TypeDeclaration } from '../runtimeTypeChecker/superMetaTypes';
+import { AssetUseCase, DBDSN_TYPEDECL, type DBDSN, type TransformDTO } from './types';
 
 export enum IngestFileAssetType {
-    SINGLE = "single",
-    COLLECTION = "collection",
-    UNKNOWN = "unknown",
+    SINGLE = 'single',
+    COLLECTION = 'collection',
+    UNKNOWN = 'unknown',
 }
 
 // Define common fields
@@ -23,27 +23,27 @@ export const INGEST_FILE_SINGLE_ASSET_TYPEDECL: TypeDeclaration = {
     type: anyOfConstants([IngestFileAssetType.SINGLE]),
     useCase: anyOfConstants(Object.values(AssetUseCase)),
     single: Type.OBJECT,
-}
+};
 export type IngestFileSingleAssetField = {
     id: number;
     source: string;
     alias?: string;
     width?: number;
     height?: number;
-}
+};
 export const INGEST_FILE_SINGLE_ASSET_FIELD_TYPEDECL: TypeDeclaration = {
     source: Type.STRING,
     id: Type.INTEGER,
     alias: optionalType(Type.STRING),
     width: optionalType(Type.INTEGER),
     height: optionalType(Type.INTEGER),
-}
+};
 
 export const INGEST_FILE_COLLECTION_FIELD_TYPEDECL: TypeDeclaration = {
     entries: Type.ARRAY,
     name: Type.STRING,
     id: Type.INTEGER,
-}
+};
 
 export interface IngestFileCollectionAsset extends IngestFileAssetBase {
     type: IngestFileAssetType.COLLECTION;
@@ -54,37 +54,37 @@ export const INGEST_FILE_COLLECTION_ASSET_TYPEDECL: TypeDeclaration = {
     type: anyOfConstants([IngestFileAssetType.COLLECTION]),
     useCase: anyOfConstants(Object.values(AssetUseCase)),
     collection: Type.OBJECT,
-}
+};
 export type CollectionEntryDTO = {
-    transform: TransformDTO,
+    transform: TransformDTO;
     /**
      * Id of existing graphical asset
      */
-    graphicalAssetId: number,
-}
+    graphicalAssetId: number;
+};
 export type IngestFileCollectionField = {
     name: string;
     id: number;
     entries: CollectionEntryDTO[];
-}
+};
 export type SettingsSubFile = {
     path: string;
     idRanges: [number, number][];
-}
+};
 export const INGEST_FILE_SUB_FILE_TYPEDECL: TypeDeclaration = {
     path: Type.STRING,
     idRanges: typedArray(typedTuple([Type.INTEGER, Type.INTEGER])),
-}
+};
 // Create the discriminated union
 export type IngestFileAssetEntry = IngestFileSingleAsset | IngestFileCollectionAsset;
 export type IngestFileSettings = {
-    version: string,
-    maxLOD: number,
-    LODThreshold: number,
-    allowedFailures: number,
-    dsn: DBDSN,
-    subFiles?: SettingsSubFile[]
-}
+    version: string;
+    maxLOD: number;
+    LODThreshold: number;
+    allowedFailures: number;
+    dsn: DBDSN;
+    subFiles?: SettingsSubFile[];
+};
 export const INGEST_FILE_SETTINGS_TYPEDECL: TypeDeclaration = {
     version: Type.STRING,
     maxLOD: Type.INTEGER,
@@ -92,9 +92,9 @@ export const INGEST_FILE_SETTINGS_TYPEDECL: TypeDeclaration = {
     allowedFailures: Type.INTEGER,
     dsn: DBDSN_TYPEDECL,
     subFiles: optionalType(typedArray(INGEST_FILE_SUB_FILE_TYPEDECL)),
-}
+};
 export interface AutoIngestSubScript {
-	assets: IngestFileAssetEntry[]
+    assets: IngestFileAssetEntry[];
 }
 export interface PreparedAutoIngestSubScript extends AutoIngestSubScript {
     path: string;
@@ -104,6 +104,6 @@ export interface PreparedAutoIngestSubScript extends AutoIngestSubScript {
  * @since 0.0.1
  */
 export interface AutoIngestScript {
-	settings: IngestFileSettings,
-	assets: IngestFileAssetEntry[]
+    settings: IngestFileSettings;
+    assets: IngestFileAssetEntry[];
 }

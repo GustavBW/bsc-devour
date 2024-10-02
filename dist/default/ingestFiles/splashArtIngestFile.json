@@ -1,49 +1,77 @@
 {
     "assets": [
         {
-            "type": "single", "useCase": "splashArt", "single": {
-                "width": 1920, "height": 1093,
-                "id": 5001, "source": "./default/splashArt/Lunar-Truck.svg"
+            "type": "single",
+            "useCase": "splashArt",
+            "single": {
+                "width": 1920,
+                "height": 1093,
+                "id": 5001,
+                "source": "./default/splashArt/Lunar-Truck.svg"
             }
         },
         {
-            "type": "single", "useCase": "splashArt", "single": {
-                "id": 5002, "source": "./default/splashArt/Outer-Walls-Splash.png"
+            "type": "single",
+            "useCase": "splashArt",
+            "single": {
+                "id": 5002,
+                "source": "./default/splashArt/Outer-Walls-Splash.png"
             }
         },
         {
-            "type": "single", "useCase": "splashArt", "single": {
-                "id": 5003, "source": "./default/splashArt/Outer-Walls-Splash.png"
+            "type": "single",
+            "useCase": "splashArt",
+            "single": {
+                "id": 5003,
+                "source": "./default/splashArt/Outer-Walls-Splash.png"
             }
         },
         {
-            "type": "single", "useCase": "splashArt", "single": {
-                "id": 5004, "source": "./default/splashArt/Outer-Walls-Splash.png"
+            "type": "single",
+            "useCase": "splashArt",
+            "single": {
+                "id": 5004,
+                "source": "./default/splashArt/Outer-Walls-Splash.png"
             }
         },
         {
-            "type": "single", "useCase": "splashArt", "single": {
-                "id": 5005, "source": "./default/splashArt/Outer-Walls-Splash.png"
+            "type": "single",
+            "useCase": "splashArt",
+            "single": {
+                "id": 5005,
+                "source": "./default/splashArt/Outer-Walls-Splash.png"
             }
         },
         {
-            "type": "single", "useCase": "splashArt", "single": {
-                "id": 5006, "source": "./default/splashArt/Outer-Walls-Splash.png"
+            "type": "single",
+            "useCase": "splashArt",
+            "single": {
+                "id": 5006,
+                "source": "./default/splashArt/Outer-Walls-Splash.png"
             }
         },
         {
-            "type": "single", "useCase": "splashArt", "single": {
-                "id": 5007, "source": "./default/splashArt/Space-Port-Splash.png"
+            "type": "single",
+            "useCase": "splashArt",
+            "single": {
+                "id": 5007,
+                "source": "./default/splashArt/Space-Port-Splash.png"
             }
         },
         {
-            "type": "single", "useCase": "splashArt", "single": {
-                "id": 5008, "source": "./default/splashArt/Home-Splash.png"
+            "type": "single",
+            "useCase": "splashArt",
+            "single": {
+                "id": 5008,
+                "source": "./default/splashArt/Home-Splash.png"
             }
         },
         {
-            "type": "single", "useCase": "splashArt", "single": {
-                "id": 5009, "source": "./default/splashArt/Town-Hall-Splash.png"
+            "type": "single",
+            "useCase": "splashArt",
+            "single": {
+                "id": 5009,
+                "source": "./default/splashArt/Town-Hall-Splash.png"
             }
         }
     ]

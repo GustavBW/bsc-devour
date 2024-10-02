@@ -1,38 +1,59 @@
 {
     "assets": [
         {
-            "type": "single", "useCase": "texture", "single": {
-                "id": 3001, "source": "./default/textures/GreenGasGiant.png"
+            "type": "single",
+            "useCase": "texture",
+            "single": {
+                "id": 3001,
+                "source": "./default/textures/GreenGasGiant.png"
             }
         },
         {
-            "type": "single", "useCase": "texture", "single": {
-                "id": 3002, "source": "./default/textures/Moon.jpg"
+            "type": "single",
+            "useCase": "texture",
+            "single": {
+                "id": 3002,
+                "source": "./default/textures/Moon.jpg"
             }
         },
         {
-            "type": "single", "useCase": "texture", "single": {
-                "id": 3003, "source": "./default/textures/RedMoon.png"
+            "type": "single",
+            "useCase": "texture",
+            "single": {
+                "id": 3003,
+                "source": "./default/textures/RedMoon.png"
             }
         },
         {
-            "type": "single", "useCase": "texture", "single": {
-                "id": 3004, "source": "./default/textures/EarthTexture.png"
+            "type": "single",
+            "useCase": "texture",
+            "single": {
+                "id": 3004,
+                "source": "./default/textures/EarthTexture.png"
             }
         },
         {
-            "type": "single", "useCase": "texture", "single": {
-                "id": 3005, "source": "./default/textures/MarsTexture.jpg"       
+            "type": "single",
+            "useCase": "texture",
+            "single": {
+                "id": 3005,
+                "source": "./default/textures/MarsTexture.jpg"
             }
         },
         {
-            "type": "single", "useCase": "texture", "single": {
-                "id": 3006, "source": "./default/textures/RustPlanetTexture.jpg"
+            "type": "single",
+            "useCase": "texture",
+            "single": {
+                "id": 3006,
+                "source": "./default/textures/RustPlanetTexture.jpg"
             }
         },
         {
-            "type": "single", "useCase": "texture", "single": {
-                "id": 3007, "source": "./default/textures/IceMoonTexture.jpg"
+            "type": "single",
+            "useCase": "texture",
+            "single": {
+                "id": 3007,
+                "source": "./default/textures/IceMoonTexture.jpg"
             }
         }
     ]

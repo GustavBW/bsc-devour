@@ -1,118 +1,191 @@
 {
     "assets": [
         {
-            "type": "single", "useCase": "icon", "single": {
-                "id": 1001, "alias": "TestIcon","source": "https://upload.wikimedia.org/wikipedia/commons/thumb/6/69/How_to_use_icon.svg/2214px-How_to_use_icon.svg.png"
+            "type": "single",
+            "useCase": "icon",
+            "single": {
+                "id": 1001,
+                "alias": "TestIcon",
+                "source": "https://upload.wikimedia.org/wikipedia/commons/thumb/6/69/How_to_use_icon.svg/2214px-How_to_use_icon.svg.png"
             }
         },
         {
-            "type": "single", "useCase": "icon", "single": {
-                "id": 1002, "source": "./default/icons/Enter-icon.png"
+            "type": "single",
+            "useCase": "icon",
+            "single": {
+                "id": 1002,
+                "source": "./default/icons/Enter-icon.png"
             }
         },
         {
-            "type": "single", "useCase": "icon", "single": {
-                "id": 1003, "source": "./default/icons/Language-icon.png"
+            "type": "single",
+            "useCase": "icon",
+            "single": {
+                "id": 1003,
+                "source": "./default/icons/Language-icon.png"
             }
         },
         {
-            "type": "single", "useCase": "icon", "single": {
-                "id": 1004, "source": "./default/icons/Multiplayer-icon.png"
+            "type": "single",
+            "useCase": "icon",
+            "single": {
+                "id": 1004,
+                "source": "./default/icons/Multiplayer-icon.png"
             }
         },
         {
-            "type": "single", "useCase": "icon", "single": {
-                "id": 1005, "source": "./default/icons/Walking-icon.png"
+            "type": "single",
+            "useCase": "icon",
+            "single": {
+                "id": 1005,
+                "source": "./default/icons/Walking-icon.png"
             }
         },
         {
-            "type": "single", "useCase": "icon", "single": {
-                "id": 1006, "source": "./default/icons/Welcome-icon.png"
+            "type": "single",
+            "useCase": "icon",
+            "single": {
+                "id": 1006,
+                "source": "./default/icons/Welcome-icon.png"
             }
         },
         {
-            "type": "single", "useCase": "icon", "single": {
-                "id": 1007, "source": "https://upload.wikimedia.org/wikipedia/commons/5/5a/Black_question_mark.png"
+            "type": "single",
+            "useCase": "icon",
+            "single": {
+                "id": 1007,
+                "source": "https://upload.wikimedia.org/wikipedia/commons/5/5a/Black_question_mark.png"
             }
         },
         {
-            "type": "single", "useCase": "icon", "single": {
-                "id": 1008, "source": "https://upload.wikimedia.org/wikipedia/commons/f/f3/Exclamation_mark.png"
+            "type": "single",
+            "useCase": "icon",
+            "single": {
+                "id": 1008,
+                "source": "https://upload.wikimedia.org/wikipedia/commons/f/f3/Exclamation_mark.png"
             }
         },
         {
-            "type": "single", "useCase": "icon", "single": {
-                "width": 100, "height": 200,
-                "id": 1009, "source": "./default/icons/tempLocationPin.svg"
+            "type": "single",
+            "useCase": "icon",
+            "single": {
+                "width": 100,
+                "height": 200,
+                "id": 1009,
+                "source": "./default/icons/tempLocationPin.svg"
             }
         },
         {
-            "type": "single", "useCase": "icon", "single": {
+            "type": "single",
+            "useCase": "icon",
+            "single": {
                 "alias": "videoIcon",
-                "id": 1010, "source": "https://cdn-icons-png.flaticon.com/512/159/159596.png"
+                "id": 1010,
+                "source": "https://cdn-icons-png.flaticon.com/512/159/159596.png"
             }
         },
         {
-            "type": "single", "useCase": "icon", "single": {
-                "id": 1011, "source": "./default/icons/enterKeyIcon.png"
+            "type": "single",
+            "useCase": "icon",
+            "single": {
+                "id": 1011,
+                "source": "./default/icons/enterKeyIcon.png"
             }
         },
         {
-            "type": "single", "useCase": "icon", "single": {
-                "width": 200, "height": 200,
-                "id": 1012, "source": "./default/icons/dkFlag.svg"
+            "type": "single",
+            "useCase": "icon",
+            "single": {
+                "width": 200,
+                "height": 200,
+                "id": 1012,
+                "source": "./default/icons/dkFlag.svg"
             }
         },
         {
-            "type": "single", "useCase": "icon", "single": {
-                "width": 200, "height": 200,
-                "id": 1013, "source": "./default/icons/noFlag.svg"
+            "type": "single",
+            "useCase": "icon",
+            "single": {
+                "width": 200,
+                "height": 200,
+                "id": 1013,
+                "source": "./default/icons/noFlag.svg"
             }
         },
         {
-            "type": "single", "useCase": "icon", "single": {
-                "width": 200, "height": 200,
-                "id": 1014, "source": "./default/icons/seFlag.svg"
+            "type": "single",
+            "useCase": "icon",
+            "single": {
+                "width": 200,
+                "height": 200,
+                "id": 1014,
+                "source": "./default/icons/seFlag.svg"
             }
         },
         {
-            "type": "single", "useCase": "icon", "single": {
-                "width": 200, "height": 200,
-                "id": 1015, "source": "./default/icons/ukFlag.svg"
+            "type": "single",
+            "useCase": "icon",
+            "single": {
+                "width": 200,
+                "height": 200,
+                "id": 1015,
+                "source": "./default/icons/ukFlag.svg"
             }
         },
         {
-            "type": "single", "useCase": "icon", "single": {
-                "width": 200, "height": 200,
-                "id": 1016, "source": "./default/icons/deFlag.svg"
+            "type": "single",
+            "useCase": "icon",
+            "single": {
+                "width": 200,
+                "height": 200,
+                "id": 1016,
+                "source": "./default/icons/deFlag.svg"
             }
         },
         {
-            "type": "single", "useCase": "icon", "single": {
-                "width": 200, "height": 200,
-                "id": 1017, "source": "./default/icons/nlFlag.svg"
+            "type": "single",
+            "useCase": "icon",
+            "single": {
+                "width": 200,
+                "height": 200,
+                "id": 1017,
+                "source": "./default/icons/nlFlag.svg"
             }
         },
         {
-            "type": "single", "useCase": "icon", "single": {
-                "id": 1018, "source": "./default/icons/trophy.png"
+            "type": "single",
+            "useCase": "icon",
+            "single": {
+                "id": 1018,
+                "source": "./default/icons/trophy.png"
             }
         },
         {
-            "type": "single", "useCase": "icon", "single": {
-                "width": 200, "height": 200,
-                "id": 1019, "source": "./default/icons/rightDoubleArrow.svg"
+            "type": "single",
+            "useCase": "icon",
+            "single": {
+                "width": 200,
+                "height": 200,
+                "id": 1019,
+                "source": "./default/icons/rightDoubleArrow.svg"
             }
         },
         {
-            "type": "single", "useCase": "icon", "single": {
-                "width": 200, "height": 200,
-                "id": 1020, "source": "./default/icons/leftDoubleArrow.svg"
+            "type": "single",
+            "useCase": "icon",
+            "single": {
+                "width": 200,
+                "height": 200,
+                "id": 1020,
+                "source": "./default/icons/leftDoubleArrow.svg"
             }
         },
         {
-            "type": "single", "useCase": "icon", "single": {
-                "id": 1021, "source": "./default/icons/Asteroids-Minigame-Icon.png"
+            "type": "single",
+            "useCase": "icon",
+            "single": {
+                "id": 1021,
+                "source": "./default/icons/Asteroids-Minigame-Icon.png"
             }
         }
     ]

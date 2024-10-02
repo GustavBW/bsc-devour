@@ -1,5 +1,5 @@
-import { test, expect, describe } from "bun:test";
-import { joinOmitSeperatorOnLast } from "./arrayUtil";
+import { test, expect, describe } from 'bun:test';
+import { joinOmitSeperatorOnLast } from './arrayUtil';
 
 describe('joinOmitSeperatorOnLast Tests', () => {
     test('should return empty string when input array is empty', () => {
@@ -16,4 +16,4 @@ describe('joinOmitSeperatorOnLast Tests', () => {
         const result = joinOmitSeperatorOnLast(['a', 'b', 'c'], ',');
         expect(result).toBe('a,b,c');
     });
-})
+});

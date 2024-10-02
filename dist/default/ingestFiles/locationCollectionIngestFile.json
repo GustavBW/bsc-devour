@@ -1,9 +1,12 @@
 {
     "assets": [
         {
-            "type": "collection", "useCase": "environment", "collection": {
+            "type": "collection",
+            "useCase": "environment",
+            "collection": {
                 "name": "questionMarks",
-                "id": 1, "entries": [
+                "id": 1,
+                "entries": [
                     {
                         "transform": "0 0 1, 1 1",
                         "graphicalAssetId": 1007
@@ -28,9 +31,12 @@
             }
         },
         {
-            "type": "collection", "useCase": "environment", "collection": {
+            "type": "collection",
+            "useCase": "environment",
+            "collection": {
                 "name": "exclamationMarks",
-                "id": 2, "entries": [
+                "id": 2,
+                "entries": [
                     {
                         "transform": "0 0 1, 1 1",
                         "graphicalAssetId": 1008
@@ -55,9 +61,12 @@
             }
         },
         {
-            "type": "collection", "useCase": "environment", "collection": {
+            "type": "collection",
+            "useCase": "environment",
+            "collection": {
                 "name": "house",
-                "id": 3, "entries": [
+                "id": 3,
+                "entries": [
                     {
                         "transform": "0 0 1, 1 1",
                         "graphicalAssetId": 2001
@@ -82,9 +91,12 @@
             }
         },
         {
-            "type": "collection", "useCase": "environment", "collection": {
+            "type": "collection",
+            "useCase": "environment",
+            "collection": {
                 "name": "Outerwalls-lvl-1",
-                "id": 10, "entries": [
+                "id": 10,
+                "entries": [
                     {
                         "transform": "0 0 1, 1 1",
                         "graphicalAssetId": 2003
@@ -93,9 +105,12 @@
             }
         },
         {
-            "type": "collection", "useCase": "environment", "collection": {
+            "type": "collection",
+            "useCase": "environment",
+            "collection": {
                 "name": "Outerwalls-lvl-2",
-                "id": 11, "entries": [
+                "id": 11,
+                "entries": [
                     {
                         "transform": "0 0 1, 1 1",
                         "graphicalAssetId": 2004
@@ -104,9 +119,12 @@
             }
         },
         {
-            "type": "collection", "useCase": "environment", "collection": {
+            "type": "collection",
+            "useCase": "environment",
+            "collection": {
                 "name": "Outerwalls-lvl-3",
-                "id": 12, "entries": [
+                "id": 12,
+                "entries": [
                     {
                         "transform": "0 0 1, 1 1",
                         "graphicalAssetId": 2005
@@ -115,9 +133,12 @@
             }
         },
         {
-            "type": "collection", "useCase": "environment", "collection": {
+            "type": "collection",
+            "useCase": "environment",
+            "collection": {
                 "name": "Outerwalls-lvl-4",
-                "id": 13, "entries": [
+                "id": 13,
+                "entries": [
                     {
                         "transform": "0 0 1, 1 1",
                         "graphicalAssetId": 2006
@@ -126,9 +147,12 @@
             }
         },
         {
-            "type": "collection", "useCase": "environment", "collection": {
+            "type": "collection",
+            "useCase": "environment",
+            "collection": {
                 "name": "Outerwalls-lvl-5",
-                "id": 14, "entries": [
+                "id": 14,
+                "entries": [
                     {
                         "transform": "0 0 1, 1 1",
                         "graphicalAssetId": 2007
@@ -137,9 +161,12 @@
             }
         },
         {
-            "type": "collection", "useCase": "environment", "collection": {
-                "name": "SpacePort-lvl-1", 
-                "id": 20, "entries": [
+            "type": "collection",
+            "useCase": "environment",
+            "collection": {
+                "name": "SpacePort-lvl-1",
+                "id": 20,
+                "entries": [
                     {
                         "transform": "0 0 1, 1 1",
                         "graphicalAssetId": 2009
@@ -148,9 +175,12 @@
             }
         },
         {
-            "type": "collection", "useCase": "environment", "collection": {
+            "type": "collection",
+            "useCase": "environment",
+            "collection": {
                 "name": "Home-lvl-1",
-                "id": 30, "entries": [
+                "id": 30,
+                "entries": [
                     {
                         "transform": "0 0 1, 1 1",
                         "graphicalAssetId": 2010
@@ -159,9 +189,12 @@
             }
         },
         {
-            "type": "collection", "useCase": "environment", "collection": {
+            "type": "collection",
+            "useCase": "environment",
+            "collection": {
                 "name": "TownHall-lvl-1",
-                "id": 40, "entries": [
+                "id": 40,
+                "entries": [
                     {
                         "transform": "0 0 1, 1 1",
                         "graphicalAssetId": 2008

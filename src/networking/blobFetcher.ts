@@ -1,10 +1,19 @@
-import type { BunFile } from "bun";
-import type { ApplicationContext, ResErr } from "../ts/metaTypes";
-import { findConformingMIMEType } from "../runtimeTypeChecker/type";
+import type { BunFile } from 'bun';
+import type { ApplicationContext, ResErr } from '../ts/metaTypes';
+import { findConformingMIMEType } from '../runtimeTypeChecker/type';
 
-const contentTypeHeaderNames = ["content-type", "Content-Type", "Content-type", "Content-Type", "content-Type", "CONTENT-TYPE", "ContentType", "contentType"];
+const contentTypeHeaderNames = [
+    'content-type',
+    'Content-Type',
+    'Content-type',
+    'Content-Type',
+    'content-Type',
+    'CONTENT-TYPE',
+    'ContentType',
+    'contentType',
+];
 const getTypeFromResponseHeaders = (response: Response, blob: Blob): ResErr<string> => {
-    let discoveredContentType = "";
+    let discoveredContentType = '';
 
     for (const headerName of contentTypeHeaderNames) {
         if (response.headers.has(headerName)) {
@@ -13,27 +22,40 @@ const getTypeFromResponseHeaders = (response: Response, blob: Blob): ResErr<stri
         }
     }
 
-    if (discoveredContentType === "") {
-        return { result: null, error: "Could not determine content type from headers" };
+    if (discoveredContentType === '') {
+        return { result: null, error: 'Could not determine content type from headers' };
     }
 
-    return {result: discoveredContentType, error: null};
-}
+    return { result: discoveredContentType, error: null };
+};
 
 const getTypeFromURL = (url: string, blob: Blob): ResErr<string> => {
-    const extension = url.split(".").pop();
-    let discoveredContentType = "";
+    const extension = url.split('.').pop();
+    let discoveredContentType = '';
     switch (extension) {
-        case "jpeg": discoveredContentType = "image/jpeg"; break;
-        case "jpg": discoveredContentType = "image/jpeg"; break;
-        case "png": discoveredContentType = "image/png"; break;
-        case "gif": discoveredContentType = "image/gif"; break;
-        case "bmp": discoveredContentType = "image/bmp"; break;
-        case "svg": discoveredContentType = "image/svg+xml"; break;
-        default: return { result: null, error: "Could not determine content type from url" };
+        case 'jpeg':
+            discoveredContentType = 'image/jpeg';
+            break;
+        case 'jpg':
+            discoveredContentType = 'image/jpeg';
+            break;
+        case 'png':
+            discoveredContentType = 'image/png';
+            break;
+        case 'gif':
+            discoveredContentType = 'image/gif';
+            break;
+        case 'bmp':
+            discoveredContentType = 'image/bmp';
+            break;
+        case 'svg':
+            discoveredContentType = 'image/svg+xml';
+            break;
+        default:
+            return { result: null, error: 'Could not determine content type from url' };
     }
-    return {result: discoveredContentType, error: null};
-}
+    return { result: discoveredContentType, error: null };
+};
 
 export const fetchBlobOverHTTP = async (url: string, context?: ApplicationContext): Promise<ResErr<Blob>> => {
     try {
@@ -45,23 +67,27 @@ export const fetchBlobOverHTTP = async (url: string, context?: ApplicationContex
         }
 
         let blob = await response.blob();
-        if (blob.type === "") {
-            let discoveredType = "";
+        if (blob.type === '') {
+            let discoveredType = '';
             const typeAttemptHeaders = getTypeFromResponseHeaders(response, blob);
-            if (typeAttemptHeaders.error === null) { 
+            if (typeAttemptHeaders.error === null) {
                 context?.logger.log(`[fetcher] Discovered type from Content-Type header: ${typeAttemptHeaders.result}`);
-                discoveredType = typeAttemptHeaders.result; 
+                discoveredType = typeAttemptHeaders.result;
             } else {
                 const typeAttemptURL = getTypeFromURL(url, blob);
-                if (typeAttemptURL.error === null) { 
+                if (typeAttemptURL.error === null) {
                     context?.logger.log(`[fetcher] Discovered type from URL: ${typeAttemptURL.result}`);
-                    discoveredType = typeAttemptURL.result; 
-                } else { 
+                    discoveredType = typeAttemptURL.result;
+                } else {
                     context?.logger.log(`[fetcher] Could not determine content type: ${typeAttemptURL.error}`);
-                    return { result: null, error: "Could not determine content type: " + typeAttemptURL.error}; 
+                    return {
+                        result: null,
+                        error: 'Could not determine content type: ' + typeAttemptURL.error,
+                    };
                 }
             }
-            const {result, error} = findConformingMIMEType(discoveredType); if (error !== null) {
+            const { result, error } = findConformingMIMEType(discoveredType);
+            if (error !== null) {
                 context?.logger.log(`[fetcher] Error determining corresponding MIME type for discovered type ${discoveredType}: ${error}`);
                 return { result: null, error: error };
             }
@@ -74,7 +100,7 @@ export const fetchBlobOverHTTP = async (url: string, context?: ApplicationContex
         context?.logger.log(`[fetcher] Error fetching blob: ${(error as any).message}`);
         return { result: null, error: (error as any).message };
     }
-}
+};
 
 export const fetchBlobFromFile = async (url: string, init?: boolean, context?: ApplicationContext): Promise<ResErr<Blob>> => {
     context?.logger.log(`[fetcher] Fetching blob from file: ${url}`);
@@ -82,9 +108,10 @@ export const fetchBlobFromFile = async (url: string, init?: boolean, context?: A
     const fileExists = await (file as BunFile).exists();
     if (!fileExists) {
         context?.logger.log(`[fetcher] File does not exist: ${url}`);
-        return { result: null, error: "File does not exist" };
+        return { result: null, error: 'File does not exist' };
     }
-    const {result, error} = findConformingMIMEType(file.type); if (error !== null) {
+    const { result, error } = findConformingMIMEType(file.type);
+    if (error !== null) {
         context?.logger.log(`[fetcher] Error determining MIME type for file ${url}: ${error}`);
         return { result: null, error: error };
     }
@@ -98,15 +125,14 @@ export const fetchBlobFromFile = async (url: string, init?: boolean, context?: A
         await file.arrayBuffer();
     }
     return { result: file, error: null };
-}
-
+};
 
 export const fetchBlobFromUrl = async (url: string, context?: ApplicationContext): Promise<ResErr<Blob>> => {
-    if (url === "") {
-        return { result: null, error: "Invalid source url" };
+    if (url === '') {
+        return { result: null, error: 'Invalid source url' };
     }
 
-    if (url.startsWith("http") || url.startsWith("www")) {
+    if (url.startsWith('http') || url.startsWith('www')) {
         return fetchBlobOverHTTP(url, context);
     }
 
