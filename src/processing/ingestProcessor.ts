@@ -61,7 +61,7 @@ const processAssetList = async (
     for (const asset of assets) {
         const type = asset.type;
         if (errors.length > settings.allowedFailures) {
-            context.logger.logAndPrint('[ingest] Too many errors, aborting:\n' + errors.join('\n\t'), LogLevel.ERROR);
+            context.logger.log('[ingest] Too many errors, aborting:\n' + errors.join('\n\t'), LogLevel.ERROR);
             return true;
         }
 
@@ -70,7 +70,7 @@ const processAssetList = async (
                 context.logger.logAndPrint('[ingest]\tProcessing asset id ' + asset.single.id + ': ' + asset.single.alias);
                 const res = await processGraphicalAsset(asset, settings, context);
                 if (res.error !== null) {
-                    context.logger.log('[ingest] Error while processing single asset: \n\t' + res.error, LogLevel.ERROR);
+                    context.logger.logAndPrint('[ingest] Error while processing single asset: \n\t' + res.error, LogLevel.ERROR);
                     errors.push(res.error);
                 }
                 break;
@@ -79,7 +79,7 @@ const processAssetList = async (
                 context.logger.logAndPrint('[ingest]\tProcessing collection id ' + asset.collection.id + ': ' + asset.collection.name);
                 const res = await processCollection(asset, context);
                 if (res.error !== null) {
-                    context.logger.log('[ingest] Error while processing single asset: \n\t' + res.error, LogLevel.ERROR);
+                    context.logger.logAndPrint('[ingest] Error while processing single asset: \n\t' + res.error, LogLevel.ERROR);
                     errors.push(res.error);
                 }
                 break;
