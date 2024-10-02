@@ -3,7 +3,7 @@ import { ImageFileType, ImageMIMEType, type ApplicationContext, type ResErr } fr
 import type { LODDTO } from '../ts/types.ts';
 import { checkIfImageTypeIsSupported } from './imageUtil.ts';
 import { LogLevel } from '../logging/simpleLogger.ts';
-import { findConformingMIMEType } from './typeChecker.ts';
+import { findConformingMIMEType } from '../runtimeTypeChecker/checker';
 import { computeETag } from './etag.ts';
 
 

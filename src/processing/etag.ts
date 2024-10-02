@@ -2,7 +2,6 @@ import type { ResErr } from '../ts/metaTypes';
 import { createHash } from 'crypto';
 
 export const computeETag = async (blob: Blob): Promise<ResErr<string>> => {
-
   try{
     // Convert Blob to ArrayBuffer to Buffer
     const arrayBuffer = await blob.arrayBuffer();  

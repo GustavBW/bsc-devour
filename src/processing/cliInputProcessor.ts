@@ -1,6 +1,6 @@
-import { AssetUseCase, type DBDSN, type TransformDTO } from '../ts/types.ts';
-import type { Error, ResErr } from '../ts/metaTypes.ts';
-import { isValidInteger, isValidNumber, isValidUrl } from './typeChecker.ts';
+import { AssetUseCase, type DBDSN, type TransformDTO } from '../ts/types';
+import type { Error, ResErr } from '../ts/metaTypes';
+import { isValidInteger, isValidNumber, isValidUrl } from '../runtimeTypeChecker/checker';
 
 export const readIDArg = (arg: string): ResErr<number> => {
     const idStrSplit = arg.split("=");

@@ -1,8 +1,11 @@
 import {test, expect} from 'bun:test';
 import {readIngestFile} from './ingestFileInput';
-import { AssetUseCase, IngestFileAssetType, type AutoIngestSubScript, type IngestFileCollectionAsset, type IngestFileSingleAsset, type SettingsSubFile } from '../../ts/types';
-import type { BunFile } from 'bun';
-import { assureUniformDSN, assureUniformTransform, checkIDRangesOfSubFiles, validateCollectionAssetEntry, validateSingleAssetEntry, verifyIngestFile, verifySubFileIDAssignments } from './ingestFileVerifier';
+import { AssetUseCase } from '../../ts/types';
+import { 
+  assureUniformDSN, assureUniformTransform, checkIDRangesOfSubFiles, validateCollectionAssetEntry, 
+  validateSingleAssetEntry, verifyIngestFile, verifyIngestFileAssets, verifyIngestFileSettings, verifySubFileIDAssignments 
+} from './ingestFileVerifier';
+import { IngestFileAssetType, type AutoIngestSubScript, type IngestFileSingleAsset, type SettingsSubFile } from '../../ts/ingestFileTypes';
 
 //Tests of "readIngestFile"
 let testFileJson: any;
@@ -84,7 +87,6 @@ test("validateCollectionAssetEntry should return null on valid input", async () 
                 transform: {xOffset: 1, yOffset: 2, zIndex: 3, xScale: 4, yScale: 5},
                 graphicalAssetId: 1,
             }],
-            transform: "1 2 3, 4 5",
         },
     };
     const error = validateCollectionAssetEntry(collectionAsset, 0);
@@ -139,9 +141,14 @@ test("validateSingleAssetEntry should return null on valid input", async () => {
 
 
 //Tests of "verifyIngestFile"
-test("verifyIngestFile should return null on valid input", async () => {
-    const res = verifyIngestFile(testFileJson);
-    expect(res.error).toBeNull();
+test("verifyIngestFile settings should return null on valid input", async () => {
+  const error = verifyIngestFileSettings(testFileJson.settings);
+  expect(error).toBeUndefined();
+})
+
+test("verifyIngestFile assets should return null on valid input", async () => {
+    const error = verifyIngestFileAssets(testFileJson.assets);
+    expect(error).toBeUndefined();
 });
 
 test("verifyIngestFile should return error on missing settings field", async () => {

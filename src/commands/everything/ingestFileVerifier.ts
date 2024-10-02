@@ -1,12 +1,16 @@
 import { LogLevel } from "../../logging/simpleLogger";
 import { readCompactDSNNotationRaw, readCompactTransformNotationRaw } from "../../processing/cliInputProcessor";
-import { conformsToType } from "../../processing/typeChecker";
+import { conformsToType } from "../../runtimeTypeChecker/checker";
+import { 
+    INGEST_FILE_COLLECTION_ASSET_TYPEDECL, INGEST_FILE_COLLECTION_FIELD_TYPEDECL, INGEST_FILE_SETTINGS_TYPEDECL, 
+    INGEST_FILE_SINGLE_ASSET_FIELD_TYPEDECL, INGEST_FILE_SINGLE_ASSET_TYPEDECL, IngestFileAssetType, 
+    type AutoIngestScript, type AutoIngestSubScript, type IngestFileAssetEntry, type IngestFileCollectionAsset, type IngestFileSettings, type IngestFileSingleAsset, 
+    type SettingsSubFile 
+} from "../../ts/ingestFileTypes";
 import type { ApplicationContext, Error, ResErr } from "../../ts/metaTypes";
-import { DBDSN_TYPEDECL, INGEST_FILE_COLLECTION_ASSET_TYPEDECL, INGEST_FILE_COLLECTION_ENTRY_TYPEDECL, 
-    INGEST_FILE_COLLECTION_FIELD_TYPEDECL, INGEST_FILE_SETTINGS_TYPEDECL, 
-    INGEST_FILE_SINGLE_ASSET_FIELD_TYPEDECL, INGEST_FILE_SINGLE_ASSET_TYPEDECL, 
-    IngestFileAssetType, TRANSFORM_DTO_TYPEDECL, type AutoIngestScript, type AutoIngestSubScript, type DBDSN, 
-    type IngestFileCollectionAsset, type IngestFileSingleAsset, type SettingsSubFile, type TransformDTO 
+import { DBDSN_TYPEDECL, INGEST_FILE_COLLECTION_ENTRY_TYPEDECL, 
+    TRANSFORM_DTO_TYPEDECL, type DBDSN, 
+    type TransformDTO 
 } from "../../ts/types";
 
 export const assureUniformTransform = (maybeTransform: string | TransformDTO): ResErr<TransformDTO> => {
@@ -95,38 +99,38 @@ export const assureUniformDSN = (dsn: string | DBDSN): ResErr<DBDSN> => {
     }
 }
 
-export const verifyIngestFileSettings = (rawFile: any, context?: ApplicationContext): Error | undefined => {
-    if (!rawFile.settings || rawFile.settings === null) {
+export const verifyIngestFileSettings = (settings: IngestFileSettings, context?: ApplicationContext): Error | undefined => {
+    if (!settings || settings === null) {
         return "No settings field and corresponding object found in ingest file.";
     }
 
-    if (!rawFile.settings.dsn || rawFile.settings.dsn === null) {
+    if (!settings.dsn || settings.dsn === null) {
         return "No dsn field found in ingest file under settings.";
     }
-    const uniformDSNAttempt = assureUniformDSN(rawFile.settings.dsn);
+    const uniformDSNAttempt = assureUniformDSN( settings.dsn);
     if (uniformDSNAttempt.error !== null) {
         return uniformDSNAttempt.error;
     }
-    rawFile.settings.dsn = uniformDSNAttempt.result;
-    const fullSettingsCheckResult = conformsToType(rawFile.settings, INGEST_FILE_SETTINGS_TYPEDECL);
+    settings.dsn = uniformDSNAttempt.result;
+    const fullSettingsCheckResult = conformsToType(settings, INGEST_FILE_SETTINGS_TYPEDECL);
     if (fullSettingsCheckResult !== null) {
         return "Settings field does not conform to type: " + fullSettingsCheckResult;
     }
 }
 
-export const verifyIngestFileAssets = (rawFile: any, context?: ApplicationContext): Error | undefined => {
-    if (!rawFile.assets || rawFile.assets === null) {
+export const verifyIngestFileAssets = (assets: IngestFileAssetEntry[], context?: ApplicationContext): Error | undefined => {
+    if (!assets || assets === null) {
         return "No assets field and corresponding object found in ingest file.";
     }
 
-    if (!Array.isArray(rawFile.assets)) {
+    if (!Array.isArray(assets)) {
         return "Assets field in ingest file is not an array.";
     }
 
     let singleCount = 1;
     let collectionCount = 1;
-    for (let i = 0; i < rawFile.assets.length; i++) {
-        const asset = rawFile.assets[i];
+    for (let i = 0; i < assets.length; i++) {
+        const asset = assets[i];
         if (!asset.type || asset.type === null) {
             return "No type field found in asset nr:" + i;
         }
@@ -160,12 +164,15 @@ export const verifyIngestFileAssets = (rawFile: any, context?: ApplicationContex
 }
 
 export const verifyIngestFile = (rawFile: any, context?: ApplicationContext): ResErr<AutoIngestScript> => {
-    const settingsError = verifyIngestFileSettings(rawFile, context);
+    if(!rawFile || rawFile === null) {
+        return {result: null, error: "Ingest File was null or undefined."};
+    }
+    const settingsError = verifyIngestFileSettings(rawFile.settings, context);
     if (settingsError !== undefined) {
         return { result: null, error: settingsError };
     }
 
-    const assetsError = verifyIngestFileAssets(rawFile, context);
+    const assetsError = verifyIngestFileAssets(rawFile.assets, context);
     if (assetsError !== undefined) {
         return { result: null, error: assetsError };
     }

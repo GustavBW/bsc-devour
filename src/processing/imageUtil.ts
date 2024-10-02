@@ -1,6 +1,6 @@
 import sharp from "sharp";
 import { ImageMIMEType, type ApplicationContext, type ResErr } from "../ts/metaTypes";
-import { findConformingMIMEType } from "./typeChecker";
+import { findConformingMIMEType } from "../runtimeTypeChecker/checker";
 
 export const SUPPORTED_IMAGE_TYPES = {
     JPEG: ImageMIMEType.JPEG,

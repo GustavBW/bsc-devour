@@ -1,14 +1,12 @@
-import type sharp from 'sharp';
-import { fetchBlobFromUrl } from '../../networking/blobFetcher.ts';
-import { readAliasArg, readCompactDSNNotation, readCompactTransformNotation, readIDArg, readThresholdArg, readUrlArg, readUseCaseArg } from '../../processing/cliInputProcessor.ts';
-import { getMetaDataAsIfImage } from '../../processing/imageUtil.ts';
-import { findConformingMIMEType } from '../../processing/typeChecker.ts';
-import { IMAGE_TYPES, ImageMIMEType, type ApplicationContext, type CLIFunc, type ResErr } from '../../ts/metaTypes.ts';
-import { UNIT_TRANSFORM, AssetUseCase, type AutoIngestScript, type DBDSN, type TransformDTO, IngestFileAssetType, type IngestFileSingleAsset, type IngestFileSettings, type IngestFileSingleAssetField } from '../../ts/types.ts';
-import { generateLODs } from '../../processing/lodGenerator.ts';
+import { 
+    readAliasArg, readCompactDSNNotation, readCompactTransformNotation, 
+    readIDArg, readThresholdArg, readUrlArg, readUseCaseArg 
+} from '../../processing/cliInputProcessor.ts';
+import { type ApplicationContext, type CLIFunc, type ResErr } from '../../ts/metaTypes.ts';
+import { UNIT_TRANSFORM, AssetUseCase, type DBDSN, type TransformDTO } from '../../ts/types.ts';
 import { LogLevel } from '../../logging/simpleLogger.ts';
-import type { UploadableAsset } from '../../networking/dbConn.ts';
 import { prepareSingleAssetForUpload } from '../../processing/ingestProcessor.ts';
+import type { IngestFileSettings, IngestFileSingleAssetField } from '../../ts/ingestFileTypes.ts';
 
 /**
  * @author GustavBW

@@ -25,19 +25,6 @@ export type ApplicationContext = {
     db: DB
 }
 
-
-export enum Type {
-    STRING = "string",
-    FLOAT = "float",
-    INTEGER = "integer",
-    BOOLEAN = "boolean",
-    OBJECT = "object",
-    ARRAY = "array"
-}
-export type FieldValidatorFunction = (valueOfField: any) => boolean;
-export type TypeDeclaration = {
-    [key: string]: Type | FieldValidatorFunction | TypeDeclaration
-}
 /**
  * @author GustavBW
  * @since 0.0.2

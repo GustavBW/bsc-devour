@@ -1,7 +1,8 @@
 import type { ApplicationContext, Error, ImageMIMEType, ResErr } from "../ts/metaTypes";
-import type { AssetUseCase, CollectionEntryDTO, DBDSN, LODDTO, TransformDTO } from "../ts/types";
+import type { AssetUseCase, DBDSN, LODDTO, TransformDTO } from "../ts/types";
 import pg from 'pg'
 import { LogLevel } from "../logging/simpleLogger";
+import type { CollectionEntryDTO } from "../ts/ingestFileTypes";
 
 export type UploadableAsset = {
     id?: number,

@@ -1,6 +1,6 @@
 import type { BunFile } from "bun";
 import type { ApplicationContext, ResErr } from "../ts/metaTypes";
-import { findConformingMIMEType } from "../processing/typeChecker";
+import { findConformingMIMEType } from "../runtimeTypeChecker/checker";
 
 const contentTypeHeaderNames = ["content-type", "Content-Type", "Content-type", "Content-Type", "content-Type", "CONTENT-TYPE", "ContentType", "contentType"];
 const getTypeFromResponseHeaders = (response: Response, blob: Blob): ResErr<string> => {
