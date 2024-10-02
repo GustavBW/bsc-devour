@@ -62,6 +62,10 @@ export const conformsToType = <T>(object: T, topLevelValidator: TypeDeclaration 
         return null;
     }
 
+    if (object === null || object === undefined) {
+        return 'Object is expected to exist';
+    }
+
     //If not function nor simple type, then it has to be a TypeDeclaration
     //Structural constraint check
     if (topLevelValidator.____$rtcNoTouch) {
