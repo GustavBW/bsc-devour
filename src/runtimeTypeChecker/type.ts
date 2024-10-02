@@ -1,7 +1,6 @@
-import type { ImageFileType, ImageMIMEType, ResErr } from "../ts/metaTypes";
-import { IMAGE_TYPES } from "../ts/metaTypes";
+import { IMAGE_TYPES, ImageFileType, type Error, type ImageMIMEType, type ResErr } from "../ts/metaTypes";
 import { joinOmitSeperatorOnLast } from "./arrayUtil";
-import { MetaType, Type, type FieldValidatorFunction, type TypeDeclaration } from "./checkerTypes";
+import { MetaType, Type, type AbstractValidator, type FieldValidatorFunction, type TypeDeclaration } from "./superMetaTypes";
 
 export const isValidFloat = (arg: any): boolean => {
     return isValidNumber(Number.parseFloat(arg));
@@ -46,7 +45,15 @@ export const findConformingMIMEType = (type: string): ResErr<ImageMIMEType> => {
  * @since 0.0.1
  * @author GustavBW
  */
-export const conformsToType = <T>(object: T, topLevelValidator: TypeDeclaration | FieldValidatorFunction): string | null => {
+export const conformsToType = <T>(object: T, topLevelValidator: TypeDeclaration | FieldValidatorFunction | Type): string | null => {
+    if (typeof topLevelValidator === "string") {
+        // If the type declaration is a string, check the object's type.
+        if (!validateSimpleType(topLevelValidator, object)) {
+            return `Object is expected to be of type "${topLevelValidator}", observed value: ${object}`;
+        }
+        return null;
+    }
+    
     if (typeof topLevelValidator === "function") {
         // If the type declaration is a function, use it to validate the object.
         if (!topLevelValidator(object)) {
@@ -54,31 +61,15 @@ export const conformsToType = <T>(object: T, topLevelValidator: TypeDeclaration 
         }
         return null;
     }
-    //If not function, then it has to be a TypeDeclaration
 
-    //Compare keys present in target vs type declaration
-    const objectKeys = new Set(Object.keys(object as any));
-    const validatorKeys = new Set(Object.keys(topLevelValidator));
-
-    const missingKeys = [...validatorKeys]
-        .filter(key => !objectKeys.has(key))
-        .filter(key => {
-            const fieldValidator = topLevelValidator[key];
-            // optionalType(...) returns a FieldFValidatorFunction
-            // if the validator of this field is not a function, it cannot be optional.
-            if (typeof fieldValidator !== "function") {
-                return true; 
+    //If not function nor simple type, then it has to be a TypeDeclaration
+    //Structural constraint check
+    if (topLevelValidator.____$rtcNoTouch) {
+        for (const constraint of topLevelValidator.____$rtcNoTouch.structuralConstraints) {
+            const error = constraint(object, topLevelValidator); if (error) {
+                return "Structural issue:\n\t" + error;
             }
-            return fieldValidator.metaType !== MetaType.OPTIONAL;
-        });
-    const extraKeys = [...objectKeys].filter(key => !validatorKeys.has(key));
-
-    if (extraKeys.length > 0) {
-        return `Extra key${extraKeys.length > 1 ? "s" : ""} in object: ${joinOmitSeperatorOnLast(extraKeys, ", ")}`;
-    }
-
-    if (missingKeys.length > 0) {
-        return `Missing key${missingKeys.length > 1 ? "s" : ""} in object: ${joinOmitSeperatorOnLast(missingKeys, ', ')}`;
+        }
     }
 
     //And now for the actual check of field values
@@ -86,27 +77,32 @@ export const conformsToType = <T>(object: T, topLevelValidator: TypeDeclaration 
         const validator = topLevelValidator[key];
         const value = object[key as keyof T];
 
-        if (typeof validator === "object") {
-            // TypeDeclaration contains a TypeDeclaration
-            const nestedError = conformsToType(value, validator as TypeDeclaration);
-            if (nestedError !== null) {
-                return `Field ${key} failed nested type check: ${nestedError}`;
-            }
-        } else if (typeof validator === "function") {
-            // If the type declaration is a function, use it to validate the field.
-            if (!validator(value)) {
-                return `Field ${key} does not conform to the expected "${validator.typeString}", observed value: ${value}`;
-            }
-        } else if (typeof validator === "string") {
-            // If the type declaration is a Type enum, check the value's type.
-            if (!validateSimpleType(validator, value)) {
-                return `Field ${key} is expected to exist and be of type "${validator}" but had value: ${value}`;
-            }
+        const error = executeValidatorForValue(value, key, validator); if (error) {
+            return error;
         }
-        
     }
     return null; // All fields conform to the expected types.
 };
+
+export const executeValidatorForValue = (value: any, key: any, validator: AbstractValidator): Error | undefined => {
+    if (typeof validator === "object") {
+        // TypeDeclaration contains a TypeDeclaration
+        const nestedError = conformsToType(value, validator as TypeDeclaration);
+        if (nestedError !== null) {
+            return `Field ${key} failed nested type check:\n\t${nestedError}`;
+        }
+    } else if (typeof validator === "function") {
+        // If the type declaration is a function, use it to validate the field.
+        if (!validator(value)) {
+            return `Field ${key} does not conform to the expected "${validator.typeString}", observed value: ${value}`;
+        }
+    } else if (typeof validator === "string") {
+        // If the type declaration is a Type enum, check the value's type.
+        if (!validateSimpleType(validator, value)) {
+            return `Field ${key} is expected to exist and be of type "${validator}" but had value: ${value}`;
+        }
+    }
+}
 
 export const validateSimpleType = (expectedType: Type, value: any): boolean => {
     switch (expectedType) {
@@ -130,7 +126,7 @@ export const validateSimpleType = (expectedType: Type, value: any): boolean => {
             return false;
     }
 };
-const validateOptionalType = (value: any, validator: Type | FieldValidatorFunction | TypeDeclaration): boolean => {
+const validateOptionalType = (value: any, validator: AbstractValidator): boolean => {
     if (value === undefined) {
         return true; // Accept undefined 
     }
@@ -146,7 +142,7 @@ const validateOptionalType = (value: any, validator: Type | FieldValidatorFuncti
  * @since 0.0.1
  * @author GustavBW
  */
-export const optionalType = (validator: Type | FieldValidatorFunction | TypeDeclaration): FieldValidatorFunction => {
+export const optionalType = (validator: AbstractValidator): FieldValidatorFunction => {
     const wrappedValidator = (value: any) => validateOptionalType(value, validator);
     wrappedValidator.metaType = MetaType.OPTIONAL;
 
@@ -160,7 +156,7 @@ export const optionalType = (validator: Type | FieldValidatorFunction | TypeDecl
 
     return wrappedValidator;
 };
-const validateTypeUnionOR = (value: any, validators: (Type | FieldValidatorFunction | TypeDeclaration)[]): boolean => {
+const validateTypeUnionOR = (value: any, validators: AbstractValidator[]): boolean => {
     for (const validator of validators) {
         if (typeof validator === "function") {
             if (validator(value)) {
@@ -176,7 +172,7 @@ const validateTypeUnionOR = (value: any, validators: (Type | FieldValidatorFunct
     }
     return false;
 }
-export const typeUnionOR = (...validators: (Type | FieldValidatorFunction | TypeDeclaration)[]): FieldValidatorFunction => {
+export const typeUnionOR = (...validators: AbstractValidator[]): FieldValidatorFunction => {
     const wrappedValidator = (value: any) => validateTypeUnionOR(value, validators);
     wrappedValidator.typeString = joinOmitSeperatorOnLast(
         validators.map((validator) => {
@@ -191,7 +187,7 @@ export const typeUnionOR = (...validators: (Type | FieldValidatorFunction | Type
     wrappedValidator.metaType = MetaType.EXCLUSIVE_UNION;
     return wrappedValidator;
 }
-const validatorTypedTuple = (value: any, validators: (Type | FieldValidatorFunction | TypeDeclaration)[]): boolean => {
+const validatorTypedTuple = (value: any, validators: AbstractValidator[]): boolean => {
     if (!Array.isArray(value) || value.length !== validators.length) {
         return false;
     }
@@ -211,7 +207,7 @@ const validatorTypedTuple = (value: any, validators: (Type | FieldValidatorFunct
     }
     return true;
 }
-export const typedTuple = (validators: (Type | FieldValidatorFunction | TypeDeclaration)[]): FieldValidatorFunction => {
+export const typedTuple = (validators: AbstractValidator[]): FieldValidatorFunction => {
     const wrappedValidator = (value: any) => validatorTypedTuple(value, validators);
     wrappedValidator.typeString = "[" + 
         joinOmitSeperatorOnLast(
@@ -240,7 +236,7 @@ const validateTypedArray = (value: any, howToInvokeValidator: (v: any) => boolea
     }
     return true;
 }
-export const typedArray = (validator: Type | FieldValidatorFunction | TypeDeclaration): FieldValidatorFunction => {
+export const typedArray = (validator: AbstractValidator): FieldValidatorFunction => {
     let howToInvokeValidator: (v: any) => boolean;
     if (typeof validator === "function") {
         howToInvokeValidator = (v: any) => validator(v);
@@ -272,3 +268,12 @@ export const anyOfConstants = (constants: (string | number)[]): FieldValidatorFu
     wrappedValidator.metaType = MetaType.EXCLUSIVE_UNION;
     return wrappedValidator;
 }
+
+export const Fields = {
+    anyOfConstants,
+    optional: optionalType,
+    unionOR: typeUnionOR,
+    tuple: typedTuple,
+    array: typedArray,
+}
+export default Fields;

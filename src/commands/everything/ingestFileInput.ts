@@ -1,7 +1,7 @@
 import { LogLevel } from '../../logging/simpleLogger';
 import { readUrlArg } from '../../processing/cliInputProcessor';
 import { processIngestFile } from '../../processing/ingestProcessor';
-import { conformsToType } from '../../runtimeTypeChecker/checker';
+import { conformsToType } from '../../runtimeTypeChecker/type.ts';
 import { 
     INGEST_FILE_SUB_FILE_TYPEDECL, type AutoIngestSubScript, type IngestFileSettings, 
     type PreparedAutoIngestSubScript, type SettingsSubFile 

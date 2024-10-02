@@ -1,5 +1,5 @@
-import { optionalType, anyOfConstants as anyOfConstants, typeUnionOR, typedArray, typedTuple } from "../runtimeTypeChecker/checker";
-import { Type, type TypeDeclaration } from "../runtimeTypeChecker/checkerTypes";
+import { optionalType, anyOfConstants as anyOfConstants, typeUnionOR, typedArray, typedTuple } from "../runtimeTypeChecker/type";
+import { Type, type TypeDeclaration } from "../runtimeTypeChecker/superMetaTypes";
 import { ImageMIMEType } from "./metaTypes";
 
 /**

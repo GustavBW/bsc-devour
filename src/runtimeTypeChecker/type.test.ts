@@ -1,7 +1,7 @@
 import { test, expect, describe } from "bun:test";
-import { anyOfConstants, conformsToType, findConformingMIMEType, optionalType, typedArray, typedTuple, typeUnionOR, validateSimpleType } from "./checker";
+import { anyOfConstants, conformsToType, findConformingMIMEType, optionalType, typedArray, typedTuple, typeUnionOR, validateSimpleType } from "./type";
 import { ImageMIMEType } from "../ts/metaTypes";
-import { Type, type TypeDeclaration } from "./checkerTypes";
+import { Type, type TypeDeclaration } from "./superMetaTypes";
 
 describe("validateType Tests", () => {
     test("validateType should return true on valid string input", async () => {

@@ -10,7 +10,7 @@ import { type ApplicationContext, type ResErr, type Error, ImageMIMEType } from 
 import { AssetUseCase } from "../ts/types";
 import { getMetaDataAsIfImage } from "./imageUtil";
 import { generateLODs } from "./lodGenerator";
-import { findConformingMIMEType } from "../runtimeTypeChecker/checker";
+import { findConformingMIMEType } from "../runtimeTypeChecker/type";
 
 export const processIngestFile = async (ingestScript: AutoIngestScript, context: ApplicationContext, subFiles: PreparedAutoIngestSubScript[]): Promise<ResErr<string>> => {
     const dbErr = await context.db.connect(ingestScript.settings.dsn, context);

@@ -1,5 +1,5 @@
-import { anyOfConstants, optionalType, typedArray, typedTuple } from "../runtimeTypeChecker/checker";
-import { Type, type TypeDeclaration } from "../runtimeTypeChecker/checkerTypes";
+import { anyOfConstants, optionalType, typedArray, typedTuple } from "../runtimeTypeChecker/type";
+import { Type, type TypeDeclaration } from "../runtimeTypeChecker/superMetaTypes";
 import { AssetUseCase, DBDSN_TYPEDECL, type DBDSN, type TransformDTO } from "./types";
 
 export enum IngestFileAssetType {

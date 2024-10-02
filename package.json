@@ -2,6 +2,7 @@
   "name": "devour",
   "module": "index.ts",
   "type": "module",
+  "version": "0.1.0",
   "scripts": {
     "build": "tsc && bun test && bun build ./src/main.ts --outfile=./dist/devour.js --target=bun --minify",
     "debugBuild": "tsc && bun build src/main.ts --sourcemap=linked --outfile=dist/devour.js --target=bun",

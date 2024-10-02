@@ -1,6 +1,6 @@
 import { LogLevel } from "../../logging/simpleLogger";
 import { readCompactDSNNotationRaw, readCompactTransformNotationRaw } from "../../processing/cliInputProcessor";
-import { conformsToType } from "../../runtimeTypeChecker/checker";
+import { conformsToType } from "../../runtimeTypeChecker/type";
 import { 
     INGEST_FILE_COLLECTION_ASSET_TYPEDECL, INGEST_FILE_COLLECTION_FIELD_TYPEDECL, INGEST_FILE_SETTINGS_TYPEDECL, 
     INGEST_FILE_SINGLE_ASSET_FIELD_TYPEDECL, INGEST_FILE_SINGLE_ASSET_TYPEDECL, IngestFileAssetType, 

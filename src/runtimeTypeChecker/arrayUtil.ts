@@ -1,4 +1,4 @@
-export const joinOmitSeperatorOnLast = (arr: (string | number)[], seperator: string): string => {
+export const joinOmitSeperatorOnLast = (arr: (string | number)[], seperator: string = ", "): string => {
     if (arr.length === 0) {
         return "";
     }
