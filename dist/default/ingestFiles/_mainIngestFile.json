@@ -1,47 +1,49 @@
 {
     "settings": {
-        "version": "0.0.1",
-        "maxLOD": 6,
+        "version": "0.0.1", 
+        "maxLOD": 6, 
         "LODThreshold": 10,
-        "allowedFailures": 0,
+        "allowedFailures": 0, 
         "dsn": {
-            "host": "localhost",
-            "port": 8432,
-            "user": "devour",
-            "password": "d3v0urP4ssw0rd",
-            "dbName": "ColonyAndAssets",
-            "sslMode": "disable"
+                "host": "localhost",
+                "port": 8432,
+                "user": "devour",
+                "password": "d3v0urP4ssw0rd",
+                "dbName": "ColonyAndAssets",
+                "sslMode": "disable"
         },
         "subFiles": [
             {
                 "path": "./default/ingestFiles/iconIngestFile.json",
-                "idRanges": [[1001, 2000]]
+                "assetIDRanges": [[1001, 2000]]
             },
             {
                 "path": "./default/ingestFiles/structureIngestFile.json",
-                "idRanges": [[2001, 3000]]
+                "assetIDRanges": [[2001, 3000]]
             },
             {
                 "path": "./default/ingestFiles/textureIngestFile.json",
-                "idRanges": [[3001, 4000]]
+                "assetIDRanges": [[3001, 4000]]
             },
             {
                 "path": "./default/ingestFiles/playerIngestFile.json",
-                "idRanges": [[4001, 5000]]
+                "assetIDRanges": [[4001, 5000]]
             },
             {
                 "path": "./default/ingestFiles/splashArtIngestFile.json",
-                "idRanges": [[5001, 6000]]
+                "assetIDRanges": [[5001, 6000]]
             },
             {
                 "path": "./default/ingestFiles/vehicleIngestFile.json",
-                "idRanges": [[6001, 7000]]
+                "assetIDRanges": [[6001, 7000]]
             },
             {
                 "path": "./default/ingestFiles/locationCollectionIngestFile.json",
-                "idRanges": [[1, 1000]]
+                "assetIDRanges": [[1, 1000]]
             }
         ]
     },
-    "assets": []
+    "assets": [
+        
+    ]
 }
