@@ -200,7 +200,23 @@ export const verifyIngestFile = (rawFile: any, context?: ApplicationContext): Re
     return { result: rawFile as AutoIngestScript, error: null };
 };
 
-export const checkIDRangesOfSubFiles = (subFiles: SettingsSubFile[], context?: ApplicationContext): Error | undefined => {
+const checkOverlapBetweenRanges = (rangeSetA: [number, number][], rangeSetB: [number, number][], context?: ApplicationContext): Error | undefined => {
+    for (let k = 0; k < rangeSetA.length; k++) {
+        const rangeASubFileA = rangeSetA[k];
+
+        for (let m = 0; m < rangeSetB.length; m++) {
+            const rangeBSubFileB = rangeSetB[m];
+            if (rangeASubFileA[0] <= rangeBSubFileB[1] && rangeASubFileA[1] >= rangeBSubFileB[0]) {
+                context?.logger.log(
+                    '[if-verifier] ID range overlap between ranges nr ' + k + ' and ' + m
+                );
+                return '[if-verifier] ID range overlap between ranges nr ' + k + ' and ' + m;
+            }
+        }
+    }
+}
+
+export const checkIDRangesAndPathsOfSubFiles = (subFiles: SettingsSubFile[], context?: ApplicationContext): Error | undefined => {
     for (let i = 0; i < subFiles.length; i++) {
         const subFileA = subFiles[i];
 
@@ -209,31 +225,26 @@ export const checkIDRangesOfSubFiles = (subFiles: SettingsSubFile[], context?: A
 
             if (subFileA.path === subFileB.path) {
                 context?.logger.log(
-                    '[if-verifier] Duplicate path in sub-files ' + i + ' and ' + j + ', path of first:' + subFileA.path,
+                    '[if-verifier] Duplicate path in sub-files ' + i + ' and ' + j + ', path:' + subFileA.path,
                     LogLevel.ERROR,
                 );
-                return 'Duplicate path in sub-files ' + i + ' and ' + j + ', path of first:' + subFileA.path;
+                return 'Duplicate path in sub-files ' + i + ' and ' + j + ', path:' + subFileA.path;
             }
-            for (let k = 0; k < subFileA.assetIDRanges!.length; k++) {
-                const rangeASubFileA = subFileA.assetIDRanges![k];
 
-                for (let m = 0; m < subFileB.assetIDRanges!.length; m++) {
-                    const rangeBSubFileB = subFileB.assetIDRanges![m];
-                    if (rangeASubFileA[0] <= rangeBSubFileB[1] && rangeASubFileA[1] >= rangeBSubFileB[0]) {
-                        context?.logger.log(
-                            '[if-verifier] ID range overlap between sub-file ' +
-                                i +
-                                ' and ' +
-                                j +
-                                ', of paths: ' +
-                                subFileA.path +
-                                ' and ' +
-                                subFileB.path,
-                        );
-                        return 'ID range overlap between sub-file ' + i + ' and ' + j + ', of paths: ' + subFileA.path + ' and ' + subFileB.path;
-                    }
+            if (subFileA.assetIDRanges && subFileB.assetIDRanges) {
+                const overlapError = checkOverlapBetweenRanges(subFileA.assetIDRanges, subFileB.assetIDRanges, context);
+                if (overlapError) {
+                    return `Error in subfile declaration nr ${i} "${subFileA.path.split("/").pop()}" and ${j} "${subFileB.path.split("/").pop()}":\n\t${overlapError}`;
                 }
             }
+
+            if (subFileA.collectionIDRanges && subFileB.collectionIDRanges) {
+                const overlapError = checkOverlapBetweenRanges(subFileA.collectionIDRanges, subFileB.collectionIDRanges, context);
+                if (overlapError) {
+                    return `Error in subfile declaration nr ${i} "${subFileA.path.split("/").pop()}" and ${j} "${subFileB.path.split("/").pop()}":\n\t${overlapError}`;
+                }
+            }
+            
         }
     }
 };

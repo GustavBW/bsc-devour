@@ -10,7 +10,7 @@ import {
     type SettingsSubFile,
 } from '../../ts/ingestFileTypes';
 import type { ApplicationContext, CLIFunc, ResErr } from '../../ts/metaTypes';
-import { checkIDRangesOfSubFiles, verifyIngestFile, verifyIngestFileAssets, verifySubFileIDAssignments } from './ingestFileVerifier.ts';
+import { checkIDRangesAndPathsOfSubFiles, verifyIngestFile, verifyIngestFileAssets, verifySubFileIDAssignments } from './ingestFileVerifier.ts';
 
 /**
  * @author GustavBW
@@ -120,7 +120,7 @@ const handleSubFiles = async (
     if (!subFiles || subFiles.length <= 0) {
         return { result: [], error: null };
     }
-    const rangeCheckError = checkIDRangesOfSubFiles(subFiles, context);
+    const rangeCheckError = checkIDRangesAndPathsOfSubFiles(subFiles, context);
     if (rangeCheckError) {
         context.logger.log('[if_cmd] Range check failed: ' + rangeCheckError, LogLevel.ERROR);
         return { result: null, error: rangeCheckError };

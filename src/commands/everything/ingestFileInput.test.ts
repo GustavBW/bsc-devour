@@ -4,7 +4,7 @@ import { AssetUseCase } from '../../ts/types';
 import {
     assureUniformDSN,
     assureUniformTransform,
-    checkIDRangesOfSubFiles,
+    checkIDRangesAndPathsOfSubFiles,
     validateCollectionAssetEntry,
     validateSingleAssetEntry,
     verifyIngestFile,
@@ -370,7 +370,7 @@ test('checkIDRangesOfSubFiles with non-overlapping ranges', () => {
         },
     ];
 
-    const result = checkIDRangesOfSubFiles(subFiles);
+    const result = checkIDRangesAndPathsOfSubFiles(subFiles);
     expect(result).toBeUndefined();
 });
 
@@ -392,7 +392,7 @@ test('checkIDRangesOfSubFiles with overlapping ranges between files', () => {
         },
     ];
 
-    const result = checkIDRangesOfSubFiles(subFiles);
+    const result = checkIDRangesAndPathsOfSubFiles(subFiles);
     expect(result).not.toBeUndefined();
     expect(result!.length).toBeGreaterThan('ID range overlap between sub-file 0 and 1'.length);
 });
@@ -403,7 +403,7 @@ test('checkIDRangesOfSubFiles with duplicate paths', () => {
         { path: 'file1.json', assetIDRanges: [[20, 30]] },
     ];
 
-    const result = checkIDRangesOfSubFiles(subFiles);
+    const result = checkIDRangesAndPathsOfSubFiles(subFiles);
     expect(result).not.toBeUndefined();
     expect(result!.length).toBeGreaterThan('Duplicate path in sub-files 0 and 1'.length);
 });
@@ -419,7 +419,7 @@ test('checkIDRangesOfSubFiles with overlapping ranges within the same file - whi
         },
     ];
 
-    const result = checkIDRangesOfSubFiles(subFiles);
+    const result = checkIDRangesAndPathsOfSubFiles(subFiles);
     expect(result).toBeUndefined();
 });
 
@@ -443,6 +443,6 @@ test('checkIDRangesOfSubFiles with multiple files and various scenarios', () => 
         { path: 'file4.json', assetIDRanges: [[100, 110]] },
     ];
 
-    const result = checkIDRangesOfSubFiles(subFiles);
+    const result = checkIDRangesAndPathsOfSubFiles(subFiles);
     expect(result).toBeUndefined();
 });
