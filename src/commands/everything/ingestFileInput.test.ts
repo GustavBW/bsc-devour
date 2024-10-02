@@ -217,7 +217,7 @@ test('verifyIngestFile should return error on missing settings field', async () 
 test('verifySubFileIDAssignments should return undefined on valid input', async () => {
     const testSubFile: SettingsSubFile = {
         path: 'somePathPathIsNotVerifiedInThisFunction',
-        idRanges: [
+        assetIDRanges: [
             [1, 10],
             [20, 30],
         ],
@@ -232,7 +232,7 @@ test('verifySubFileIDAssignments should return undefined on valid input', async 
 test('verifySubFileIDAssignments with unknown asset type', () => {
     const subFile: SettingsSubFile = {
         path: 'test.json',
-        idRanges: [[1, 10]],
+        assetIDRanges: [[1, 10]],
     };
     const script: AutoIngestSubScript = {
         assets: [
@@ -250,7 +250,7 @@ test('verifySubFileIDAssignments with unknown asset type', () => {
 test('verifySubFileIDAssignments with multiple ID ranges', () => {
     const subFile: SettingsSubFile = {
         path: 'test.json',
-        idRanges: [
+        assetIDRanges: [
             [1, 10],
             [20, 30],
         ],
@@ -277,7 +277,7 @@ test('verifySubFileIDAssignments with multiple ID ranges', () => {
 test('verifySubFileIDAssignments with invalid collection asset ID', () => {
     const subFile: SettingsSubFile = {
         path: 'test.json',
-        idRanges: [[1, 10]],
+        assetIDRanges: [[1, 10]],
     };
     const script: AutoIngestSubScript = {
         assets: [
@@ -297,7 +297,7 @@ test('verifySubFileIDAssignments with invalid collection asset ID', () => {
 test('verifySubFileIDAssignments with invalid single asset ID', () => {
     const subFile: SettingsSubFile = {
         path: 'test.json',
-        idRanges: [[1, 10]],
+        assetIDRanges: [[1, 10]],
     };
     const script: AutoIngestSubScript = {
         assets: [
@@ -317,7 +317,7 @@ test('verifySubFileIDAssignments with invalid single asset ID', () => {
 test('verifySubFileIDAssignments with valid collection asset', () => {
     const subFile: SettingsSubFile = {
         path: 'test.json',
-        idRanges: [[1, 10]],
+        assetIDRanges: [[1, 10]],
     };
     const script: AutoIngestSubScript = {
         assets: [
@@ -336,7 +336,7 @@ test('verifySubFileIDAssignments with valid collection asset', () => {
 test('verifySubFileIDAssignments with valid single asset', () => {
     const subFile: SettingsSubFile = {
         path: 'test.json',
-        idRanges: [[1, 10]],
+        assetIDRanges: [[1, 10]],
     };
     const script: AutoIngestSubScript = {
         assets: [
@@ -356,14 +356,14 @@ test('checkIDRangesOfSubFiles with non-overlapping ranges', () => {
     const subFiles: SettingsSubFile[] = [
         {
             path: 'file1.json',
-            idRanges: [
+            assetIDRanges: [
                 [1, 10],
                 [20, 30],
             ],
         },
         {
             path: 'file2.json',
-            idRanges: [
+            assetIDRanges: [
                 [40, 50],
                 [60, 70],
             ],
@@ -378,14 +378,14 @@ test('checkIDRangesOfSubFiles with overlapping ranges between files', () => {
     const subFiles: SettingsSubFile[] = [
         {
             path: 'file1.json',
-            idRanges: [
+            assetIDRanges: [
                 [1, 10],
                 [20, 30],
             ],
         },
         {
             path: 'file2.json',
-            idRanges: [
+            assetIDRanges: [
                 [25, 35],
                 [40, 50],
             ],
@@ -399,8 +399,8 @@ test('checkIDRangesOfSubFiles with overlapping ranges between files', () => {
 
 test('checkIDRangesOfSubFiles with duplicate paths', () => {
     const subFiles: SettingsSubFile[] = [
-        { path: 'file1.json', idRanges: [[1, 10]] },
-        { path: 'file1.json', idRanges: [[20, 30]] },
+        { path: 'file1.json', assetIDRanges: [[1, 10]] },
+        { path: 'file1.json', assetIDRanges: [[20, 30]] },
     ];
 
     const result = checkIDRangesOfSubFiles(subFiles);
@@ -412,7 +412,7 @@ test('checkIDRangesOfSubFiles with overlapping ranges within the same file - whi
     const subFiles: SettingsSubFile[] = [
         {
             path: 'file1.json',
-            idRanges: [
+            assetIDRanges: [
                 [1, 10],
                 [5, 15],
             ],
@@ -427,20 +427,20 @@ test('checkIDRangesOfSubFiles with multiple files and various scenarios', () => 
     const subFiles: SettingsSubFile[] = [
         {
             path: 'file1.json',
-            idRanges: [
+            assetIDRanges: [
                 [1, 10],
                 [20, 30],
             ],
         },
-        { path: 'file2.json', idRanges: [[40, 50]] },
+        { path: 'file2.json', assetIDRanges: [[40, 50]] },
         {
             path: 'file3.json',
-            idRanges: [
+            assetIDRanges: [
                 [60, 70],
                 [80, 90],
             ],
         },
-        { path: 'file4.json', idRanges: [[100, 110]] },
+        { path: 'file4.json', assetIDRanges: [[100, 110]] },
     ];
 
     const result = checkIDRangesOfSubFiles(subFiles);

@@ -1,6 +1,7 @@
 import { anyOfConstants, optionalType, typedArray, typedTuple } from '../runtimeTypeChecker/type';
 import { Type, type TypeDeclaration } from '../runtimeTypeChecker/superMetaTypes';
 import { AssetUseCase, DBDSN_TYPEDECL, type DBDSN, type TransformDTO } from './types';
+import Structure from '../runtimeTypeChecker/structure';
 
 export enum IngestFileAssetType {
     SINGLE = 'single',
@@ -69,12 +70,17 @@ export type IngestFileCollectionField = {
 };
 export type SettingsSubFile = {
     path: string;
-    idRanges: [number, number][];
+    assetIDRanges?: [number, number][];
+    collectionIDRanges?: [number, number][];
 };
-export const INGEST_FILE_SUB_FILE_TYPEDECL: TypeDeclaration = {
+export const INGEST_FILE_SUB_FILE_TYPEDECL: TypeDeclaration = Structure([
+    Structure.atLeastOneOf({
+        assetIDRanges: typedArray(typedTuple([Type.INTEGER, Type.INTEGER])),
+        collectionIDRanges: typedArray(typedTuple([Type.INTEGER, Type.INTEGER])),
+    })
+])({
     path: Type.STRING,
-    idRanges: typedArray(typedTuple([Type.INTEGER, Type.INTEGER])),
-};
+});
 // Create the discriminated union
 export type IngestFileAssetEntry = IngestFileSingleAsset | IngestFileCollectionAsset;
 export type IngestFileSettings = {
