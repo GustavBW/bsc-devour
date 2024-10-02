@@ -214,11 +214,11 @@ export const checkIDRangesOfSubFiles = (subFiles: SettingsSubFile[], context?: A
                 );
                 return 'Duplicate path in sub-files ' + i + ' and ' + j + ', path of first:' + subFileA.path;
             }
-            for (let k = 0; k < subFileA.idRanges.length; k++) {
-                const rangeASubFileA = subFileA.idRanges[k];
+            for (let k = 0; k < subFileA.assetIDRanges!.length; k++) {
+                const rangeASubFileA = subFileA.assetIDRanges![k];
 
-                for (let m = 0; m < subFileB.idRanges.length; m++) {
-                    const rangeBSubFileB = subFileB.idRanges[m];
+                for (let m = 0; m < subFileB.assetIDRanges!.length; m++) {
+                    const rangeBSubFileB = subFileB.assetIDRanges![m];
                     if (rangeASubFileA[0] <= rangeBSubFileB[1] && rangeASubFileA[1] >= rangeBSubFileB[0]) {
                         context?.logger.log(
                             '[if-verifier] ID range overlap between sub-file ' +
@@ -254,7 +254,7 @@ export const verifySubFileIDAssignments = (
             return 'Unknown asset type in sub-file. Unable to verify ID assignment.';
         }
         let isOkay = false;
-        for (const range of subFile.idRanges) {
+        for (const range of subFile.assetIDRanges!) {
             if (id >= range[0] && id <= range[1]) {
                 isOkay = true;
             }
@@ -268,7 +268,7 @@ export const verifySubFileIDAssignments = (
                 subFile.path +
                 ' is not within assigned id ranges.\n\t' +
                 'Ranges (inclusive): ' +
-                subFile.idRanges.map((range) => '[' + range[0] + '->' + range[1] + ']').join(', ')
+                subFile.assetIDRanges!.map((range) => '[' + range[0] + '->' + range[1] + ']').join(', ')
             );
         }
     }
