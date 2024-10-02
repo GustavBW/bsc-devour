@@ -36,13 +36,17 @@ export type TypeDeclaration = {
     [key: string]: Type | FieldValidatorFunction | TypeDeclaration;
 } & {
     /**
-     * Storage of other assorted data. Fx. Structural Constraints
+     * Storage of other assorted data. Fx. Structural Constraints.
+     * 
+     * Sometimes exist, but does not count towards the type check, as usually done on the entire TypeDeclaration object.
      * @since 0.1.0
      */
-    ____$rtcNoTouch?: {
+    [__rtcInternalSupportiveField]?: {
         structuralConstraints: StructuralConstraint[];
     };
 };
+
+export const __rtcInternalSupportiveField = '____$rtcNoTouch';
 
 export type AbstractValidator = TypeDeclaration | FieldValidatorFunction | Type;
 

@@ -1,7 +1,7 @@
 import { IMAGE_TYPES, ImageFileType, type Error, type ImageMIMEType, type ResErr } from '../ts/metaTypes';
 import { joinOmitSeperatorOnLast } from './arrayUtil';
 import { stringifyAllButKeys } from './jsonUtil';
-import { MetaType, Type, type AbstractValidator, type FieldValidatorFunction, type TypeDeclaration } from './superMetaTypes';
+import { __rtcInternalSupportiveField, MetaType, Type, type AbstractValidator, type FieldValidatorFunction, type TypeDeclaration } from './superMetaTypes';
 
 export const isValidFloat = (arg: any): boolean => {
     return isValidNumber(Number.parseFloat(arg));
@@ -50,7 +50,7 @@ export const conformsToType = <T>(object: T, topLevelValidator: TypeDeclaration 
     if (typeof topLevelValidator === 'string') {
         // If the type declaration is a string, check the object's type.
         if (!validateSimpleType(topLevelValidator, object)) {
-            return `Object is expected to be of type "${topLevelValidator}", observed value: ${object}`;
+            return `Object is expected to be of type "${topLevelValidator}", observed value: ${JSON.stringify(object)}`;
         }
         return null;
     }
@@ -58,7 +58,7 @@ export const conformsToType = <T>(object: T, topLevelValidator: TypeDeclaration 
     if (typeof topLevelValidator === 'function') {
         // If the type declaration is a function, use it to validate the object.
         if (!topLevelValidator(object)) {
-            return `Object does not conform to the expected "${topLevelValidator.typeString}", observed value: ${object}`;
+            return `Object does not conform to the expected "${topLevelValidator.typeString}", observed value: ${JSON.stringify(object)}`;
         }
         return null;
     }
@@ -69,8 +69,8 @@ export const conformsToType = <T>(object: T, topLevelValidator: TypeDeclaration 
 
     //If not function nor simple type, then it has to be a TypeDeclaration
     //Structural constraint check
-    if (topLevelValidator.____$rtcNoTouch) {
-        for (const constraint of topLevelValidator.____$rtcNoTouch.structuralConstraints) {
+    if (topLevelValidator[__rtcInternalSupportiveField]) {
+        for (const constraint of topLevelValidator[__rtcInternalSupportiveField].structuralConstraints) {
             const error = constraint(object, topLevelValidator);
             if (error) {
                 return 'Structural issue:\n\t' + error;
@@ -79,7 +79,7 @@ export const conformsToType = <T>(object: T, topLevelValidator: TypeDeclaration 
     }
 
     //And now for the actual check of field values
-    for (const key of Object.keys(topLevelValidator)) {
+    for (const key of Object.keys(topLevelValidator).filter((key) => key !== __rtcInternalSupportiveField)) {
         const validator = topLevelValidator[key];
         const value = object[key as keyof T];
 
@@ -92,21 +92,37 @@ export const conformsToType = <T>(object: T, topLevelValidator: TypeDeclaration 
 };
 
 export const executeValidatorForValue = (value: any, key: any, validator: AbstractValidator): Error | undefined => {
+    if (!validator || validator === null) {
+        return "Internal error, validator is null or undefined";
+    }
+
+    if (key === __rtcInternalSupportiveField) {
+        return undefined;
+    }
+    
     if (typeof validator === 'object') {
+        console.log("[delete me] execute validator for value validator is object, value is: ", value, " key is: ", key, " validator is: ", validator);
         // TypeDeclaration contains a TypeDeclaration
         const nestedError = conformsToType(value, validator as TypeDeclaration);
+        console.log("[delete me] execute validator for value nested error: ", nestedError);
         if (nestedError !== null) {
             return `Field ${key} failed nested type check:\n\t${nestedError}`;
         }
     } else if (typeof validator === 'function') {
+        console.log("[delete me] execute validator for value validator is function, value is: ", value, " key is: ", key, " validator is: ", validator);
         // If the type declaration is a function, use it to validate the field.
-        if (!validator(value)) {
-            return `Field ${key} does not conform to the expected "${validator.typeString}", observed value: ${value}`;
+        const res = validator(value);
+        console.log("[delete me] execute validator for value res: ", res);
+        if (!res) {
+            return `Field ${key} does not conform to the expected "${validator.typeString}", observed value: ${JSON.stringify(value)}`;
         }
     } else if (typeof validator === 'string') {
+        console.log("[delete me] execute validator for value validator is string, value is: ", value, " key is: ", key, " validator is: ", validator);
         // If the type declaration is a Type enum, check the value's type.
-        if (!validateSimpleType(validator, value)) {
-            return `Field ${key} is expected to exist and be of type "${validator}" but had value: ${value}`;
+        const res = validateSimpleType(validator, value);
+        console.log("[delete me] execute validator for value res: ", res);
+        if (!res) {
+            return `Field ${key} is expected to exist and be of type "${validator}" but had value: ${JSON.stringify(value)}`;
         }
     }
 };
@@ -156,7 +172,7 @@ export const optionalType = (validator: AbstractValidator): FieldValidatorFuncti
     if (typeof validator === 'string') {
         wrappedValidator.typeString = '(' + validator + ')?';
     } else if (typeof validator === 'object') {
-        wrappedValidator.typeString = stringifyAllButKeys(validator, ["____$rtcNoTouch"]) + '?';
+        wrappedValidator.typeString = stringifyAllButKeys(validator, [__rtcInternalSupportiveField]) + '?';
     } else if (typeof validator === 'function') {
         wrappedValidator.typeString = '(' + validator.typeString + ')?';
     }
@@ -186,7 +202,7 @@ export const typeUnionOR = (...validators: AbstractValidator[]): FieldValidatorF
             if (typeof validator === 'string') {
                 return validator;
             } else if (typeof validator === 'object') {
-                return stringifyAllButKeys(validator, ["____$rtcNoTouch"]);
+                return stringifyAllButKeys(validator, [__rtcInternalSupportiveField]);
             } else {
                 return validator.typeString;
             }
@@ -225,7 +241,7 @@ export const typedTuple = (validators: AbstractValidator[]): FieldValidatorFunct
                 if (typeof validator === 'string') {
                     return validator;
                 } else if (typeof validator === 'object') {
-                    return stringifyAllButKeys(validator, ["____$rtcNoTouch"]);
+                    return stringifyAllButKeys(validator, [__rtcInternalSupportiveField]);
                 } else {
                     return validator.typeString;
                 }
@@ -261,7 +277,7 @@ export const typedArray = (validator: AbstractValidator): FieldValidatorFunction
     if (typeof validator === 'string') {
         wrappedValidator.typeString = validator + '[]';
     } else if (typeof validator === 'object') {
-        wrappedValidator.typeString = stringifyAllButKeys(validator, ["____$rtcNoTouch"]) + '[]';
+        wrappedValidator.typeString = stringifyAllButKeys(validator, [__rtcInternalSupportiveField]) + '[]';
     } else if (typeof validator === 'function') {
         wrappedValidator.typeString = '(' + validator.typeString + ')[]';
     }

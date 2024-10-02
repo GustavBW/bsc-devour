@@ -1,6 +1,6 @@
 import type { Error } from '../ts/metaTypes';
 import { joinOmitSeperatorOnLast } from './arrayUtil';
-import type { AbstractValidator, FieldValidatorFunction, StructuralConstraint, StructureEntryPoint, Type, TypeDeclaration } from './superMetaTypes';
+import { __rtcInternalSupportiveField, type AbstractValidator, type FieldValidatorFunction, type StructuralConstraint, type StructureEntryPoint, type Type, type TypeDeclaration } from './superMetaTypes';
 import { executeValidatorForValue } from './type';
 
 export const validateExactlyOneOf = <T>(target: T, typeDeclaration: TypeDeclaration): Error | undefined => {
@@ -23,16 +23,20 @@ export const validateExactlyOneOf = <T>(target: T, typeDeclaration: TypeDeclarat
 };
 
 export const validateAtLeastOneOf = <T>(target: T, typeDeclaration: TypeDeclaration): Error | undefined => {
-    console.error("[delete me] validateAtLeastOneOf");
+    console.error("[delete me] validateAtLeastOneOf, target is: ", target);
     const keysOfDeclaration = Object.keys(typeDeclaration);
     let keysFound = Object.keys(target as any).filter((key) => keysOfDeclaration.includes(key));
     if (keysFound.length <= 0) {
         return 'Expected at least 1 of "' + joinOmitSeperatorOnLast(keysOfDeclaration) + '" present, but found none';
     }
 
+    console.log("[delete me] validateAtLeastOneOf keysFound: ", keysFound);
+
     //Execute validator
     for (const key of keysFound) {
-        console.error("[delete me] validateAtLeastOneOf validator check on all keys");
+        console.log("[delete me] validateAtLeastOneOf validator check on all keys, target: ", target, " key: ", key, " typeDeclaration: ", typeDeclaration);
+        const validator = typeDeclaration[key];
+        console.log("[delete me] function: ", JSON.stringify(validator) + " " + typeof validator);
         const error = executeValidatorForValue(target[key as keyof T], key, typeDeclaration[key]);
         if (error) {
             return error;
@@ -81,7 +85,7 @@ export const validateAtMostOneOf = <T>(target: T, typeDeclaration: TypeDeclarati
 export const Structure: StructureEntryPoint = Object.assign(
     (constraints: StructuralConstraint[]) => {
         return (baseDeclaration: TypeDeclaration): TypeDeclaration => {
-            baseDeclaration.____$rtcNoTouch = {
+            baseDeclaration[__rtcInternalSupportiveField] = {
                 structuralConstraints: constraints,
             };
             return baseDeclaration;
