@@ -1,55 +1,87 @@
 {
     "assets": [
         {
-            "type": "single", "useCase": "structure", "single": {
-                "width": 100, "height": 100,
-                "id": 2001, "source": "./default/structures/tempHouse.svg"    
+            "type": "single",
+            "useCase": "structure",
+            "single": {
+                "width": 100,
+                "height": 100,
+                "id": 2001,
+                "source": "./default/structures/tempHouse.svg"
             }
         },
         {
-            "type": "single", "useCase": "structure", "single": {
-                "width": 283, "height": 301,
-                "id": 2002, "source": "./default/structures/Oxygen-Generator.svg"
+            "type": "single",
+            "useCase": "structure",
+            "single": {
+                "width": 283,
+                "height": 301,
+                "id": 2002,
+                "source": "./default/structures/Oxygen-Generator.svg"
             }
         },
         {
-            "type": "single", "useCase": "structure", "single": {
-                "id": 2003, "source": "./default/structures/Outer-Walls.png"
+            "type": "single",
+            "useCase": "structure",
+            "single": {
+                "id": 2003,
+                "source": "./default/structures/Outer-Walls.png"
             }
         },
         {
-            "type": "single", "useCase": "structure", "single": {
-                "id": 2004, "source": "./default/structures/Outer-Walls.png"
+            "type": "single",
+            "useCase": "structure",
+            "single": {
+                "id": 2004,
+                "source": "./default/structures/Outer-Walls.png"
             }
         },
         {
-            "type": "single", "useCase": "structure", "single": {
-                "id": 2005, "source": "./default/structures/Outer-Walls.png"
+            "type": "single",
+            "useCase": "structure",
+            "single": {
+                "id": 2005,
+                "source": "./default/structures/Outer-Walls.png"
             }
         },
         {
-            "type": "single", "useCase": "structure", "single": {
-                "id": 2006, "source": "./default/structures/Outer-Walls.png"
+            "type": "single",
+            "useCase": "structure",
+            "single": {
+                "id": 2006,
+                "source": "./default/structures/Outer-Walls.png"
             }
         },
         {
-            "type": "single", "useCase": "structure", "single": {
-                "id": 2007, "source": "./default/structures/Outer-Walls.png"
+            "type": "single",
+            "useCase": "structure",
+            "single": {
+                "id": 2007,
+                "source": "./default/structures/Outer-Walls.png"
             }
         },
         {
-            "type": "single", "useCase": "structure", "single": {
-                "id": 2008, "source": "./default/structures/Town-Hall.png"
+            "type": "single",
+            "useCase": "structure",
+            "single": {
+                "id": 2008,
+                "source": "./default/structures/Town-Hall.png"
             }
         },
         {
-            "type": "single", "useCase": "structure", "single": {
-                "id": 2009, "source": "./default/structures/Space-Port.png"
+            "type": "single",
+            "useCase": "structure",
+            "single": {
+                "id": 2009,
+                "source": "./default/structures/Space-Port.png"
             }
         },
         {
-            "type": "single", "useCase": "structure", "single": {
-                "id": 2010, "source": "./default/structures/Home.png"
+            "type": "single",
+            "useCase": "structure",
+            "single": {
+                "id": 2010,
+                "source": "./default/structures/Home.png"
             }
         },
         {

@@ -1,16 +1,16 @@
 {
     "settings": {
-        "version": "0.0.1", 
-        "maxLOD": 6, 
+        "version": "0.0.1",
+        "maxLOD": 6,
         "LODThreshold": 10,
-        "allowedFailures": 0, 
+        "allowedFailures": 0,
         "dsn": {
-                "host": "localhost",
-                "port": 8432,
-                "user": "devour",
-                "password": "d3v0urP4ssw0rd",
-                "dbName": "ColonyAndAssets",
-                "sslMode": "disable"
+            "host": "localhost",
+            "port": 8432,
+            "user": "devour",
+            "password": "d3v0urP4ssw0rd",
+            "dbName": "ColonyAndAssets",
+            "sslMode": "disable"
         },
         "subFiles": [
             {
@@ -43,7 +43,5 @@
             }
         ]
     },
-    "assets": [
-        
-    ]
+    "assets": []
 }
