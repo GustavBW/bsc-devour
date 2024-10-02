@@ -83,6 +83,31 @@
             "type": "single", "useCase": "splashArt", "single": {
                 "id": 5011, "source": "./default/splashArt/Aquifer-Plant-Splash.png"
             }
+        },
+        {
+            "type": "single", "useCase": "splashArt", "single": {
+                "id": 5012, "source": "./default/splashArt/Agriculture-Center-Splash.png"
+            }
+        },
+        {
+            "type": "single", "useCase": "splashArt", "single": {
+                "id": 5013, "source": "./default/splashArt/Vehicle-Storage-Splash.png"
+            }
+        },
+        {
+            "type": "single", "useCase": "splashArt", "single": {
+                "id": 5014, "source": "./default/splashArt/Cantina-Splash.png"
+            }
+        },
+        {
+            "type": "single", "useCase": "splashArt", "single": {
+                "id": 5015, "source": "./default/splashArt/Radar-Dish-Splash.png"
+            }
+        },
+        {
+            "type": "single", "useCase": "splashArt", "single": {
+                "id": 5016, "source": "./default/splashArt/Mining-Facility-Splash.png"
+            }
         }
     ]
 }
