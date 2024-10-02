@@ -1,5 +1,6 @@
 import { IMAGE_TYPES, ImageFileType, type Error, type ImageMIMEType, type ResErr } from '../ts/metaTypes';
 import { joinOmitSeperatorOnLast } from './arrayUtil';
+import { stringifyAllButKeys } from './jsonUtil';
 import { MetaType, Type, type AbstractValidator, type FieldValidatorFunction, type TypeDeclaration } from './superMetaTypes';
 
 export const isValidFloat = (arg: any): boolean => {
@@ -155,7 +156,7 @@ export const optionalType = (validator: AbstractValidator): FieldValidatorFuncti
     if (typeof validator === 'string') {
         wrappedValidator.typeString = '(' + validator + ')?';
     } else if (typeof validator === 'object') {
-        wrappedValidator.typeString = JSON.stringify(validator) + '?';
+        wrappedValidator.typeString = stringifyAllButKeys(validator, ["____$rtcNoTouch"]) + '?';
     } else if (typeof validator === 'function') {
         wrappedValidator.typeString = '(' + validator.typeString + ')?';
     }
@@ -185,7 +186,7 @@ export const typeUnionOR = (...validators: AbstractValidator[]): FieldValidatorF
             if (typeof validator === 'string') {
                 return validator;
             } else if (typeof validator === 'object') {
-                return JSON.stringify(validator);
+                return stringifyAllButKeys(validator, ["____$rtcNoTouch"]);
             } else {
                 return validator.typeString;
             }
@@ -224,7 +225,7 @@ export const typedTuple = (validators: AbstractValidator[]): FieldValidatorFunct
                 if (typeof validator === 'string') {
                     return validator;
                 } else if (typeof validator === 'object') {
-                    return JSON.stringify(validator);
+                    return stringifyAllButKeys(validator, ["____$rtcNoTouch"]);
                 } else {
                     return validator.typeString;
                 }
@@ -260,7 +261,7 @@ export const typedArray = (validator: AbstractValidator): FieldValidatorFunction
     if (typeof validator === 'string') {
         wrappedValidator.typeString = validator + '[]';
     } else if (typeof validator === 'object') {
-        wrappedValidator.typeString = JSON.stringify(validator) + '[]';
+        wrappedValidator.typeString = stringifyAllButKeys(validator, ["____$rtcNoTouch"]) + '[]';
     } else if (typeof validator === 'function') {
         wrappedValidator.typeString = '(' + validator.typeString + ')[]';
     }
