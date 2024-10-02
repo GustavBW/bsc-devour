@@ -56,33 +56,6 @@
         },
         {
             "type": "collection", "useCase": "environment", "collection": {
-                "name": "house",
-                "id": 3, "entries": [
-                    {
-                        "transform": "0 0 1, 1 1",
-                        "graphicalAssetId": 2001
-                    },
-                    {
-                        "transform": "50 50 0, .5 .5",
-                        "graphicalAssetId": 2001
-                    },
-                    {
-                        "transform": "50 -50 0, .5 .5",
-                        "graphicalAssetId": 2001
-                    },
-                    {
-                        "transform": "-50 50 0, .5 .5",
-                        "graphicalAssetId": 2001
-                    },
-                    {
-                        "transform": "-50 -50 0, .5 .5",
-                        "graphicalAssetId": 2001
-                    }
-                ]
-            }
-        },
-        {
-            "type": "collection", "useCase": "environment", "collection": {
                 "name": "Outerwalls-lvl-1",
                 "id": 10, "entries": [
                     {
@@ -138,8 +111,9 @@
         },
         {
             "type": "collection", "useCase": "environment", "collection": {
-                "name": "SpacePort-lvl-1", 
-                "id": 20, "entries": [
+                "name": "SpacePort-lvl-1",
+                "id": 20,
+                "entries": [
                     {
                         "transform": "0 0 1, 1 1",
                         "graphicalAssetId": 2009
@@ -165,6 +139,90 @@
                     {
                         "transform": "0 0 1, 1 1",
                         "graphicalAssetId": 2008
+                    }
+                ]
+            }
+        },
+        {
+            "type": "collection", "useCase": "environment", "collection": {
+                "name": "ShieldGenerators-lvl-1",
+                "id": 50,
+                "entries": [
+                    {
+                        "transform": "0 0 1, 1 1",
+                        "graphicalAssetId": 2011
+                    }
+                ]
+            }
+        },
+        {
+            "type": "collection", "useCase": "environment", "collection": {
+                "name": "AquiferPlant-lvl-1",
+                "id": 60,
+                "entries": [
+                    {
+                        "transform": "0 0 1, 1 1",
+                        "graphicalAssetId": 2003
+                    }
+                ]
+            }
+        },
+        {
+            "type": "collection", "useCase": "environment", "collection": {
+                "name": "AgricultureCenter-lvl-1",
+                "id": 70,
+                "entries": [
+                    {
+                        "transform": "0 0 1, 1 1",
+                        "graphicalAssetId": 2004
+                    }
+                ]
+            }
+        },
+        {
+            "type": "collection", "useCase": "environment", "collection": {
+                "name": "VehicleStorage-lvl-1",
+                "id": 80,
+                "entries": [
+                    {
+                        "transform": "0 0 1, 1 1",
+                        "graphicalAssetId": 2005
+                    }
+                ]
+            }
+        },
+        {
+            "type": "collection", "useCase": "environment", "collection": {
+                "name": "Cantina-lvl-1",
+                "id": 90,
+                "entries": [
+                    {
+                        "transform": "0 0 1, 1 1",
+                        "graphicalAssetId": 2006
+                    }
+                ]
+            }
+        },
+        {
+            "type": "collection", "useCase": "environment", "collection": {
+                "name": "RadarDish-lvl-1",
+                "id": 100,
+                "entries": [
+                    {
+                        "transform": "0 0 1, 1 1",
+                        "graphicalAssetId": 2007
+                    }
+                ]
+            }
+        },
+        {
+            "type": "collection", "useCase": "environment", "collection": {
+                "name": "MiningFacility-lvl-1",
+                "id": 110,
+                "entries": [
+                    {
+                        "transform": "0 0 1, 1 1",
+                        "graphicalAssetId": 2011
                     }
                 ]
             }

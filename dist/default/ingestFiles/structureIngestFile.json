@@ -51,6 +51,16 @@
             "type": "single", "useCase": "structure", "single": {
                 "id": 2010, "source": "./default/structures/Home.png"
             }
+        },
+        {
+            "type": "single", "useCase": "structure", "single": {
+                "id": 2011, "source": "./default/structures/Shield-Generator.png"
+            }
+        },
+        {
+            "type": "single", "useCase": "structure", "single": {
+                "id": 2012, "source": "./default/structures/Aquifer-Plant.png"
+            }
         }
     ]
 }

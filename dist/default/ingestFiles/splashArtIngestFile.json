@@ -45,6 +45,16 @@
             "type": "single", "useCase": "splashArt", "single": {
                 "id": 5009, "source": "./default/splashArt/Town-Hall-Splash.png"
             }
+        },
+        {
+            "type": "single", "useCase": "splashArt", "single": {
+                "id": 5010, "source": "./default/splashArt/Shield-Generator-Splash.png"
+            }
+        },
+        {
+            "type": "single", "useCase": "splashArt", "single": {
+                "id": 5011, "source": "./default/splashArt/Aquifer-Plant-Splash.png"
+            }
         }
     ]
 }
