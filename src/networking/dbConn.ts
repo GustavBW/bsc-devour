@@ -24,7 +24,7 @@ const SQL_UPSERT_GRAPHICAL_ASSET = `
         type = EXCLUDED.type
     RETURNING id;
 `;
-const _uploadAsset = async (asset: UploadableAsset, context: ApplicationContext, conn: pg.Client, cache: ProcessCache): Promise<ResErr<string>> => {
+const _uploadAsset = async (asset: UploadableAsset, context: ApplicationContext, conn: pg.Pool, cache: ProcessCache): Promise<ResErr<string>> => {
     context.logger.log('[db] Uploading asset id: ' + asset.id);
     if (asset.lods.length === 0) {
         context.logger.log('[db] Asset did not have at least 1 LOD', LogLevel.ERROR);
@@ -69,7 +69,7 @@ const _uploadAsset = async (asset: UploadableAsset, context: ApplicationContext,
 type ETag = string;
 type DetailLevel = number;
 type AssetID = number;
-const insertLODS = async (lods: LODDTO[], assetId: number, conn: pg.Client, context: ApplicationContext): Promise<Error | null> => {
+const insertLODS = async (lods: LODDTO[], assetId: number, conn: pg.Pool, context: ApplicationContext): Promise<Error | null> => {
     try {
         const valueTuples: [Buffer, DetailLevel, AssetID, ImageMIMEType, ETag][] = await Promise.all(
             lods.map(async (lod) => {
@@ -118,7 +118,7 @@ RETURNING id
 const _establishCollection = async (
     collection: CollectionSpecification,
     context: ApplicationContext,
-    conn: pg.Client,
+    conn: pg.Pool,
     cache: ProcessCache,
 ): Promise<ResErr<string>> => {
     let res;
@@ -136,7 +136,7 @@ const _establishCollection = async (
         res = await conn.query<{ id: number }>(SQL_UPSERT_ASSET_COLLECTION, [collection.id, collection.name, collection.useCase]);
 
         if (doesPreviousExist.rows.length > 0) {
-            context.logger.log('[db] Collection already exists, removing previous collection entries', LogLevel.WARNING);
+            context.logger.log('[db] Collection already exists, updating...', LogLevel.INFO);
             const removeEntriesRes = await conn.query(`DELETE FROM "CollectionEntry" WHERE "assetCollection" = $1 RETURNING transform`, [
                 collection.id,
             ]);
@@ -179,7 +179,7 @@ const _establishCollection = async (
 const insertCollectionEntry = async (
     collectionId: number,
     entry: CollectionEntryDTO,
-    conn: pg.Client,
+    conn: pg.Pool,
     context: ApplicationContext,
     cache: ProcessCache,
 ): Promise<Error | null> => {
@@ -217,7 +217,7 @@ const insertCollectionEntry = async (
  * @param context
  * @returns the assigned id of the transform
  */
-const insertTransform = async (transform: TransformDTO, conn: pg.Client, context: ApplicationContext): Promise<ResErr<number>> => {
+const insertTransform = async (transform: TransformDTO, conn: pg.Pool, context: ApplicationContext): Promise<ResErr<number>> => {
     let transformRes;
     try {
         transformRes = await conn.query<{ id: number }>(
@@ -242,7 +242,7 @@ type ClearResult = {
     aliasOfFormer: string;
 };
 const NO_ALIAS_FOUND = 'No alias found';
-const clearExistingContent = async (graphicalAssetId: number, context: ApplicationContext, client: pg.Client): Promise<ResErr<ClearResult>> => {
+const clearExistingContent = async (graphicalAssetId: number, context: ApplicationContext, client: pg.Pool): Promise<ResErr<ClearResult>> => {
     context.logger.log('[db] Clearing existing content for asset id: ' + graphicalAssetId);
 
     let deleteLODsRes, getAssetAliasRes;
@@ -307,7 +307,7 @@ export const DB_SINGLETON: DB = {
 /**
  * @throws THROWS!
  */
-const tableCheck = async (conn: pg.Client, context: ApplicationContext): Promise<void> => {
+const tableCheck = async (conn: pg.Pool, context: ApplicationContext): Promise<void> => {
     //look for the following tables: LOD, GraphicAsset, CollectionEntry, & AssetCollection
     //if any of them are missing, let it throw
     context.logger.log('[db] Checking for required tables in the database');
@@ -340,18 +340,20 @@ export type ProcessCache = {
 
 async function connectDB(dsn: DBDSN, context: ApplicationContext): Promise<Error | null> {
     context.logger.log(`[db] Connecting to database, host: ${dsn.host}, port: ${dsn.port}, name: ${dsn.dbName}, credentials: ${dsn.user} ****`);
-    const { Client } = pg;
-    const client = new Client({
+    const { Pool } = pg;
+    const pool = new Pool({
         user: dsn.user,
         host: dsn.host,
         database: dsn.dbName,
         password: dsn.password,
         port: dsn.port,
         ssl: dsn.sslMode === 'require' ? { rejectUnauthorized: false } : false,
+        max: 50, // maximum number of clients in the pool
+        idleTimeoutMillis: 30000,
     });
 
     try {
-        await client.connect();
+        await pool.connect();
     } catch (anything) {
         context.logger.log('[db] Connection failed: ' + JSON.stringify(anything));
         return anything as string;
@@ -360,7 +362,7 @@ async function connectDB(dsn: DBDSN, context: ApplicationContext): Promise<Error
 
     //Check connection
     try {
-        await tableCheck(client, context);
+        await tableCheck(pool, context);
     } catch (error) {
         //Just making sure a string is returned regardless of what the postgres lib might throw (they don't indicate what they throw, and what methods throws...)
         return JSON.stringify(error);
@@ -372,8 +374,8 @@ async function connectDB(dsn: DBDSN, context: ApplicationContext): Promise<Error
 
     DB_SINGLETON.instance = {
         dsn: dsn, //Using a closure here to act like a private field in the object
-        uploadAsset: (uploadableAsset) => _uploadAsset(uploadableAsset, context, client, processCache),
-        establishCollection: (collection) => _establishCollection(collection, context, client, processCache),
+        uploadAsset: (uploadableAsset) => _uploadAsset(uploadableAsset, context, pool, processCache),
+        establishCollection: (collection) => _establishCollection(collection, context, pool, processCache),
     };
 
     return null;

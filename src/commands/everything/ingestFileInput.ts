@@ -1,6 +1,7 @@
 import { LogLevel } from '../../logging/simpleLogger';
 import { readUrlArg } from '../../processing/cliInputProcessor';
 import { processIngestFile } from '../../processing/ingestProcessor';
+import { joinOmitSeperatorOnLast } from '../../runtimeTypeChecker/arrayUtil.ts';
 import { conformsToType } from '../../runtimeTypeChecker/type.ts';
 import {
     INGEST_FILE_SUB_FILE_TYPEDECL,
@@ -126,7 +127,7 @@ const handleSubFiles = async (
         return { result: null, error: rangeCheckError };
     }
     const verifiedSubFiles: PreparedAutoIngestSubScript[] = [];
-    for (const subFileDeclaration of subFiles) {
+    const results = (await Promise.all(subFiles.map(async (subFileDeclaration) => {
         context.logger.logAndPrint('[if_cmd] Verifying sub-file: ' + subFileDeclaration.path);
         const typeCheckError = conformsToType(subFileDeclaration, INGEST_FILE_SUB_FILE_TYPEDECL);
         if (typeCheckError !== null) {
@@ -150,10 +151,24 @@ const handleSubFiles = async (
             return { result: null, error: idCheckError };
         }
         const ingestScript = result as AutoIngestSubScript;
-        verifiedSubFiles.push({
+        return {result: {
             path: subFileDeclaration.path,
             assets: ingestScript.assets,
-        });
+        }, error: null};
+    })));
+
+    const errors = [];
+    for (const res of results) {
+        if (res.error !== null) {
+            errors.push(res.error);
+        } else {
+            verifiedSubFiles.push(res.result);
+        }
     }
+
+    if (errors.length > 0) {
+        return { result: null, error: 'Errors in sub-files: ' + joinOmitSeperatorOnLast(errors, ', ') };
+    }
+
     return { result: verifiedSubFiles, error: null };
 };
