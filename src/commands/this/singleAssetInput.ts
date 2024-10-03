@@ -10,8 +10,8 @@ import {
 import { type ApplicationContext, type CLIFunc, type ResErr } from '../../ts/metaTypes.ts';
 import { UNIT_TRANSFORM, AssetUseCase, type DBDSN, type TransformDTO } from '../../ts/types.ts';
 import { LogLevel } from '../../logging/simpleLogger.ts';
-import { prepareSingleAssetForUpload } from '../../processing/ingestProcessor.ts';
-import type { IngestFileSettings, IngestFileSingleAssetField } from '../../ts/ingestFileTypes.ts';
+import { prepareSingleAssetForUpload, type TracableAssetEntry } from '../../processing/ingestProcessor.ts';
+import { IngestFileAssetType, type IngestFileSettings, type IngestFileSingleAssetField } from '../../ts/ingestFileTypes.ts';
 
 /**
  * @author GustavBW
@@ -127,12 +127,17 @@ const handleSingleAssetCLIInput = async (args: string[], context: ApplicationCon
         allowedFailures: 0,
         maxLOD: 0,
     };
-    const singleAsset: IngestFileSingleAssetField = {
-        id: id,
-        alias: alias,
-        source: url,
-        width: transform.xScale,
-        height: transform.yScale,
+    const singleAsset: TracableAssetEntry = {
+        type: IngestFileAssetType.SINGLE,
+        originFile: 'cli',
+        useCase: useCase,
+        single: {
+            id: id,
+            alias: alias,
+            source: url,
+            width: transform.xScale,
+            height: transform.yScale,
+        }
     };
 
     // Prepare for upload
