@@ -187,6 +187,12 @@
                 "id": 1021,
                 "source": "./default/icons/Asteroids-Minigame-Icon.png"
             }
+        },
+        {
+            "type": "single", "useCase": "icon", "single": {
+                "id": 1022,
+                "source": "./default/icons/globeIcon.png"
+            }
         }
     ]
 }
