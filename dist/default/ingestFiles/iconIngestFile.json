@@ -193,6 +193,12 @@
                 "id": 1022,
                 "source": "./default/icons/globeIcon.png"
             }
+        },
+        {
+            "type": "single", "useCase": "icon", "single": {
+                "id": 1023,
+                "source": "./default/icons/noConnectionIcon.png"
+            }
         }
     ]
 }
