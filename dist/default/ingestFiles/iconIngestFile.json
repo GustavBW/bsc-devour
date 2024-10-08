@@ -199,6 +199,30 @@
                 "id": 1023,
                 "source": "./default/icons/noConnectionIcon.png"
             }
+        },
+        {
+            "type": "single", "useCase": "icon", "single": {
+                "id": 1024,
+                "source": "./default/icons/actionContextNavigationIcon.png"
+            }
+        },
+        {
+            "type": "single", "useCase": "icon", "single": {
+                "id": 1025,
+                "source": "./default/icons/actionContextInteraction.png"
+            }
+        },
+        {
+            "type": "single", "useCase": "icon", "single": {
+                "id": 1026,
+                "source": "./default/icons/targetIcon.png"
+            }
+        },
+        {
+            "type": "single", "useCase": "icon", "single": {
+                "id": 1027,
+                "source": "./default/icons/actionContextHourglassIcon.png"
+            }
         }
     ]
 }
