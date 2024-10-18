@@ -40,6 +40,10 @@
             {
                 "path": "./default/ingestFiles/locationCollectionIngestFile.json",
                 "assetIDRanges": [[1, 1000]]
+            },
+            {
+                "path": "./default/ingestFiles/minigames/asteroidsMinigame/asteroidMinigameIngetsFile.json",
+                "assetIDRanges": [[7001, 8000]]
             }
         ]
     },
