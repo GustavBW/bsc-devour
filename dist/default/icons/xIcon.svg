@@ -1,0 +1,8 @@
+<svg id="x-mark" width="100" height="100" stroke="white" strokeWidth="2" fill="white" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+  <path d="M 0 0 L 0 5 L 47.5 50 
+      L 0 95 L 0 100 L 5 100 L 50 52.5
+      L 95 100 L 100 100 L 100 95 L 52.5 50
+      L 100 5 L 100 0 L 95 0 L 50 47.5
+      L 5 0 Z
+      "/>
+</svg>
