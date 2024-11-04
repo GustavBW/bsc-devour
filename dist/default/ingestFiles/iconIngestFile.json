@@ -72,7 +72,7 @@
                 "width": 100,
                 "height": 200,
                 "id": 1009,
-                "source": "./default/icons/tempLocationPin.svg"
+                "source": "./default/icons/LocationPin.png"
             }
         },
         {
@@ -189,51 +189,79 @@
             }
         },
         {
-            "type": "single", "useCase": "icon", "single": {
+            "type": "single",
+            "useCase": "icon",
+            "single": {
                 "id": 1022,
                 "source": "./default/icons/globeIcon.png"
             }
         },
         {
-            "type": "single", "useCase": "icon", "single": {
+            "type": "single",
+            "useCase": "icon",
+            "single": {
                 "id": 1023,
                 "source": "./default/icons/noConnectionIcon.png"
             }
         },
         {
-            "type": "single", "useCase": "icon", "single": {
+            "type": "single",
+            "useCase": "icon",
+            "single": {
                 "id": 1024,
                 "source": "./default/icons/actionContextNavigationIcon.png"
             }
         },
         {
-            "type": "single", "useCase": "icon", "single": {
+            "type": "single",
+            "useCase": "icon",
+            "single": {
                 "id": 1025,
                 "source": "./default/icons/actionContextInteraction.png"
             }
         },
         {
-            "type": "single", "useCase": "icon", "single": {
+            "type": "single",
+            "useCase": "icon",
+            "single": {
                 "id": 1026,
                 "source": "./default/icons/targetIcon.png"
             }
         },
         {
-            "type": "single", "useCase": "icon", "single": {
+            "type": "single",
+            "useCase": "icon",
+            "single": {
                 "id": 1027,
                 "source": "./default/icons/actionContextHourglassIcon.png"
             }
         },
         {
-            "type": "single", "useCase": "icon", "single": {
-                "id": 1028, "width": 100, "height": 100,
+            "type": "single",
+            "useCase": "icon",
+            "single": {
+                "id": 1028,
+                "width": 100,
+                "height": 100,
                 "source": "./default/icons/xIcon.svg"
             }
         },
-        {   
-            "type": "single", "useCase": "icon", "single": {
-                "id": 1029, "width": 100, "height": 100,
+        {
+            "type": "single",
+            "useCase": "icon",
+            "single": {
+                "id": 1029,
+                "width": 100,
+                "height": 100,
                 "source": "./default/icons/checkmark.svg"
+            }
+        },
+        {
+            "type": "single",
+            "useCase": "icon",
+            "single": {
+                "id": 1030,
+                "source": "./default/icons/VideoIcon.png"
             }
         }
     ]
