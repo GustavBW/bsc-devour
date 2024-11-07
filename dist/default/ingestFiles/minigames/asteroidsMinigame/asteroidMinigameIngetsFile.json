@@ -15,6 +15,14 @@
                 "id": 7002,
                 "source": "./default/minigames/asteroidsMinigame/Cannon.png"
             }
+        },
+        {
+            "type": "single",
+            "useCase": "texture",
+            "single": {
+                "id": 7003,
+                "source": "./default/minigames/asteroidsMinigame/WallTexture.png"
+            }
         }
     ]
 }
