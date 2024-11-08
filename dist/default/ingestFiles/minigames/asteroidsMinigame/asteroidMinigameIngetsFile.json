@@ -23,6 +23,14 @@
                 "id": 7003,
                 "source": "./default/minigames/asteroidsMinigame/WallTexture.png"
             }
+        },
+        {
+            "type": "single",
+            "useCase": "texture",
+            "single": {
+                "id": 7004,
+                "source": "./default/minigames/asteroidsMinigame/BrokenWallTexture.png"
+            }
         }
     ]
 }
