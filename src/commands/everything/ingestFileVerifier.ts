@@ -2,6 +2,7 @@ import { LogLevel } from '../../logging/simpleLogger';
 import { readCompactDSNNotationRaw, readCompactTransformNotationRaw } from '../../processing/cliInputProcessor';
 import { conformsToType } from '../../runtimeTypeChecker/type';
 import {
+    assetTypeFromString,
     INGEST_FILE_COLLECTION_ASSET_TYPEDECL,
     INGEST_FILE_COLLECTION_FIELD_TYPEDECL,
     INGEST_FILE_SETTINGS_TYPEDECL,
@@ -151,11 +152,22 @@ export const verifyIngestFileAssets = (assets: IngestFileAssetEntry[], context?:
     let collectionCount = 1;
     for (let i = 0; i < assets.length; i++) {
         const asset = assets[i];
-        if (!asset.type || asset.type === null) {
-            return 'No type field found in asset nr:' + i;
-        }
         if (!asset.useCase || asset.useCase === null) {
-            return 'No useCase field found in asset nr:' + i;
+            return 'No useCase field found in asset nr: ' + i;
+        }
+        let type = asset.type;
+        if (!type || type === null) {
+            context?.logger.log('[if-verifier] asset id ' + i + ' has no type field. Trying to interpret from object keys', LogLevel.INFO);
+            const matches = Object.keys(asset).map(assetTypeFromString).filter(x => x !== IngestFileAssetType.UNKNOWN);
+            if (matches.length === 0) {
+                return 'Neither type field found in asset nr:' + i + " nor any keys that could be interpreted as asset type. Valid options: " + Object.values(IngestFileAssetType).join(', ');
+            }
+            if (matches.length > 1) {
+                return 'Multiple keys that could be interpreted as asset type in asset nr:' + i + " expected only one of either: " + Object.values(IngestFileAssetType).join(', ');
+            }
+            type = matches[0];
+            asset.type = type;
+            context?.logger.log('[if-verifier] asset id ' + i + ' interpreted type from object keys: ' + asset.type, LogLevel.INFO);
         }
         switch (asset.type) {
             case IngestFileAssetType.SINGLE: {

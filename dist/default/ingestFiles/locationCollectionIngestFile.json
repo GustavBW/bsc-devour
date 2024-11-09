@@ -1,7 +1,6 @@
 {
     "assets": [
         {
-            "type": "collection",
             "useCase": "environment",
             "collection": {
                 "name": "questionMarks",
@@ -31,7 +30,6 @@
             }
         },
         {
-            "type": "collection",
             "useCase": "environment",
             "collection": {
                 "name": "exclamationMarks",
@@ -61,7 +59,7 @@
             }
         },
         {
-            "type": "collection", "useCase": "environment", "collection": {
+            "useCase": "environment", "collection": {
                 "name": "house",
                 "id": 3,
                 "entries": [
@@ -89,7 +87,6 @@
             }
         },
         {
-            "type": "collection",
             "useCase": "environment",
             "collection": {
                 "name": "Outerwalls-lvl-1",
@@ -103,7 +100,6 @@
             }
         },
         {
-            "type": "collection",
             "useCase": "environment",
             "collection": {
                 "name": "Outerwalls-lvl-2",
@@ -117,7 +113,6 @@
             }
         },
         {
-            "type": "collection",
             "useCase": "environment",
             "collection": {
                 "name": "Outerwalls-lvl-3",
@@ -131,7 +126,6 @@
             }
         },
         {
-            "type": "collection",
             "useCase": "environment",
             "collection": {
                 "name": "Outerwalls-lvl-4",
@@ -145,7 +139,6 @@
             }
         },
         {
-            "type": "collection",
             "useCase": "environment",
             "collection": {
                 "name": "Outerwalls-lvl-5",
@@ -159,7 +152,7 @@
             }
         },
         {
-            "type": "collection", "useCase": "environment", "collection": {
+            "useCase": "environment", "collection": {
                 "name": "SpacePort-lvl-1",
                 "id": 20,
                 "entries": [
@@ -171,7 +164,6 @@
             }
         },
         {
-            "type": "collection",
             "useCase": "environment",
             "collection": {
                 "name": "Home-lvl-1",
@@ -185,7 +177,6 @@
             }
         },
         {
-            "type": "collection",
             "useCase": "environment",
             "collection": {
                 "name": "TownHall-lvl-1",
@@ -199,7 +190,7 @@
             }
         },
         {
-            "type": "collection", "useCase": "environment", "collection": {
+            "useCase": "environment", "collection": {
                 "name": "ShieldGenerators-lvl-1",
                 "id": 50,
                 "entries": [
@@ -211,7 +202,7 @@
             }
         },
         {
-            "type": "collection", "useCase": "environment", "collection": {
+            "useCase": "environment", "collection": {
                 "name": "AquiferPlant-lvl-1",
                 "id": 60,
                 "entries": [
@@ -223,7 +214,7 @@
             }
         },
         {
-            "type": "collection", "useCase": "environment", "collection": {
+            "useCase": "environment", "collection": {
                 "name": "AgricultureCenter-lvl-1",
                 "id": 70,
                 "entries": [
@@ -235,7 +226,7 @@
             }
         },
         {
-            "type": "collection", "useCase": "environment", "collection": {
+            "useCase": "environment", "collection": {
                 "name": "VehicleStorage-lvl-1",
                 "id": 80,
                 "entries": [
@@ -247,7 +238,7 @@
             }
         },
         {
-            "type": "collection", "useCase": "environment", "collection": {
+            "useCase": "environment", "collection": {
                 "name": "Cantina-lvl-1",
                 "id": 90,
                 "entries": [
@@ -259,7 +250,7 @@
             }
         },
         {
-            "type": "collection", "useCase": "environment", "collection": {
+            "useCase": "environment", "collection": {
                 "name": "RadarDish-lvl-1",
                 "id": 100,
                 "entries": [
@@ -271,7 +262,7 @@
             }
         },
         {
-            "type": "collection", "useCase": "environment", "collection": {
+            "useCase": "environment", "collection": {
                 "name": "MiningFacility-lvl-1",
                 "id": 110,
                 "entries": [

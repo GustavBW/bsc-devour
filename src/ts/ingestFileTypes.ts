@@ -4,14 +4,24 @@ import { AssetUseCase, DBDSN_TYPEDECL, type DBDSN, type TransformDTO } from './t
 import Structure from '../runtimeTypeChecker/structure';
 
 export enum IngestFileAssetType {
-    SINGLE = 'single',
-    COLLECTION = 'collection',
-    UNKNOWN = 'unknown',
+    SINGLE = "single",
+    COLLECTION = "collection",
+    UNKNOWN = "unknown",
+}
+export const assetTypeFromString = (str: string): IngestFileAssetType => {
+    switch (str.toLowerCase()) {
+        case IngestFileAssetType.SINGLE:
+            return IngestFileAssetType.SINGLE;
+        case IngestFileAssetType.COLLECTION:
+            return IngestFileAssetType.COLLECTION;
+        default:
+            return IngestFileAssetType.UNKNOWN;
+    }
 }
 
 // Define common fields
 interface IngestFileAssetBase {
-    type: IngestFileAssetType;
+    type?: IngestFileAssetType;
     useCase: AssetUseCase;
 }
 
@@ -21,7 +31,7 @@ export interface IngestFileSingleAsset extends IngestFileAssetBase {
     single: IngestFileSingleAssetField;
 }
 export const INGEST_FILE_SINGLE_ASSET_TYPEDECL: TypeDeclaration = {
-    type: anyOfConstants([IngestFileAssetType.SINGLE]),
+    type: optionalType(anyOfConstants([IngestFileAssetType.SINGLE])),
     useCase: anyOfConstants(Object.values(AssetUseCase)),
     single: Type.OBJECT,
 };
@@ -52,7 +62,7 @@ export interface IngestFileCollectionAsset extends IngestFileAssetBase {
     collection: IngestFileCollectionField;
 }
 export const INGEST_FILE_COLLECTION_ASSET_TYPEDECL: TypeDeclaration = {
-    type: anyOfConstants([IngestFileAssetType.COLLECTION]),
+    type: optionalType(anyOfConstants([IngestFileAssetType.COLLECTION])),
     useCase: anyOfConstants(Object.values(AssetUseCase)),
     collection: Type.OBJECT,
 };

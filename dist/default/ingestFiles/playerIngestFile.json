@@ -1,7 +1,6 @@
 {
     "assets": [
         {
-            "type": "single",
             "useCase": "player",
             "single": {
                 "width": 100,

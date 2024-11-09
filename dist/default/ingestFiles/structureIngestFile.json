@@ -1,7 +1,6 @@
 {
     "assets": [
         {
-            "type": "single",
             "useCase": "structure",
             "single": {
                 "width": 100,
@@ -11,7 +10,6 @@
             }
         },
         {
-            "type": "single",
             "useCase": "structure",
             "single": {
                 "width": 283,
@@ -21,7 +19,6 @@
             }
         },
         {
-            "type": "single",
             "useCase": "structure",
             "single": {
                 "id": 2003,
@@ -29,7 +26,6 @@
             }
         },
         {
-            "type": "single",
             "useCase": "structure",
             "single": {
                 "id": 2004,
@@ -37,7 +33,6 @@
             }
         },
         {
-            "type": "single",
             "useCase": "structure",
             "single": {
                 "id": 2005,
@@ -45,7 +40,6 @@
             }
         },
         {
-            "type": "single",
             "useCase": "structure",
             "single": {
                 "id": 2006,
@@ -53,7 +47,6 @@
             }
         },
         {
-            "type": "single",
             "useCase": "structure",
             "single": {
                 "id": 2007,
@@ -61,7 +54,6 @@
             }
         },
         {
-            "type": "single",
             "useCase": "structure",
             "single": {
                 "id": 2008,
@@ -69,7 +61,6 @@
             }
         },
         {
-            "type": "single",
             "useCase": "structure",
             "single": {
                 "id": 2009,
@@ -77,7 +68,6 @@
             }
         },
         {
-            "type": "single",
             "useCase": "structure",
             "single": {
                 "id": 2010,
@@ -85,37 +75,37 @@
             }
         },
         {
-            "type": "single", "useCase": "structure", "single": {
+            "useCase": "structure", "single": {
                 "id": 2011, "source": "./default/structures/Shield-Generator.png"
             }
         },
         {
-            "type": "single", "useCase": "structure", "single": {
+            "useCase": "structure", "single": {
                 "id": 2012, "source": "./default/structures/Aquifer-Plant.png"
             }
         },
         {
-            "type": "single", "useCase": "structure", "single": {
+            "useCase": "structure", "single": {
                 "id": 2013, "source": "./default/structures/Agriculture-Center.png"
             }
         },
         {
-            "type": "single", "useCase": "structure", "single": {
+            "useCase": "structure", "single": {
                 "id": 2014, "source": "./default/structures/Vehicle-Storage.png"
             }
         },
         {
-            "type": "single", "useCase": "structure", "single": {
+            "useCase": "structure", "single": {
                 "id": 2015, "source": "./default/structures/Cantina.png"
             }
         },
         {
-            "type": "single", "useCase": "structure", "single": {
+            "useCase": "structure", "single": {
                 "id": 2016, "source": "./default/structures/Radar-Dish.png"
             }
         },
         {
-            "type": "single", "useCase": "structure", "single": {
+            "useCase": "structure", "single": {
                 "id": 2017, "source": "./default/structures/Mining-Facility.png"
             }
         }
