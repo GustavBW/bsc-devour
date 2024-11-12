@@ -1,0 +1,11 @@
+{
+    "assets": [
+        {
+            "useCase": "tile",
+            "single": {
+                "id": 8001,
+                "source": "./default/tiles/GroundTile.png"
+            }
+        }
+    ]
+}

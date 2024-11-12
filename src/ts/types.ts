@@ -103,6 +103,7 @@ export enum AssetUseCase {
     STRUCTURE = 'structure',
     VEHICLE = 'vehicle',
     TEXTURE = 'texture',
+    TILE = 'tile',
     UNKNOWN = 'unknown',
 }
 export const assetUseCaseFromString = (str: string): AssetUseCase => {
