@@ -1,4 +1,4 @@
-import { AssetUseCase, type DBDSN, type TransformDTO } from '../ts/types';
+import { AssetUseCase, assetUseCaseFromString, type DBDSN, type TransformDTO } from '../ts/types';
 import type { Error, ResErr } from '../ts/metaTypes';
 import { isValidInteger, isValidNumber, isValidUrl } from '../runtimeTypeChecker/type';
 
@@ -25,19 +25,9 @@ export const readUrlArg = (arg: string): ResErr<string> => {
 
 export const readUseCaseArg = (arg: string): ResErr<AssetUseCase> => {
     const useCaseStr = arg.split('=')[1].replaceAll('"', '').trim();
-    let useCase: AssetUseCase;
-    switch (useCaseStr) {
-        case 'icon':
-            useCase = AssetUseCase.ICON;
-            break;
-        case 'environment':
-            useCase = AssetUseCase.ENVIRONMENT;
-            break;
-        case 'player':
-            useCase = AssetUseCase.PLAYER;
-            break;
-        default:
-            return { result: null, error: 'Invalid useCase argument' };
+    const useCase = assetUseCaseFromString(useCaseStr);
+    if (useCase === AssetUseCase.UNKNOWN) {
+        return { result: null, error: 'Invalid useCase argument: ' + useCaseStr };
     }
     return { result: useCase, error: null };
 };

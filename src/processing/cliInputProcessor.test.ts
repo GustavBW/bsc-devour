@@ -13,13 +13,18 @@ test('readUrlArg invalid URL', () => {
 });
 
 test('readUseCaseArg valid useCase icon', () => {
-    const result = readUseCaseArg('useCase="icon"');
-    expect(result).toEqual({ result: AssetUseCase.ICON, error: null });
+    for (const useCase of Object.values(AssetUseCase).filter(v => v !== AssetUseCase.UNKNOWN)) {
+        const result = readUseCaseArg(`useCase="${useCase}"`);
+        expect(result).toEqual({ result: useCase, error: null });
+    }
 });
 
 test('readUseCaseArg invalid useCase', () => {
     const result = readUseCaseArg('useCase="invalid"');
-    expect(result).toEqual({ result: null, error: 'Invalid useCase argument' });
+    expect(result).toEqual({ result: null, error: 'Invalid useCase argument: invalid' });
+
+    const result2 = readUseCaseArg('useCase="unknown"'); // "unknown" is present in AssetUseCase, but not a valid use case (null-object)
+    expect(result2).toEqual({ result: null, error: 'Invalid useCase argument: unknown' });
 });
 
 test('readThresholdArg valid threshold', () => {

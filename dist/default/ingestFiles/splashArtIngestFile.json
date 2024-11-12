@@ -1,7 +1,6 @@
 {
     "assets": [
         {
-            "type": "single",
             "useCase": "splashArt",
             "single": {
                 "width": 1920,
@@ -11,7 +10,6 @@
             }
         },
         {
-            "type": "single",
             "useCase": "splashArt",
             "single": {
                 "id": 5002,
@@ -19,7 +17,6 @@
             }
         },
         {
-            "type": "single",
             "useCase": "splashArt",
             "single": {
                 "id": 5003,
@@ -27,7 +24,6 @@
             }
         },
         {
-            "type": "single",
             "useCase": "splashArt",
             "single": {
                 "id": 5004,
@@ -35,7 +31,6 @@
             }
         },
         {
-            "type": "single",
             "useCase": "splashArt",
             "single": {
                 "id": 5005,
@@ -43,7 +38,6 @@
             }
         },
         {
-            "type": "single",
             "useCase": "splashArt",
             "single": {
                 "id": 5006,
@@ -51,7 +45,6 @@
             }
         },
         {
-            "type": "single",
             "useCase": "splashArt",
             "single": {
                 "id": 5007,
@@ -59,7 +52,6 @@
             }
         },
         {
-            "type": "single",
             "useCase": "splashArt",
             "single": {
                 "id": 5008,
@@ -67,7 +59,6 @@
             }
         },
         {
-            "type": "single",
             "useCase": "splashArt",
             "single": {
                 "id": 5009,
@@ -75,37 +66,37 @@
             }
         },
         {
-            "type": "single", "useCase": "splashArt", "single": {
+            "useCase": "splashArt", "single": {
                 "id": 5010, "source": "./default/splashArt/Shield-Generator-Splash.png"
             }
         },
         {
-            "type": "single", "useCase": "splashArt", "single": {
+            "useCase": "splashArt", "single": {
                 "id": 5011, "source": "./default/splashArt/Aquifer-Plant-Splash.png"
             }
         },
         {
-            "type": "single", "useCase": "splashArt", "single": {
+            "useCase": "splashArt", "single": {
                 "id": 5012, "source": "./default/splashArt/Agriculture-Center-Splash.png"
             }
         },
         {
-            "type": "single", "useCase": "splashArt", "single": {
+            "useCase": "splashArt", "single": {
                 "id": 5013, "source": "./default/splashArt/Vehicle-Storage-Splash.png"
             }
         },
         {
-            "type": "single", "useCase": "splashArt", "single": {
+            "useCase": "splashArt", "single": {
                 "id": 5014, "source": "./default/splashArt/Cantina-Splash.png"
             }
         },
         {
-            "type": "single", "useCase": "splashArt", "single": {
+            "useCase": "splashArt", "single": {
                 "id": 5015, "source": "./default/splashArt/Radar-Dish-Splash.png"
             }
         },
         {
-            "type": "single", "useCase": "splashArt", "single": {
+            "useCase": "splashArt", "single": {
                 "id": 5016, "source": "./default/splashArt/Mining-Facility-Splash.png"
             }
         }

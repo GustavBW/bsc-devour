@@ -12,7 +12,7 @@ import {
     verifyIngestFileSettings,
     verifySubFileIDAssignments,
 } from './ingestFileVerifier';
-import { IngestFileAssetType, type AutoIngestSubScript, type IngestFileSingleAsset, type SettingsSubFile } from '../../ts/ingestFileTypes';
+import { IngestFileAssetType, type AutoIngestSubScript, type IngestFileAssetEntry, type IngestFileSingleAsset, type SettingsSubFile } from '../../ts/ingestFileTypes';
 
 //Tests of "readIngestFile"
 let testFileJson: any;
@@ -207,6 +207,59 @@ test('verifyIngestFile assets should return null on valid input', async () => {
     const error = verifyIngestFileAssets(testFileJson.assets);
     expect(error).toBeUndefined();
 });
+
+test('verifyIngestFile assets should allow for no explicit type', async () => {
+    const testAssets: IngestFileAssetEntry[] = [
+        {
+            useCase: AssetUseCase.ICON,
+            single: {
+                id: 1,
+                source: 'https://http.cat/images/100.jpg',
+                alias: 'YallNeverGuessThisOne',
+                width: 100,
+                height: 100,
+            },
+        } as any,
+    ]
+    const error = verifyIngestFileAssets(testAssets);
+    expect(error).toBeUndefined();
+})
+
+test('verifyIngestFile assets shouldnt allow for "unknown" as type, even though it is part of backing enum', async () => {
+    const testAssets: IngestFileAssetEntry[] = [
+        {
+            type: IngestFileAssetType.UNKNOWN, 
+            useCase: AssetUseCase.ICON,
+            unknown: {
+                id: 1,
+                source: 'https://http.cat/images/100.jpg',
+                alias: 'YallNeverGuessThisOne',
+                width: 100,
+                height: 100,
+            },
+        } as any,
+    ]
+    const error = verifyIngestFileAssets(testAssets);
+    expect(error).not.toBeUndefined();
+})
+
+test('verifyIngestFile assets should still accept explicit type', async () => {
+    const testAssets: IngestFileAssetEntry[] = [
+        {
+            type: IngestFileAssetType.SINGLE, 
+            useCase: AssetUseCase.ICON,
+            single: {
+                id: 1,
+                source: 'https://http.cat/images/100.jpg',
+                alias: 'YallNeverGuessThisOne',
+                width: 100,
+                height: 100,
+            },
+        } as any,
+    ]
+    const error = verifyIngestFileAssets(testAssets);
+    expect(error).toBeUndefined();
+})
 
 test('verifyIngestFile should return error on missing settings field', async () => {
     const res = verifyIngestFile({ assets: [] });

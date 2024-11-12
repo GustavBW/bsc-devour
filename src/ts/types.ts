@@ -103,6 +103,16 @@ export enum AssetUseCase {
     STRUCTURE = 'structure',
     VEHICLE = 'vehicle',
     TEXTURE = 'texture',
+    UNKNOWN = 'unknown',
+}
+export const assetUseCaseFromString = (str: string): AssetUseCase => {
+    const lowerCased = str.toLowerCase();
+    for (const useCase of Object.values(AssetUseCase)) {
+        if (useCase.toLowerCase() === lowerCased) {
+            return useCase;
+        }
+    }
+    return AssetUseCase.UNKNOWN;
 }
 export type DBDSN = {
     host: string;

@@ -1,7 +1,6 @@
 {
     "assets": [
         {
-            "type": "single",
             "useCase": "vehicle",
             "single": {
                 "width": 162,
