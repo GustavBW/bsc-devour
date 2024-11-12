@@ -31,6 +31,14 @@
                 "id": 7004,
                 "source": "./default/minigames/asteroidsMinigame/BrokenWallTexture.png"
             }
+        },
+        {
+            "type": "single",
+            "useCase": "texture",
+            "single": {
+                "id": 7005,
+                "source": "./default/minigames/asteroidsMinigame/Surface.png"
+            }
         }
     ]
 }
