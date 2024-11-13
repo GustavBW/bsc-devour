@@ -93,6 +93,15 @@
                         9000
                     ]
                 ]
+            },
+            {
+                "path": "./default/ingestFiles/decalIngestFile.json",
+                "assetIDRanges": [
+                    [
+                        9001,
+                        10000
+                    ]
+                ]
             }
         ]
     },

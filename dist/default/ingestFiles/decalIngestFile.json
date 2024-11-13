@@ -1,0 +1,11 @@
+{
+    "assets": [
+        {
+            "useCase": "decal",
+            "single": {
+                "id": 9001,
+                "source": "./default/decals/horizontalCracks.png"
+            }
+        }
+    ]
+}
