@@ -36,14 +36,14 @@ const handleIngestFileInput = async (args: string[], context: ApplicationContext
     const { result, error } = await readIngestFile(url);
     if (error !== null) {
         context.logger.log('[if_cmd] Failed to read ingest file: \n\t' + error, LogLevel.FATAL);
-        return { result: null, error: error };
+        return { result: null, error: "Error in file: " + url + ": " + error };
     }
     context.logger.log('[if_cmd] Successfully read main ingest file.');
     context.logger.logAndPrint('[if_cmd] Verifying main ingest file.');
     const verificationResult = verifyIngestFile(result, context);
     if (verificationResult.error !== null) {
-        context.logger.log('[if_cmd] Failed to verify ingest file: \n\t' + verificationResult.error, LogLevel.FATAL);
-        return { result: null, error: verificationResult.error };
+        context.logger.log('[if_cmd] Failed to verify ingest file ' + url + ': \n\t' + verificationResult.error, LogLevel.FATAL);
+        return { result: null, error: "Error in file: " + url + ": " + verificationResult.error };
     }
     const ingestScript = verificationResult.result;
     context.logger.log('[if_cmd] Successfully verified main ingest file.');
@@ -52,7 +52,7 @@ const handleIngestFileInput = async (args: string[], context: ApplicationContext
     const subFileResult = await handleSubFiles(ingestScript.settings.subFiles, context);
     if (subFileResult.error !== null) {
         context.logger.log('[if_cmd] Failed to handle sub-files: \n\t' + subFileResult.error, LogLevel.FATAL);
-        return { result: null, error: subFileResult.error };
+        return { result: null, error: "Error in file: " + url + ": " + subFileResult.error };
     }
 
     return processIngestFile(ingestScript, context, subFileResult.result);
@@ -132,29 +132,31 @@ const handleSubFiles = async (
         const typeCheckError = conformsToType(subFileDeclaration, INGEST_FILE_SUB_FILE_TYPEDECL);
         if (typeCheckError !== null) {
             context.logger.log('[if_cmd] Type error in sub-file declaration: ' + typeCheckError, LogLevel.ERROR);
-            return { result: null, error: 'Type error in sub-file declaration: ' + typeCheckError };
+            return { result: null, error: 'Type error in sub-file: ' + subFileDeclaration.path + typeCheckError };
         }
         const url = subFileDeclaration.path;
         const { result, error } = await readIngestFile(url);
         if (error !== null) {
             context.logger.log('[if_cmd] Failed to read sub-file: ' + url + '\n\t' + error, LogLevel.ERROR);
-            return { result: null, error: error };
+            return { result: null, error: 'Failed to read sub-file: ' + url + ": " + error };
         }
         const verifyError = verifyIngestFileAssets(result.assets, context);
         if (verifyError) {
             context.logger.log('[if_cmd] Failed to verify sub-file: ' + url + '\n\t' + verifyError, LogLevel.ERROR);
-            return { result: null, error: verifyError };
+            return { result: null, error: 'Failed to verify sub-file: ' + url + ": " + verifyError };
         }
         const idCheckError = verifySubFileIDAssignments(subFileDeclaration, result, context);
         if (idCheckError) {
             context.logger.log('[if_cmd] ID assignment error in sub-file: ' + url + '\n\t' + idCheckError, LogLevel.ERROR);
-            return { result: null, error: idCheckError };
+            return { result: null, error: 'ID assignment error in sub-file: ' + url + ": " + idCheckError };
         }
         const ingestScript = result as AutoIngestSubScript;
-        return {result: {
-            path: subFileDeclaration.path,
-            assets: ingestScript.assets,
-        }, error: null};
+        return {
+            result: {
+                path: subFileDeclaration.path,
+                assets: ingestScript.assets,
+            }, error: null
+        };
     })));
 
     const errors = [];

@@ -115,6 +115,7 @@ export const readCompactDSNNotation = (arg: string): ResErr<DBDSN> => {
 export const readCompactTransformNotationRaw = (arg: string): ResErr<TransformDTO> => {
     const [xyzStr, scaleStr] = arg.split(',');
     const xyz = xyzStr.trim().split(' ');
+
     if (xyz.length !== 3) {
         return { result: null, error: 'Invalid transform xyz component' };
     }
@@ -122,11 +123,11 @@ export const readCompactTransformNotationRaw = (arg: string): ResErr<TransformDT
     if (scale.length !== 2) {
         return { result: null, error: 'Invalid transform scale component' };
     }
-    const xOffset = parseFloat(xyz[0]);
+    const xOffset = Number(xyz[0]);
     if (!isValidNumber(xOffset)) {
         return { result: null, error: 'Invalid transform x offset' };
     }
-    const yOffset = parseFloat(xyz[1]);
+    const yOffset = Number(xyz[1]);
     if (!isValidNumber(yOffset)) {
         return { result: null, error: 'Invalid transform y offset' };
     }
@@ -134,11 +135,11 @@ export const readCompactTransformNotationRaw = (arg: string): ResErr<TransformDT
     if (!isValidNumber(zIndex)) {
         return { result: null, error: 'Invalid transform z index' };
     }
-    const xScale = parseFloat(scale[0]);
+    const xScale = Number(scale[0]);
     if (!isValidNumber(xScale)) {
         return { result: null, error: 'Invalid transform x scale' };
     }
-    const yScale = parseFloat(scale[1]);
+    const yScale = Number(scale[1]);
     if (!isValidNumber(yScale)) {
         return { result: null, error: 'Invalid transform y scale' };
     }

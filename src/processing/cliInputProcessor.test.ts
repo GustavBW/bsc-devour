@@ -66,6 +66,11 @@ test('readCompactTransformNotation invalid scale component', () => {
     expect(result).toEqual({ result: null, error: 'Invalid transform data' });
 });
 
+test('readCompactTransformNotation invalid scale component', () => {
+    const result = readCompactTransformNotation('transform="0 0 1, 1 1x"');
+    expect(result).toEqual({ result: null, error: 'Invalid transform y scale' });
+});
+
 test('readCompactDSNNotation should return a valid DBDSN object for correct notation', () => {
     const input = 'dsn="localhost 5432, user password, mydb, require"';
     const expected = {

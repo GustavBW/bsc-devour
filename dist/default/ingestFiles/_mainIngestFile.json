@@ -102,6 +102,15 @@
                         10000
                     ]
                 ]
+            },
+            {
+                "path": "./default/ingestFiles/assetCollectionIngestFile.json",
+                "assetIDRanges": [
+                    [
+                        10001,
+                        11000
+                    ]
+                ]
             }
         ]
     },

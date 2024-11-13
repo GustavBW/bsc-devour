@@ -6,6 +6,181 @@
                 "id": 8001,
                 "source": "./default/tiles/GroundTile.png"
             }
+        },
+        {
+            "useCase": "tile",
+            "single": {
+                "id": 8002,
+                "source": "./default/tiles/Rock1.png"
+            }
+        },
+        {
+            "useCase": "tile",
+            "single": {
+                "id": 8003,
+                "source": "./default/tiles/Rock2.png"
+            }
+        },
+        {
+            "useCase": "tile",
+            "single": {
+                "id": 8004,
+                "source": "./default/tiles/Rock3.png"
+            }
+        },
+        {
+            "useCase": "tile",
+            "single": {
+                "id": 8005,
+                "source": "./default/tiles/Rock4.png"
+            }
+        },
+        {
+            "useCase": "tile",
+            "single": {
+                "id": 8006,
+                "source": "./default/tiles/Rock5.png"
+            }
+        },
+        {
+            "useCase": "tile",
+            "single": {
+                "id": 8007,
+                "source": "./default/tiles/Rock6.png"
+            }
+        },
+        {
+            "useCase": "tile",
+            "single": {
+                "id": 8008,
+                "source": "./default/tiles/Rock7.png"
+            }
+        },
+        {
+            "useCase": "tile",
+            "single": {
+                "id": 8009,
+                "source": "./default/tiles/Rock8.png"
+            }
+        },
+        {
+            "useCase": "tile",
+            "single": {
+                "id": 8010,
+                "source": "./default/tiles/Rock9.png"
+            }
+        },
+        {
+            "useCase": "tile",
+            "single": {
+                "id": 8011,
+                "source": "./default/tiles/Rock10.png"
+            }
+        },
+        {
+            "useCase": "tile",
+            "single": {
+                "id": 8012,
+                "source": "./default/tiles/Rock11.png"
+            }
+        },
+        {
+            "useCase": "tile",
+            "single": {
+                "id": 8013,
+                "source": "./default/tiles/Rock12.png"
+            }
+        },
+        {
+            "useCase": "tile",
+            "single": {
+                "id": 8014,
+                "source": "./default/tiles/Rock13.png"
+            }
+        },
+        {
+            "useCase": "tile",
+            "single": {
+                "id": 8015,
+                "source": "./default/tiles/Rock14.png"
+            }
+        },
+        {
+            "useCase": "tile",
+            "single": {
+                "id": 8016,
+                "source": "./default/tiles/Rock15.png"
+            }
+        },
+        {
+            "useCase": "tile",
+            "single": {
+                "id": 8017,
+                "source": "./default/tiles/Rock16.png"
+            }
+        },
+        {
+            "useCase": "tile",
+            "single": {
+                "id": 8018,
+                "source": "./default/tiles/Rock17.png"
+            }
+        },
+        {
+            "useCase": "tile",
+            "single": {
+                "id": 8019,
+                "source": "./default/tiles/Rock18.png"
+            }
+        },
+        {
+            "useCase": "tile",
+            "single": {
+                "id": 8020,
+                "source": "./default/tiles/Rock19.png"
+            }
+        },
+        {
+            "useCase": "tile",
+            "single": {
+                "id": 8021,
+                "source": "./default/tiles/Rock20.png"
+            }
+        },
+        {
+            "useCase": "tile",
+            "single": {
+                "id": 8022,
+                "source": "./default/tiles/Rock21.png"
+            }
+        },
+        {
+            "useCase": "tile",
+            "single": {
+                "id": 8023,
+                "source": "./default/tiles/Rock22.png"
+            }
+        },
+        {
+            "useCase": "tile",
+            "single": {
+                "id": 8024,
+                "source": "./default/tiles/Rock23.png"
+            }
+        },
+        {
+            "useCase": "tile",
+            "single": {
+                "id": 8025,
+                "source": "./default/tiles/Rock24.png"
+            }
+        },
+        {
+            "useCase": "tile",
+            "single": {
+                "id": 8026,
+                "source": "./default/tiles/Rock25.png"
+            }
         }
     ]
 }

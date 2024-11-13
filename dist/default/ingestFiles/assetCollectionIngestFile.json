@@ -1,0 +1,117 @@
+{
+    "assets": [
+        {
+            "useCase": "environment",
+            "collection": {
+                "name": "Ground",
+                "id": 10001,
+                "entries": [
+                    {
+                        "transform": "0 0 1, 1 1",
+                        "graphicalAssetId": 8001
+                    },
+                    {
+                        "transform": "0 0 1, 1 1",
+                        "graphicalAssetId": 8002
+                    },
+                    {
+                        "transform": "0 0 1, 1 1",
+                        "graphicalAssetId": 8003
+                    },
+                    {
+                        "transform": "0 0 1, 1 1",
+                        "graphicalAssetId": 8004
+                    },
+                    {
+                        "transform": "0 0 1, 1 1",
+                        "graphicalAssetId": 8005
+                    },
+                    {
+                        "transform": "0 0 1, 1 1",
+                        "graphicalAssetId": 8006
+                    },
+                    {
+                        "transform": "0 0 1, 1 1",
+                        "graphicalAssetId": 8007
+                    },
+                    {
+                        "transform": "0 0 1, 1 1",
+                        "graphicalAssetId": 8008
+                    },
+                    {
+                        "transform": "0 0 1, 1 1",
+                        "graphicalAssetId": 8009
+                    },
+                    {
+                        "transform": "0 0 1, 1 1",
+                        "graphicalAssetId": 8010
+                    },
+                    {
+                        "transform": "0 0 1, 1 1",
+                        "graphicalAssetId": 8011
+                    },
+                    {
+                        "transform": "0 0 1, 1 1",
+                        "graphicalAssetId": 8012
+                    },
+                    {
+                        "transform": "0 0 1, 1 1",
+                        "graphicalAssetId": 8013
+                    },
+                    {
+                        "transform": "0 0 1, 1 1",
+                        "graphicalAssetId": 8014
+                    },
+                    {
+                        "transform": "0 0 1, 1 1",
+                        "graphicalAssetId": 8015
+                    },
+                    {
+                        "transform": "0 0 1, 1 1",
+                        "graphicalAssetId": 8016
+                    },
+                    {
+                        "transform": "0 0 1, 1 1",
+                        "graphicalAssetId": 8017
+                    },
+                    {
+                        "transform": "0 0 1, 1 1",
+                        "graphicalAssetId": 8018
+                    },
+                    {
+                        "transform": "0 0 1, 1 1",
+                        "graphicalAssetId": 8019
+                    },
+                    {
+                        "transform": "0 0 1, 1 1",
+                        "graphicalAssetId": 8020
+                    },
+                    {
+                        "transform": "0 0 1, 1 1",
+                        "graphicalAssetId": 8021
+                    },
+                    {
+                        "transform": "0 0 1, 1 1",
+                        "graphicalAssetId": 8022
+                    },
+                    {
+                        "transform": "0 0 1, 1 1",
+                        "graphicalAssetId": 8023
+                    },
+                    {
+                        "transform": "0 0 1, 1 1",
+                        "graphicalAssetId": 8024
+                    },
+                    {
+                        "transform": "0 0 1, 1 1",
+                        "graphicalAssetId": 8025
+                    },
+                    {
+                        "transform": "0 0 1, 1 1",
+                        "graphicalAssetId": 8026
+                    }
+                ]
+            }
+        }
+    ]
+}

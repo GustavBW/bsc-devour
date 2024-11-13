@@ -63,7 +63,7 @@ export const validateCollectionAssetEntry = (asset: IngestFileCollectionAsset, e
         }
         const uniformTransformAttempt = assureUniformTransform(source.transform);
         if (uniformTransformAttempt.error !== null) {
-            return uniformTransformAttempt.error;
+            return "Error in collection id: " + asset.collection.id + ": " + uniformTransformAttempt.error;
         }
         source.transform = uniformTransformAttempt.result;
     }
@@ -256,7 +256,7 @@ export const checkIDRangesAndPathsOfSubFiles = (subFiles: SettingsSubFile[], con
                     return `Error in subfile declaration nr ${i} "${subFileA.path.split("/").pop()}" and ${j} "${subFileB.path.split("/").pop()}":\n\t${overlapError}`;
                 }
             }
-            
+
         }
     }
 };
