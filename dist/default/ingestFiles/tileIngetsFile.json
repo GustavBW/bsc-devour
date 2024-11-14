@@ -186,7 +186,7 @@
             "useCase": "environment",
             "single": {
                 "id": 8027,
-                "source": "./default/tiles/GroundTile3.png"
+                "source": "./default/tiles/GroundTile.png"
             }
         }
     ]
