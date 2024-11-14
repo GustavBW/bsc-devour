@@ -181,6 +181,13 @@
                 "id": 8026,
                 "source": "./default/enviroment/Rock25.png"
             }
+        },
+        {
+            "useCase": "environment",
+            "single": {
+                "id": 8027,
+                "source": "./default/tiles/GroundTile3.png"
+            }
         }
     ]
 }

@@ -337,6 +337,19 @@
                     }
                 ]
             }
+        },
+        {
+            "useCase": "environment",
+            "collection": {
+                "name": "tile2",
+                "id": 10027,
+                "entries": [
+                    {
+                        "transform": "0 0 1, 1 1",
+                        "graphicalAssetId": 8027
+                    }
+                ]
+            }
         }
     ]
 }
