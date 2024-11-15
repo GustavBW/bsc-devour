@@ -8,6 +8,48 @@
                 "id": 6001,
                 "source": "./default/vehicles/Truck-2.svg"
             }
+        },
+        {
+            "useCase": "vehicle",
+            "single": {
+                "id": 6002,
+                "source": "./default/vehicles/Carrier.png"
+            }
+        },
+        {
+            "useCase": "vehicle",
+            "single": {
+                "id": 6003,
+                "source": "./default/vehicles/Small-Tank.png"
+            }
+        },
+        {
+            "useCase": "vehicle",
+            "single": {
+                "id": 6004,
+                "source": "./default/vehicles/Small-Tank-V2.png"
+            }
+        },
+        {
+            "useCase": "vehicle",
+            "single": {
+                "id": 6005,
+                "source": "./default/vehicles/Allroader.png"
+            }
+        },
+        {
+            "useCase": "vehicle",
+            "single": {
+                "id": 6006,
+                "source": "./default/vehicles/Robot 1.png"
+            }
+        },
+        {
+            "useCase": "vehicle",
+            "single": {
+                "id": 6007,
+                "source": "./default/vehicles/Robot 2.png"
+            }
         }
     ]
 }

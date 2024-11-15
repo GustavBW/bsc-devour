@@ -109,6 +109,14 @@
                     {
                         "transform": "0 0 1, 1 1",
                         "graphicalAssetId": 2004
+                    },
+                    {
+                        "transform": "200 -400 1, 1 1",
+                        "graphicalAssetId": 2022
+                    },
+                    {
+                        "transform": "170 400 1, 1 1",
+                        "graphicalAssetId": 2022
                     }
                 ]
             }
@@ -122,6 +130,22 @@
                     {
                         "transform": "0 0 1, 1 1",
                         "graphicalAssetId": 2005
+                    },
+                    {
+                        "transform": "200 -400 1, 1 1",
+                        "graphicalAssetId": 2022
+                    },
+                    {
+                        "transform": "170 400 1, 1 1",
+                        "graphicalAssetId": 2022
+                    },
+                    {
+                        "transform": "-170 300 1, 1 1",
+                        "graphicalAssetId": 6007
+                    },
+                    {
+                        "transform": "400 20 1, 1 1",
+                        "graphicalAssetId": 6006
                     }
                 ]
             }
@@ -159,8 +183,8 @@
                 "id": 20,
                 "entries": [
                     {
-                        "transform": "0 0 1, 1 1",
-                        "graphicalAssetId": 2009
+                        "transform": "0 0 1, 1.25 1.25",
+                        "graphicalAssetId": 2018
                     }
                 ]
             }
@@ -198,8 +222,8 @@
                 "id": 50,
                 "entries": [
                     {
-                        "transform": "0 0 1, 1 1",
-                        "graphicalAssetId": 2011
+                        "transform": "0 0 1, 1.25 1.25",
+                        "graphicalAssetId": 2020
                     }
                 ]
             }
@@ -237,8 +261,28 @@
                 "id": 80,
                 "entries": [
                     {
-                        "transform": "0 0 1, 1 1",
-                        "graphicalAssetId": 2014
+                        "transform": "0 0 1, 1.25 1.25",
+                        "graphicalAssetId": 2021
+                    },
+                    {
+                        "transform": "-400 -1200 1, 1 1",
+                        "graphicalAssetId": 6005
+                    },
+                    {
+                        "transform": "-1200 -1040 1, 1 1",
+                        "graphicalAssetId": 6005
+                    },
+                    {
+                        "transform": "-1360 1200 1, 1 1",
+                        "graphicalAssetId": 6004
+                    },
+                    {
+                        "transform": "-800 1600 1, 1 1",
+                        "graphicalAssetId": 6003
+                    },
+                    {
+                        "transform": "1200 1440 1, 1 1",
+                        "graphicalAssetId": 6002
                     }
                 ]
             }
@@ -276,8 +320,8 @@
                 "id": 110,
                 "entries": [
                     {
-                        "transform": "0 0 1, 1 1",
-                        "graphicalAssetId": 2017
+                        "transform": "0 0 1, 1.25 1.25",
+                        "graphicalAssetId": 2019
                     }
                 ]
             }

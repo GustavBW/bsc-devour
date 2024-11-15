@@ -75,38 +75,87 @@
             }
         },
         {
-            "useCase": "structure", "single": {
-                "id": 2011, "source": "./default/structures/Shield-Generator.png"
+            "useCase": "structure",
+            "single": {
+                "id": 2011,
+                "source": "./default/structures/Shield-Generator.png"
             }
         },
         {
-            "useCase": "structure", "single": {
-                "id": 2012, "source": "./default/structures/Aquifer-Plant.png"
+            "useCase": "structure",
+            "single": {
+                "id": 2012,
+                "source": "./default/structures/Aquifer-Plant.png"
             }
         },
         {
-            "useCase": "structure", "single": {
-                "id": 2013, "source": "./default/structures/Agriculture-Center.png"
+            "useCase": "structure",
+            "single": {
+                "id": 2013,
+                "source": "./default/structures/Agriculture-Center.png"
             }
         },
         {
-            "useCase": "structure", "single": {
-                "id": 2014, "source": "./default/structures/Vehicle-Storage.png"
+            "useCase": "structure",
+            "single": {
+                "id": 2014,
+                "source": "./default/structures/Vehicle-Storage.png"
             }
         },
         {
-            "useCase": "structure", "single": {
-                "id": 2015, "source": "./default/structures/Cantina.png"
+            "useCase": "structure",
+            "single": {
+                "id": 2015,
+                "source": "./default/structures/Cantina.png"
             }
         },
         {
-            "useCase": "structure", "single": {
-                "id": 2016, "source": "./default/structures/Radar-Dish.png"
+            "useCase": "structure",
+            "single": {
+                "id": 2016,
+                "source": "./default/structures/Radar-Dish.png"
             }
         },
         {
-            "useCase": "structure", "single": {
-                "id": 2017, "source": "./default/structures/Mining-Facility.png"
+            "useCase": "structure",
+            "single": {
+                "id": 2017,
+                "source": "./default/structures/Mining-Facility.png"
+            }
+        },
+        {
+            "useCase": "structure",
+            "single": {
+                "id": 2018,
+                "source": "./default/structures/Spaceport2.png"
+            }
+        },
+        {
+            "useCase": "structure",
+            "single": {
+                "id": 2019,
+                "source": "./default/structures/Mining-Facility2.png"
+            }
+        },
+        {
+            "useCase": "structure",
+            "single": {
+                "id": 2020,
+                "source": "./default/structures/Shield-Generator2.png"
+            }
+        },
+        {
+            "useCase": "structure",
+            "single": {
+                "id": 2021,
+                "source": "./default/structures/Vehicle-Storage2.png"
+            }
+        },
+        {
+            "useCase": "structure",
+            "single": {
+                "id": 2022,
+                "source": "./default/structures/Rocket Launcher.png"
             }
         }
     ]

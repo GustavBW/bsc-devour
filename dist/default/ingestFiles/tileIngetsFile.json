@@ -186,7 +186,49 @@
             "useCase": "environment",
             "single": {
                 "id": 8027,
-                "source": "./default/tiles/GroundTile.png"
+                "source": "./default/enviroment/Rock26.png"
+            }
+        },
+        {
+            "useCase": "environment",
+            "single": {
+                "id": 8028,
+                "source": "./default/enviroment/Rock27.png"
+            }
+        },
+        {
+            "useCase": "environment",
+            "single": {
+                "id": 8029,
+                "source": "./default/enviroment/Rock28.png"
+            }
+        },
+        {
+            "useCase": "environment",
+            "single": {
+                "id": 8030,
+                "source": "./default/enviroment/Rock29.png"
+            }
+        },
+        {
+            "useCase": "environment",
+            "single": {
+                "id": 8031,
+                "source": "./default/enviroment/Rock30.png"
+            }
+        },
+        {
+            "useCase": "environment",
+            "single": {
+                "id": 8032,
+                "source": "./default/enviroment/Rock31.png"
+            }
+        },
+        {
+            "useCase": "environment",
+            "single": {
+                "id": 8033,
+                "source": "./default/enviroment/Mounts.png"
             }
         }
     ]

@@ -341,12 +341,90 @@
         {
             "useCase": "environment",
             "collection": {
-                "name": "tile2",
+                "name": "Rock26",
                 "id": 10027,
                 "entries": [
                     {
                         "transform": "0 0 1, 1 1",
                         "graphicalAssetId": 8027
+                    }
+                ]
+            }
+        },
+        {
+            "useCase": "environment",
+            "collection": {
+                "name": "Rock27",
+                "id": 10028,
+                "entries": [
+                    {
+                        "transform": "0 0 1, 1 1",
+                        "graphicalAssetId": 8028
+                    }
+                ]
+            }
+        },
+        {
+            "useCase": "environment",
+            "collection": {
+                "name": "Rock28",
+                "id": 10029,
+                "entries": [
+                    {
+                        "transform": "0 0 1, 1 1",
+                        "graphicalAssetId": 8029
+                    }
+                ]
+            }
+        },
+        {
+            "useCase": "environment",
+            "collection": {
+                "name": "Rock29",
+                "id": 10030,
+                "entries": [
+                    {
+                        "transform": "0 0 1, 1 1",
+                        "graphicalAssetId": 8030
+                    }
+                ]
+            }
+        },
+        {
+            "useCase": "environment",
+            "collection": {
+                "name": "Rock30",
+                "id": 10031,
+                "entries": [
+                    {
+                        "transform": "0 0 1, 1 1",
+                        "graphicalAssetId": 8031
+                    }
+                ]
+            }
+        },
+        {
+            "useCase": "environment",
+            "collection": {
+                "name": "Rock31",
+                "id": 10032,
+                "entries": [
+                    {
+                        "transform": "0 0 1, 1 1",
+                        "graphicalAssetId": 8032
+                    }
+                ]
+            }
+        },
+        {
+            "useCase": "environment",
+            "collection": {
+                "name": "Mounts",
+                "id": 10033,
+                "entries": [
+                    {
+                        "transform": "0 0 1, 0.5 0.5",
+                        "graphicalAssetId": 8033
                     }
                 ]
             }
