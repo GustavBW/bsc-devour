@@ -1,7 +1,7 @@
 {
     "assets": [
         {
-            "useCase": "environment",
+            "useCase": "tile",
             "collection": {
                 "name": "tile",
                 "id": 10001,
