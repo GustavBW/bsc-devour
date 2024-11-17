@@ -230,6 +230,20 @@
                 "id": 8033,
                 "source": "./default/enviroment/Mounts.png"
             }
+        },
+        {
+            "useCase": "tile",
+            "single": {
+                "id": 8034,
+                "source": "./default/tiles/WallTile.png"
+            }
+        },
+        {
+            "useCase": "tile",
+            "single": {
+                "id": 8035,
+                "source": "./default/tiles/GlassTile.png"
+            }
         }
     ]
 }

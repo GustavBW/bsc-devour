@@ -428,6 +428,32 @@
                     }
                 ]
             }
+        },
+        {
+            "useCase": "tile",
+            "collection": {
+                "name": "WallTile",
+                "id": 10034,
+                "entries": [
+                    {
+                        "transform": "0 0 2, 1 1",
+                        "graphicalAssetId": 8034
+                    }
+                ]
+            }
+        },
+        {
+            "useCase": "tile",
+            "collection": {
+                "name": "GlassTile",
+                "id": 10035,
+                "entries": [
+                    {
+                        "transform": "0 0 1, 1 1",
+                        "graphicalAssetId": 8035
+                    }
+                ]
+            }
         }
     ]
 }
