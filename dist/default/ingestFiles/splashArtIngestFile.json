@@ -66,38 +66,59 @@
             }
         },
         {
-            "useCase": "splashArt", "single": {
-                "id": 5010, "source": "./default/splashArt/Shield-Generator-Splash.png"
+            "useCase": "splashArt",
+            "single": {
+                "id": 5010,
+                "source": "./default/splashArt/Shield-Generator-Splash.png"
             }
         },
         {
-            "useCase": "splashArt", "single": {
-                "id": 5011, "source": "./default/splashArt/Aquifer-Plant-Splash.png"
+            "useCase": "splashArt",
+            "single": {
+                "id": 5011,
+                "source": "./default/splashArt/Aquifer-Plant-Splash.png"
             }
         },
         {
-            "useCase": "splashArt", "single": {
-                "id": 5012, "source": "./default/splashArt/Agriculture-Center-Splash.png"
+            "useCase": "splashArt",
+            "single": {
+                "id": 5012,
+                "source": "./default/splashArt/Agriculture-Center-Splash.png"
             }
         },
         {
-            "useCase": "splashArt", "single": {
-                "id": 5013, "source": "./default/splashArt/Vehicle-Storage-Splash.png"
+            "useCase": "splashArt",
+            "single": {
+                "id": 5013,
+                "source": "./default/splashArt/Vehicle-Storage-Splash.png"
             }
         },
         {
-            "useCase": "splashArt", "single": {
-                "id": 5014, "source": "./default/splashArt/Cantina-Splash.png"
+            "useCase": "splashArt",
+            "single": {
+                "id": 5014,
+                "source": "./default/splashArt/Cantina-Splash.png"
             }
         },
         {
-            "useCase": "splashArt", "single": {
-                "id": 5015, "source": "./default/splashArt/Radar-Dish-Splash.png"
+            "useCase": "splashArt",
+            "single": {
+                "id": 5015,
+                "source": "./default/splashArt/Radar-Dish-Splash.png"
             }
         },
         {
-            "useCase": "splashArt", "single": {
-                "id": 5016, "source": "./default/splashArt/Mining-Facility-Splash.png"
+            "useCase": "splashArt",
+            "single": {
+                "id": 5016,
+                "source": "./default/splashArt/Mining-Facility-Splash.png"
+            }
+        },
+        {
+            "useCase": "splashArt",
+            "single": {
+                "id": 5017,
+                "source": "./default/splashArt/Asteroids-Post-Game-Splash.png"
             }
         }
     ]
