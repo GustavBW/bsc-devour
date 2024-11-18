@@ -48,6 +48,160 @@
                 "id": 3007,
                 "source": "./default/textures/IceMoonTexture.jpg"
             }
+        },
+        {
+            "useCase": "texture",
+            "single": {
+                "id": 3008,
+                "source": "./default/textures/Blue_Nebula_01-1024x1024.png"
+            }
+        },
+        {
+            "useCase": "texture",
+            "single": {
+                "id": 3009,
+                "source": "./default/textures/Blue_Nebula_02-1024x1024.png"
+            }
+        },
+        {
+            "useCase": "texture",
+            "single": {
+                "id": 3010,
+                "source": "./default/textures/Blue_Nebula_03-1024x1024.png"
+            }
+        },
+        {
+            "useCase": "texture",
+            "single": {
+                "id": 3011,
+                "source": "./default/textures/Blue_Nebula_04-1024x1024.png"
+            }
+        },
+        {
+            "useCase": "texture",
+            "single": {
+                "id": 3012,
+                "source": "./default/textures/Blue_Nebula_05-1024x1024.png"
+            }
+        },
+        {
+            "useCase": "texture",
+            "single": {
+                "id": 3013,
+                "source": "./default/textures/Blue_Nebula_06-1024x1024.png"
+            }
+        },
+        {
+            "useCase": "texture",
+            "single": {
+                "id": 3014,
+                "source": "./default/textures/Blue_Nebula_08-1024x1024.png"
+            }
+        },
+        {
+            "useCase": "texture",
+            "single": {
+                "id": 3015,
+                "source": "./default/textures/Green_Nebula_01-1024x1024.png"
+            }
+        },
+        {
+            "useCase": "texture",
+            "single": {
+                "id": 3016,
+                "source": "./default/textures/Green_Nebula_02-1024x1024.png"
+            }
+        },
+        {
+            "useCase": "texture",
+            "single": {
+                "id": 3017,
+                "source": "./default/textures/Green_Nebula_03-1024x1024.png"
+            }
+        },
+        {
+            "useCase": "texture",
+            "single": {
+                "id": 3018,
+                "source": "./default/textures/Green_Nebula_04-1024x1024.png"
+            }
+        },
+        {
+            "useCase": "texture",
+            "single": {
+                "id": 3019,
+                "source": "./default/textures/Green_Nebula_05-1024x1024.png"
+            }
+        },
+        {
+            "useCase": "texture",
+            "single": {
+                "id": 3020,
+                "source": "./default/textures/Green_Nebula_06-1024x1024.png"
+            }
+        },
+        {
+            "useCase": "texture",
+            "single": {
+                "id": 3021,
+                "source": "./default/textures/Green_Nebula_07-1024x1024.png"
+            }
+        },
+        {
+            "useCase": "texture",
+            "single": {
+                "id": 3022,
+                "source": "./default/textures/Purple_Nebula_01-1024x1024.png"
+            }
+        },
+        {
+            "useCase": "texture",
+            "single": {
+                "id": 3023,
+                "source": "./default/textures/Purple_Nebula_02-1024x1024.png"
+            }
+        },
+        {
+            "useCase": "texture",
+            "single": {
+                "id": 3024,
+                "source": "./default/textures/Purple_Nebula_03-1024x1024.png"
+            }
+        },
+        {
+            "useCase": "texture",
+            "single": {
+                "id": 3025,
+                "source": "./default/textures/Purple_Nebula_04-1024x1024.png"
+            }
+        },
+        {
+            "useCase": "texture",
+            "single": {
+                "id": 3026,
+                "source": "./default/textures/Purple_Nebula_05-1024x1024.png"
+            }
+        },
+        {
+            "useCase": "texture",
+            "single": {
+                "id": 3027,
+                "source": "./default/textures/Purple_Nebula_06-1024x1024.png"
+            }
+        },
+        {
+            "useCase": "texture",
+            "single": {
+                "id": 3028,
+                "source": "./default/textures/Purple_Nebula_07-1024x1024.png"
+            }
+        },
+        {
+            "useCase": "texture",
+            "single": {
+                "id": 3029,
+                "source": "./default/textures/Starfield_01-1024x1024.png"
+            }
         }
     ]
 }
