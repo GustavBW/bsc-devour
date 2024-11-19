@@ -8,6 +8,13 @@
                 "id": 4001,
                 "source": "./default/player/tempPlayerChar.svg"
             }
+        },
+        {
+            "useCase": "player",
+            "single": {
+                "id": 4002,
+                "source": "./default/player/Player.png"
+            }
         }
     ]
 }
