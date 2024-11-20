@@ -39,6 +39,14 @@
                 "id": 7005,
                 "source": "./default/minigames/asteroidsMinigame/Surface.png"
             }
+        },
+        {
+            "type": "single",
+            "useCase": "texture",
+            "single": {
+                "id": 7006,
+                "source": "./default/minigames/asteroidsMinigame/surfacePost.png"
+            }
         }
     ]
 }
