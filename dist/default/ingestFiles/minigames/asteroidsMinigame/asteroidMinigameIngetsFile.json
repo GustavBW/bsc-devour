@@ -47,6 +47,22 @@
                 "id": 7006,
                 "source": "./default/minigames/asteroidsMinigame/surfacePost.png"
             }
+        },
+        {
+            "type": "single",
+            "useCase": "structure",
+            "single": {
+                "id": 7007,
+                "source": "./default/minigames/asteroidsMinigame/CannonBase.png"
+            }
+        },
+        {
+            "type": "single",
+            "useCase": "structure",
+            "single": {
+                "id": 7008,
+                "source": "./default/minigames/asteroidsMinigame/CannonHead.png"
+            }
         }
     ]
 }
